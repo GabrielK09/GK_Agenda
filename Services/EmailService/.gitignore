@@ -1,0 +1,5 @@
+.env
+
+./internal/build/files/*
+./logs/*
+./logs
