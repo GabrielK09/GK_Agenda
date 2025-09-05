@@ -1,0 +1,23 @@
+-- Projeto iniciado no dia 05/09/2025 15:44 --
+
+-- Stacks --
+-- FrontEnd --
+
+-- Quasar/Vue ( TypeScript );
+
+-- == -- == -- == -- == -- == -- == 
+-- BackEnd --
+
+-- Laravel ( PHP );
+-- Extra --
+-- Golang - Envio de e-mail;
+
+-- == -- == -- == -- == -- == -- == 
+
+-- Banco de dados -
+-- MariaDB
+
+-- == -- == -- == -- == -- == -- == 
+
+-- Ideia de e-mail para enviar o agendamento no e-mail do proprietário da loja;
+-- Ideia inicial de login -> Nome Completo, e-mail, e-mail de recuperação ( opcional ) e senha;
