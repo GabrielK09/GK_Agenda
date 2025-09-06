@@ -14,9 +14,15 @@ return new class extends Migration
         Schema::create('owners', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('owner_code')->index();
-            $table->string('company_name', 160);
-            $table->string('trade_name', 160);
-            $table->string('cnpj_cpf', 14);
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->string('phone', 14)->nullable();
+            $table->string('password');
+
+            $table->string('company_name', 160)->nullable();
+            $table->string('trade_name', 160)->nullable();
+
+            $table->string('cnpj_cpf', 14)->nullable()->unique();
 
             $table->string('cep', 8)->nullable();
             $table->string('uf', 2)->nullable();

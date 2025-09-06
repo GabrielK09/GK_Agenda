@@ -10,6 +10,10 @@ class Owner extends Model
 
     protected $fillable = [
         'owner_code', 
+        'name', 
+        'email', 
+        'phone', 
+        'password', 
         'company_name', 
         'trade_name', 
         'cnpj_cpf', 
