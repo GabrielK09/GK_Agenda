@@ -13,6 +13,12 @@ return new class extends Migration
     {
         Schema::create('attendants', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('owner_code');
+            $table->foreign('owner_code')->references('owner_code')->on('owners')->restrictOnDelete();
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->string('password');
+            $table->boolean('is_attendant', 1)->default(1);
             $table->timestamps();
         });
     }

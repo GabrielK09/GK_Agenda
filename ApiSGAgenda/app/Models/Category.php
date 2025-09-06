@@ -4,15 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Attendant extends Model
+class Category extends Model
 {
-    protected $table = 'attendants';
+    protected $table = 'categories';
     
     protected $fillable = [
+        'category_code',
         'owner_code',
+        'parent_category',
         'name',
-        'email',
-        'password',
-        'is_attendant',
+        'description',
     ];
 }

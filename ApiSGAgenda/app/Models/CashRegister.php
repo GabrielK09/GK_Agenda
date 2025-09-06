@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ServicesProducts extends Model
+class CashRegister extends Model
 {
     //
 }

@@ -4,15 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Attendant extends Model
+class Product extends Model
 {
-    protected $table = 'attendants';
-    
+    protected $table = 'products';
+
     protected $fillable = [
+        'product_code',
         'owner_code',
         'name',
-        'email',
-        'password',
-        'is_attendant',
+        'price', 
+        'amount' 
+
     ];
 }

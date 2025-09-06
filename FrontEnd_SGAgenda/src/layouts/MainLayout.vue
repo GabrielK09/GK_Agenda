@@ -1,102 +1,102 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
-      <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
+    <q-layout view="hHr LpR lFf">
+        <q-header>
+            <div 
+                class="q-pa-md ml-16 text-xl"
+            >     
+                <div class="flex" v-if="width as number >= 1100">
+                    <q-avatar rounded class="w-40 h-10 cursor-pointer">
+                        <img 
+                            :src="surprise ? 'public/images/GK_agenda.png' : 'public/images/logo-branca.png'"
+                            @click="surprise = !surprise"
+                        >
+                    </q-avatar>
 
-        <q-toolbar-title>
-          Quasar App
-        </q-toolbar-title>
+                    <div class="ml-4 mt-auto mb-auto hover:bg-blue-500 rounded-md p-1">
+                        <router-link to="">Contato</router-link>
+                    </div>
+                    
+                    <div class="ml-4 mt-auto mb-auto hover:bg-blue-500 rounded-md p-1">
+                        <router-link to="">Suporte</router-link>
+                    </div>
 
-        <div>Quasar v{{ $q.version }}</div>
-      </q-toolbar>
-    </q-header>
+                    <div class="ml-auto mr-14">
+                        <q-btn 
+                            :style="`background-color: rgb(59 130 200 / var(--tw-bg-opacity, 1))`"
+                            class="mr-4"
+                            label="Criar conta"
+                            
+                        />
 
-    <q-drawer
-      v-model="leftDrawerOpen"
-      show-if-above
-      bordered
-    >
-      <q-list>
-        <q-item-label
-          header
-        >
-          Essential Links
-        </q-item-label>
+                        <q-btn 
+                            :style="`background-color: #fff`"
+                            class="text-blue-600"
+                            label="Entrar"
+                            
+                        />
+                    </div>
+                </div>
 
-        <EssentialLink
-          v-for="link in linksList"
-          :key="link.title"
-          v-bind="link"
-        />
-      </q-list>
-    </q-drawer>
+                <div v-else>
+                    <q-avatar rounded class="w-40 h-10 cursor-pointer">
+                        <img 
+                            :src="surprise ? 'public/images/GK_agenda.png' : 'public/images/logo-branca.png'"
+                            @click="surprise = !surprise"
+                        >
+                    </q-avatar>
+                    <q-btn 
+                        flat
+                        round
+                        icon="menu"
+                        class="ml-14"
+                        @click="show = !show"
+                    />
 
-    <q-page-container>
-      <router-view />
-    </q-page-container>
-  </q-layout>
+                    <q-dialog v-model="show" persistent>
+                        <div class="bg-white p-4 flex-col text-center">
+                            <div class="ml-auto mr-auto hover:bg-blue-500 rounded-md p-1">
+                                <router-link to="">Contato</router-link>
+                            </div>
+                            
+                            <div class="hover:bg-blue-500 rounded-md p-1">
+                                <router-link to="">Suporte</router-link>
+                            </div>
+
+                            <div class="">
+                                <q-btn 
+                                    :style="`background-color: rgb(59 130 200 / var(--tw-bg-opacity, 1))`"
+                                    class="mb-4"
+                                    label="Criar conta"
+                                    
+                                />
+
+                                <q-btn 
+                                    :style="`background-color: #fff`"
+                                    class="text-blue-600 mb-4 flex"
+                                    label="Entrar"
+                                    
+                                />
+                            </div>
+                            
+                            <q-btn flat label="Cancel" color="primary" v-close-popup />
+                        </div>
+                    </q-dialog>
+                </div>
+            </div>
+        </q-header>
+
+        <q-page-container>
+            <router-view />
+        </q-page-container>
+    </q-layout>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import EssentialLink, { type EssentialLinkProps } from 'components/EssentialLink.vue';
+    import { LocalStorage } from 'quasar';
+    import { ref } from 'vue';
 
-const linksList: EssentialLinkProps[] = [
-  {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev'
-  },
-  {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework'
-  },
-  {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev'
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev'
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev'
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev'
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev'
-  }
-];
+    const width = LocalStorage.getItem("width");
+    let surprise = ref<boolean>(true);
+    let show = ref<boolean>(true);
 
-const leftDrawerOpen = ref(false);
-
-function toggleLeftDrawer () {
-  leftDrawerOpen.value = !leftDrawerOpen.value;
-}
 </script>
