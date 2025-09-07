@@ -12,9 +12,14 @@ const routes: RouteRecordRaw[] = [
             
         ],
     },
-
-    // Always leave this as last one,
-    // but you can also remove it
+    {
+        path: '/register',
+        component: () => import('pages/Auth/Register/RegisterOwner.vue')
+    },
+    {
+        path: '/complete-register',
+        component: () => import('pages/Auth/Register/CompleteRegister.vue')
+    },
     {
         path: '/:catchAll(.*)*',
         component: () => import('pages/ErrorPages/ErrorNotFound.vue'),

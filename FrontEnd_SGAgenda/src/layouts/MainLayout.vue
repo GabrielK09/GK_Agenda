@@ -25,7 +25,7 @@
                             :style="`background-color: rgb(59 130 200 / var(--tw-bg-opacity, 1))`"
                             class="mr-4"
                             label="Criar conta"
-                            
+                            @click="toRegister"   
                         />
 
                         <q-btn 
@@ -57,15 +57,15 @@
                     <q-dialog v-model="show" persistent>
                         <div class="bg-white p-4 flex-col text-center">
                             <div class="">
-                                <q-btn flat icon="close" color="primary" class="" v-close-popup />
+                                <q-btn flat icon="close" color="primary" v-close-popup />
                             </div>
 
                             <q-btn 
                                 :style="`background-color: rgb(59 130 200 / var(--tw-bg-opacity, 1))`"
                                 class="mb-2 mt-2 flex justify-center text-white"
                                 label="Criar conta"
-                                
-                            />
+                                @click="toRegister" 
+                            />  
 
                             <q-btn 
                                 :style="`background-color: #fff`"
@@ -96,9 +96,15 @@
 <script setup lang="ts">
     import { LocalStorage } from 'quasar';
     import { ref } from 'vue';
+    import { useRouter } from 'vue-router';
 
     const width = LocalStorage.getItem("width");
+    const router = useRouter();
+
     let surprise = ref<boolean>(true);
     let show = ref<boolean>(false);
 
+    const toRegister = () => {
+        router.replace({ path: '/register' });    
+    };
 </script>

@@ -15,12 +15,33 @@ const api = axios.create({ baseURL: process.env.API_URL });
 export default defineBoot(({ app, router }) => {
     api.interceptors.request.use(
         (config) => {
+            const publicRoutes: string[] = [
+                '/auth/register-owner',
+                '/auth/update-owner',
+                '/auth/login',
+
+            ];
+            const isPublic = publicRoutes.some(route => config.url?.includes(route));
+
             const token = LocalStorage.getItem("authToken");
 
-            if (!token) {
+            if (!token && !isPublic) {
+                app.config.globalProperties.$q.notify({
+                    color: 'red',
+                    message: 'O usuário não está logado!',
+                    position: 'top',
+                    timeout: 2000
+                    
+                });
+
                 router.replace({
                     path: '/login'
                 });
+            };
+
+            if (token)
+            {
+                config.headers.Authorization = `Bearer ${token}`;
             };
 
             return config;

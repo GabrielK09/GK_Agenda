@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('owners', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('owner_code')->index();
+            $table->unsignedBigInteger('owner_code')->index()->default(1);
             $table->string('name');
             $table->string('email')->unique();
-            $table->string('phone', 14)->nullable();
+            $table->string('phone', 16)->nullable();
             $table->string('password');
 
             $table->string('company_name', 160)->nullable();
@@ -32,6 +32,7 @@ return new class extends Migration
             $table->string('municipality', 100)->nullable();
             $table->string('number', 12)->nullable();
             
+            $table->rememberToken();
             $table->timestamps();
         });
     }
