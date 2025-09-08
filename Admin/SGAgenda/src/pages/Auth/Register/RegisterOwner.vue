@@ -3,7 +3,7 @@
         <div 
             class="text-2xl " 
             :class="{
-                'ml-32 mt-20': width >= 1100
+                'ml-32 mt-12': width >= 1100
             }"
         >
             <article
@@ -13,13 +13,14 @@
             >
                 <div
                     :class="{
-                        'flex justify-between p-12 border w-max': width >= 1100
+                        'flex justify-between mt-8 p-12': width >= 1100
+
                     }"
                     class="max-h-max"
                 >
                     <q-form
                         @submit="registerOwner"
-                        class="q-gutter-md"
+                        class="q-gutter-md p-4 ml-12"
                     >
                         <h2 class="text-center">
                             Faça seu cadastro aqui!
@@ -33,11 +34,11 @@
                                 borderless
                                 color="grey"
                                 label="Nome"
-                                class="w-[100%] mb-4 border rounded-md"
+                                class="max-w-[130%] mb-4 border rounded-md"
                                 required
                             >
                                 <template v-slot:label>
-                                    <div class="border-b">Nome <span class="text-red-500 text-xs relative bottom-1">*</span></div>
+                                    <div>Nome <span class="text-red-500 text-xs relative bottom-1">*</span></div>
                                 </template>
 
                                 <template v-slot:prepend>
@@ -60,7 +61,7 @@
                                 required
                             >
                                 <template v-slot:label>
-                                    <div class="border-b">Email <span class="text-red-500 text-xs relative bottom-1">*</span></div>
+                                    <div>Email <span class="text-red-500 text-xs relative bottom-1">*</span></div>
                                 </template>
 
                                 <template v-slot:prepend>
@@ -84,7 +85,7 @@
                                 mask="(##) #####-####"
                             >
                                 <template v-slot:label>
-                                    <div class="border-b">Telefone</div>
+                                    <div>Telefone</div>
                                 </template>
 
                                 <template v-slot:prepend>
@@ -115,7 +116,7 @@
                                 required
                             >
                                 <template v-slot:label>
-                                    <div class="border-b">Senha <span class="text-red-500 text-xs relative bottom-1">*</span></div>
+                                    <div>Senha <span class="text-red-500 text-xs relative bottom-1">*</span></div>
                                 </template>
 
                                 <template v-slot:prepend>
@@ -137,13 +138,13 @@
                                 borderless
                                 color="grey"
                                 label="Confirme a sua senha "
-                                class=" mb-4 border rounded-md"
+                                class="mb-4 border rounded-md"
                                 required
                                 @update:model-value="checkPasswords"
                                 
                             >
                                 <template v-slot:label>
-                                    <div class="border-b">Confirme a sua senha <span class="text-red-500 text-xs relative bottom-1">*</span></div>
+                                    <div>Confirme a sua senha <span class="text-red-500 text-xs relative bottom-1">*</span></div>
                                 </template>
 
                                 <template v-slot:prepend>
@@ -163,16 +164,16 @@
 
                             
                         </div>
-                        <span 
-                                class="text-xs flex mt-2 justify-center cursor-pointer"
-                                @click="toLogin"
+                            <span 
+                                class="text-xs flex mt-2 justify-center"
+                                
                             >
-                                Já possui uma conta?
+                                <router-link to="/login">Já possui uma conta?</router-link>
                             </span>
                     </q-form>
                 </div>
 
-                <div class="relative right-12 top-8">
+                <div class="relative right-8 top-20">
                     <img 
                         v-if="width > 1300 && width >= 1440"
                         src="public/images/imagem_teste.jpg" 
@@ -244,6 +245,7 @@
                 };
 
             } catch (error: any) {
+                console.error('Erro: ', error);
                 const e: string = error.response?.data?.message;
                 const isDuplicateMail = e.trim().includes("SQLSTATE[23000]")
                 

@@ -3,7 +3,7 @@
         <div 
             class="text-2xl " 
             :class="{
-                'ml-32 mt-20': width >= 1100
+                'ml-32 mt-12': width >= 1100
             }"
         >
             <article
@@ -13,13 +13,14 @@
             >
                 <div
                     :class="{
-                        'flex justify-between p-12 border w-max': width >= 1100
+                        'flex justify-between mt-8 p-12 w-[100vh]': width >= 1100
+
                     }"
                     class="max-h-max"
                 >
                     <q-form
                         @submit="completeOwner"
-                        class="q-gutter-md"
+                        class="q-gutter-md p-4 ml-28"
                     >
                         <h2 class="text-center">
                             Só mais alguns passos!
@@ -33,12 +34,12 @@
                                 borderless
                                 color="grey"
                                 label="Razão social"
-                                class="w-[100%] mb-4 border rounded-md"
+                                class="max-w-[130%] mb-4 border rounded-md"
                                 required
                                 @update:model-value="equalName(owner.companyName)"
                             >
                                 <template v-slot:label>
-                                    <div class="border-b">Razão social <span class="text-red-500 text-xs relative bottom-1">*</span></div>
+                                    <div >Razão social <span class="text-red-500 text-xs relative bottom-1">*</span></div>
                                 </template>
 
                                 <template v-slot:prepend>
@@ -59,7 +60,7 @@
                                 @update:model-value="setUpperCase(owner.tradeName)"
                             >
                                 <template v-slot:label>
-                                    <div class="border-b">Nome Fantasia <span class="text-red-500 text-xs relative bottom-1">*</span></div>
+                                    <div >Nome Fantasia <span class="text-red-500 text-xs relative bottom-1">*</span></div>
                                 </template>
 
                                 <template v-slot:prepend>
@@ -82,7 +83,7 @@
                                 :rules="[cpfInput]"
                             >
                                 <template v-slot:label>
-                                    <div class="border-b">CPF/CNPJ<span class="text-red-500 text-xs relative bottom-1">*</span></div>
+                                    <div >CPF/CNPJ<span class="text-red-500 text-xs relative bottom-1">*</span></div>
                                 </template>
 
                                 <template v-slot:before>
@@ -98,9 +99,9 @@
                     </q-form>
                 </div>
 
-                <div class="relative right-12 top-8">
+                <div class="relative right-8 top-20">
                     <img 
-                        v-if="width > 1300 && width >= 1440"
+                        v-if="width >= 1440"
                         src="public/images/imagem_teste.jpg" 
                     />
                 </div>

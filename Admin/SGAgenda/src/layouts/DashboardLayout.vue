@@ -5,10 +5,10 @@
         <q-drawer
             v-model="drawerLeft"
             show-if-above
-            :width="190"
-            class="bg-blue-500 text-white rounded-r-md"
+            :width="210"
+            class="bg-[#03202e] text-white rounded-r-md"
         >
-            <q-toolbar class="mt-8 border-b">
+            <q-toolbar class="mt-8">
                 <img
                     class="rounded mb-4"  
                     :src="surprise ? '../../public/images/GK_agenda.png' : '../../public/images/logo-branca.png'"
@@ -19,9 +19,9 @@
 
             <Links/>
 
-            <div class="fixed ml-16 bottom-0">
+            <div class="fixed ml-16 bottom-0 mb-2 ">
                 <span
-                    class="hover:bg-blue-600 p-2 rounded-md cursor-pointer"
+                    class="p-2 rounded-md cursor-pointer"
                     @click="logout"
                 >
                     Sair

@@ -13,7 +13,7 @@
                         <div class="p-6 bg-blue-500 text-white rounded-lg max-w-[45vh] max-h-auto">
                             <span>Totais de atendimentos realizados:</span>
                             
-                            <span class="flex"><div class="bg-white w-1 h-4 mt-auto mb-auto mr-1"></div>{{ 0 }}</span>
+                            <span class="flex"><div class="bg-white w-1 h-4 mt-4 mr-3"></div><span class="mt-3">{{ 0 }}</span></span>
                         </div>
 
                         <div class="">
@@ -25,7 +25,7 @@
                         <div class="p-6 bg-sky-400 text-white rounded-lg w-[45vh] max-h-auto">
                             <span>Faturamento total:</span>
                             
-                            <span class="flex"><div class="bg-white w-1 h-4 mt-auto mb-auto mr-1"></div>R$ 0,00</span>
+                            <span class="flex"><div class="bg-white w-1 h-4 mt-4 mr-3"></div><span class="mt-3">R$ 0,00</span></span>
 
                         </div>
 
@@ -38,7 +38,7 @@
                         <div class="p-6 bg-sky-500 text-white rounded-lg w-[45vh] max-h-auto">
                             <span>Média:</span>
 
-                            <span class="flex"><div class="bg-white w-1 h-4 mt-auto mb-auto mr-1"></div>R$ 0,00</span>
+                            <span class="flex "><div class="bg-white w-1 h-4 mt-4 mr-3"></div><span class="mt-3">R$ 0,00</span></span>
                         </div>
 
                         <div class="">
