@@ -14,7 +14,7 @@
             <q-item-section class="">
                 <router-link class=" p-2" :to="`/${link.url}`">
                     <q-icon size="20px" :name="link.icon" />
-                    <span class="ml-3">{{ link.title }}</span>
+                    S
                 </router-link>
             </q-item-section>
             
