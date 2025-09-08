@@ -1,6 +1,6 @@
 <template>
     <q-layout view="hHr LpR lFf">
-        <q-btn @click="drawerLeft = !drawerLeft" class="bg-transparent" icon="menu" />
+        <q-btn @click="drawerLeft = !drawerLeft" flat class="p-4 rounded btn-menu" icon="menu" />
 
         <q-drawer
             v-model="drawerLeft"
