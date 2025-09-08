@@ -1,24 +1,27 @@
 <template>
-    <q-list class="mt-2 p-2">
-        <q-item 
-            v-for="(link, i) in links"
-            clickable 
-            class="rounded-md mb-4 "
-            :class="{
-                'bg-blue-500': link.marked
-            }"
+    <q-list 
+        v-for="(link, i) in links"
+        class="mt-2 p-2"        
+    >
+        <router-link :to="link.url" class="bg-red-600">
+            <q-item 
+                clickable 
+                class="rounded-md"
+                :class="{
+                    'bg-blue-500': link.marked
+                }"
 
-            @click="changeMakred(i)"
+                @click="changeMakred(i)"
 
-        >
-            <q-item-section class="">
-                <router-link class=" p-2" :to="`/${link.url}`">
-                    <q-icon size="20px" :name="link.icon" />
-                    S
-                </router-link>
-            </q-item-section>
-            
-        </q-item>
+            >
+                <q-item-section avat>
+                    <div class="flex">
+                        <q-icon size="25px" :name="link.icon" />
+                        <span class="ml-3">{{ link.title }}</span>
+                    </div>
+                </q-item-section>            
+            </q-item>
+        </router-link>
     </q-list>
 </template>
 
@@ -37,13 +40,13 @@
     const siteName = ref(LocalStorage.getItem("siteName") as string);
 
     let links: ILinks[] = reactive([
-        {icon: 'dashboard', title: 'Dashboard', position: 0, marked: true, url: `admin/${siteName.value}/dashboard` },
-        {icon: 'event', title: 'Agenda', position: 1, marked: false, url: `admin/${siteName.value}/agenda` },
-        {icon: 'attach_money', title: 'Comissões', position: 2, marked: false, url: `admin/${siteName.value}/agenda` },
-        {icon: 'perm_identity', title: 'Atendentes', position: 3, marked: false, url: `admin/${siteName.value}/agenda` },
-        {icon: 'checklist', title: 'Serviços', position: 4, marked: false, url: `admin/${siteName.value}/services` },
-        {icon: 'list_alt', title: 'Produtos', position: 5, marked: false, url: `admin/${siteName.value}/agenda` },
-        {icon: 'wallet', title: 'Caixa', position: 6, marked: false, url: `admin/${siteName.value}/agenda` },
+        {icon: 'dashboard', title: 'Dashboard', position: 0, marked: true, url: `dashboard` },
+        {icon: 'event', title: 'Agenda', position: 1, marked: false, url: `agenda` },
+        {icon: 'attach_money', title: 'Comissões', position: 2, marked: false, url: `agenda` },
+        {icon: 'perm_identity', title: 'Atendentes', position: 3, marked: false, url: `agenda` },
+        {icon: 'checklist', title: 'Serviços', position: 4, marked: false, url: `services` },
+        {icon: 'list_alt', title: 'Produtos', position: 5, marked: false, url: `agenda` },
+        {icon: 'wallet', title: 'Caixa', position: 6, marked: false, url: `agenda` },
         
     ]);
 
