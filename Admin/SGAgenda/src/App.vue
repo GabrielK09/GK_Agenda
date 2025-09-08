@@ -7,7 +7,6 @@
     import { onMounted } from 'vue';
 
     onMounted(() => {
-        
         LocalStorage.setItem("width", window.innerWidth);
     });
 </script>

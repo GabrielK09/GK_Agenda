@@ -3,20 +3,19 @@
         <q-item 
             v-for="(link, i) in links"
             clickable 
-            class="rounded-md mb-4"
+            class="rounded-md mb-4 "
             :class="{
-                'bg-blue-700': link.marked
+                'bg-blue-500': link.marked
             }"
-            @click="changeMakred(i)"
-        >
-            <q-item-section avatar >
-                <q-icon size="25px" :name="link.icon" />
 
-            </q-item-section>
-            
-            <q-item-section>
-                <router-link :to="`/${link.url}`">{{ link.title }}</router-link>
-                
+            @click="changeMakred(i)"
+
+        >
+            <q-item-section class="">
+                <router-link class=" p-2" :to="`/${link.url}`">
+                    <q-icon size="20px" :name="link.icon" />
+                    <span class="ml-3">{{ link.title }}</span>
+                </router-link>
             </q-item-section>
             
         </q-item>
@@ -41,7 +40,7 @@
         {icon: 'dashboard', title: 'Dashboard', position: 0, marked: true, url: `admin/${siteName.value}/dashboard` },
         {icon: 'event', title: 'Agenda', position: 1, marked: false, url: `admin/${siteName.value}/agenda` },
         {icon: 'attach_money', title: 'Comissões', position: 2, marked: false, url: `admin/${siteName.value}/agenda` },
-        {icon: 'perm_identity', title: 'Atendetes', position: 3, marked: false, url: `admin/${siteName.value}/agenda` },
+        {icon: 'perm_identity', title: 'Atendentes', position: 3, marked: false, url: `admin/${siteName.value}/agenda` },
         {icon: 'checklist', title: 'Serviços', position: 4, marked: false, url: `admin/${siteName.value}/services` },
         {icon: 'list_alt', title: 'Produtos', position: 5, marked: false, url: `admin/${siteName.value}/agenda` },
         {icon: 'wallet', title: 'Caixa', position: 6, marked: false, url: `admin/${siteName.value}/agenda` },
