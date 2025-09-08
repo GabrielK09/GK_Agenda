@@ -55,15 +55,15 @@
                                         <q-btn color="primary" icon="check" label="OK" @click="" />
                                     </template>
 
-                                    <template v-if="col.name === 'isHomeService'">
+                                    <template v-if="col.name === 'checkAvailability'">
                                         <div class="text-center">
-                                            <q-icon name="close" color="red" size="25px"/>
+                                            <q-icon :name="col.value ? 'check' : 'close'" :color="col.value ? 'green' : 'red'" size="25px"/>
                                         </div>
                                     </template>
 
-                                    <template v-if="col.name === 'checkAvailability'">
+                                    <template v-if="col.name === 'isHomeService'">
                                         <div class="text-center">
-                                            <q-icon name="close" color="red" size="25px"/>
+                                            <q-icon :name="col.value ? 'check' : 'close'" :color="col.value ? 'green' : 'red'" size="25px"/>
                                         </div>
                                     </template>
 
@@ -163,8 +163,8 @@
             price: 10.20,
             serviceCode: 1,
             category: 'Teste',
-            checkAvailability: false,
-            isHomeService: false
+            isHomeService: false,
+            checkAvailability: true
         }
     ]);
 
