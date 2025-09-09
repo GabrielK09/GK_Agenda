@@ -1,5 +1,5 @@
 <template>
-    <q-page>
+    <q-page padding>
         <section class="text-xl" v-if="!serviceManagement">
             <div
                 class="m-2"
@@ -15,9 +15,7 @@
                             label="Cadastrar novo serviço"
                         
                         />
-
                     </div>
-
                 </div>
 
                 <div class="">

@@ -9,9 +9,9 @@
                         'grid grid-cols-3 ml-12 mr-12': width > 1000,
                     }"
                 >
-                    <div class="card-1 m-2">
-                        <div class="p-6 bg-blue-500 text-white rounded-lg max-w-[45vh] max-h-auto">
-                            <span>Totais de atendimentos realizados:</span>
+                    <div class="card-1 m-2 flex ">
+                        <div class="p-6 bg-blue-500 text-white rounded-lg w-[45vh]">
+                            <span>Totais de atendimentos:</span>
                             
                             <span class="flex"><div class="bg-white w-1 h-4 mt-4 mr-3"></div><span class="mt-3">{{ 0 }}</span></span>
                         </div>
@@ -22,7 +22,7 @@
                     </div>
 
                     <div class="card-2 m-2">
-                        <div class="p-6 bg-sky-400 text-white rounded-lg w-[45vh] max-h-auto">
+                        <div class="p-6 bg-sky-400 text-white rounded-lg w-[45vh] ">
                             <span>Faturamento total:</span>
                             
                             <span class="flex"><div class="bg-white w-1 h-4 mt-4 mr-3"></div><span class="mt-3">R$ 0,00</span></span>
@@ -35,7 +35,7 @@
                     </div>    
                     
                     <div class="card-3 m-2">
-                        <div class="p-6 bg-sky-500 text-white rounded-lg w-[45vh] max-h-auto">
+                        <div class="p-6 bg-sky-500 text-white rounded-lg w-[45vh]">
                             <span>Média:</span>
 
                             <span class="flex "><div class="bg-white w-1 h-4 mt-4 mr-3"></div><span class="mt-3">R$ 0,00</span></span>
