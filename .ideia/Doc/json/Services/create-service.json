@@ -1,0 +1,10 @@
+{
+    "ownerCode": "1",
+    "categoryCode": "",
+    "name": "Corte de cabelo",
+    "price": 21.30,
+    "description": "Serviço para corte de cabelo",
+    "duration": "",
+    "isHomeService": "",
+    "checkAvailability" : ""
+}
