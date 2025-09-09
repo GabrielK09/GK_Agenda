@@ -19,10 +19,10 @@
 
             <Links/>
 
-            <div class="fixed ml-16 bottom-0 mb-2 ">
+            <div class="fixed ml-16 bottom-0 mb-2">
                 <span
                     class="p-2 rounded-md cursor-pointer"
-                    @click="logout"
+                    @click="confirm"
                 >
                     Sair
                 </span>
@@ -38,15 +38,29 @@
 <script setup lang="ts">
     import Links from 'src/components/LinksSideBar/Links.vue';
     import { onMounted, ref } from 'vue';
-    import { LocalStorage } from 'quasar';
+    import { LocalStorage, useQuasar } from 'quasar';
     import { api } from 'src/boot/axios';
     import { useRouter } from 'vue-router';
 
+    const $q = useQuasar();
     const router = useRouter();
     const width = LocalStorage.getItem("width") as number;
 
     let surprise = ref<boolean>(true);
     let drawerLeft = ref<boolean>(true);
+
+    const confirm = () => {
+        $q.dialog({
+            title: 'Confirme',
+            message: 'Deseja realmente sair?',
+            cancel: true,
+            persistent: true
+        }).onOk(() => {
+            logout();
+        }).onCancel(() => {
+            return;
+        });;
+    }
 
     const logout = async () => {
         const res = await api.post('/auth/logout');
@@ -55,6 +69,7 @@
             LocalStorage.remove("authToken");
             LocalStorage.remove("siteName");            
             LocalStorage.remove("lastCheck"); 
+            LocalStorage.remove("lastURL"); 
 
             router.replace({ path: '/' });   
         };
@@ -65,3 +80,9 @@
 
     });
 </script>
+
+<style>
+    body {
+        background-color: #f5f5f5;
+    }
+</style>

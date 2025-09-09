@@ -28,6 +28,7 @@
 <script setup lang="ts">
     import { LocalStorage } from 'quasar';
     import { onMounted, reactive, ref } from 'vue';
+    import { useRouter } from 'vue-router';
 
     interface ILinks {
         icon: string,
@@ -37,6 +38,7 @@
         url: string
     };
 
+    const router = useRouter();
     const siteName = ref(LocalStorage.getItem("siteName") as string);
 
     let links: ILinks[] = reactive([
@@ -55,12 +57,13 @@
         LocalStorage.set("lastCheck", i);
 
         links.map(link => {
-            if(link.position === i) link.marked = true;
+            if(link.position === i) link.marked = true, LocalStorage.set("lastURL", link.url);
             if(link.position !== i) link.marked = false;
         });
     };
 
-    onMounted(() => {
+    onMounted(() => {;
+        router.replace({ path: LocalStorage.getItem("lastURL") as string })
         links.map(link => {
             if(link.position === LocalStorage.getItem("lastCheck")) link.marked = true;
             if(link.position !== LocalStorage.getItem("lastCheck")) link.marked = false;

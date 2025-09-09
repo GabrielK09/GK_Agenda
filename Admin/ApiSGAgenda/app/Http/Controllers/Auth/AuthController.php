@@ -81,13 +81,13 @@ class AuthController extends Controller
 
             } else {
                 Log::info('As senhas não são iguais');
-                return apiError('As senhas não são iguais');
+                return apiError('Credencias incorretas!');
                 
             }
             return apiError("E-mail: {$data['email']} não localizado na base de dados");
         } else {
             Log::info('As senhas não são iguais');
-            return apiError('As senhas não são iguais');
+            return apiError('Credencias incorretas!');
 
         }
     }

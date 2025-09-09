@@ -1,6 +1,6 @@
 <template>
-    <q-page >
-        <section class="text-xl">
+    <q-page>
+        <section class="text-xl" v-if="!serviceManagement">
             <div
                 class="m-2"
             >
@@ -22,6 +22,7 @@
 
                 <div class="">
                     <q-table
+                        borded
                         :rows="allServices"
                         :columns="columns"
                         row-key="name"
@@ -43,7 +44,6 @@
                             </q-input>
                         </template>
 
-
                         <template v-slot:body="props">
                             <q-tr
                                 :props="props"
@@ -52,16 +52,20 @@
                                     v-for="(col, i) in props.cols"
                                 >
                                     <template v-if="col.name === 'actions'">
-                                        <q-btn color="primary" icon="check" label="OK" @click="" />
+                                        <div class="text-center">
+                                            <q-btn no-caps color="black" icon="edit" flat @click=""/>
+                                            <q-btn no-caps color="red" icon="delete" flat @click=""/>
+
+                                        </div>
                                     </template>
 
-                                    <template v-if="col.name === 'checkAvailability'">
+                                    <template v-else-if="col.name === 'checkAvailability'">
                                         <div class="text-center">
                                             <q-icon :name="col.value ? 'check' : 'close'" :color="col.value ? 'green' : 'red'" size="25px"/>
                                         </div>
                                     </template>
 
-                                    <template v-if="col.name === 'isHomeService'">
+                                    <template v-else-if="col.name === 'isHomeService'">
                                         <div class="text-center">
                                             <q-icon :name="col.value ? 'check' : 'close'" :color="col.value ? 'green' : 'red'" size="25px"/>
                                         </div>
@@ -73,9 +77,7 @@
 
                                         </div>
                                     </template>
-
                                 </q-td>
-
                             </q-tr>
                         </template>
 
@@ -91,6 +93,9 @@
                 </div>
             </div>
         </section>
+        <ServiceManagement
+            v-if="serviceManagement"
+        />
     </q-page>
 </template>
 
@@ -98,6 +103,7 @@
     import { api } from 'src/boot/axios';
     import { LocalStorage, QTableColumn } from 'quasar';
     import { onMounted, ref } from 'vue';
+    import ServiceManagement from 'src/components/App/ServiceManagement/ServiceManagement.vue';
 
     interface Services {
         serviceCode: number,
@@ -170,6 +176,7 @@
 
     let services = ref<Services[]>([]);
     let searchInput = ref<string>('');
+    let serviceManagement = ref<boolean>(false);
 
     function formatVal(val: number | string) 
     {    
@@ -185,7 +192,7 @@
     };
 
     const showServiceManagement = () => {
-        
+        serviceManagement.value = !serviceManagement.value;
     };
 
     onMounted(() => {
