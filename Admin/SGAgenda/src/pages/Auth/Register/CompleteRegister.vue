@@ -92,8 +92,8 @@
                             </q-input>
                         </div>        
                         
-                        <div class="w-40 ml-auto mr-auto">
-                            <q-btn label="Finalizar cadastro" type="submit" class="w-full" color="primary"/>
+                        <div class="w-max ml-auto mr-auto">
+                            <q-btn no-caps label="Cadastrar empresa" type="submit" class="w-full" color="primary"/>
                             
                         </div>
                     </q-form>

@@ -222,6 +222,14 @@
     let showConfirm = ref<boolean>(false);
 
     const registerOwner = async () => {
+        $q.notify({
+            color: 'green',
+            message: 'Realizando cadastro ...',
+            position: 'top',
+            timeout: 2000
+
+        });
+
         const payload: Owner = {
             email: owner.value.email,
             name: owner.value.name,

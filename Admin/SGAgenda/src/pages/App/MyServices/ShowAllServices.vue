@@ -93,6 +93,7 @@
         </section>
         <ServiceManagement
             v-if="serviceManagement"
+            @close="serviceManagement = !$event"
         />
     </q-page>
 </template>

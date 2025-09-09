@@ -92,6 +92,12 @@
     });
 
     const makeSiteURL = async () => {
+        $q.notify({
+            color: 'green',
+            message: 'Verificando URL ...',
+            position: 'top',
+            timeout: 1200
+        });
         console.log('Endereço a ser salvo: ', prefix);
         console.log('Endereço urlName: ', informedURL.value);
 
@@ -101,27 +107,38 @@
             url: prefix
         };
 
-        const res = await api.post('/site/create-url', payload, {
-            headers: {
-                Accept: 'application/json'
-            }
-        });
+        try {
+            const res = await api.post('/site/create-url', payload, {
+                headers: {
+                    Accept: 'application/json'
+                }
+            });
 
-        const data = res.data;
+            const data = res.data;
 
-        console.log(data);
+            console.log(data);
 
-        if(data.success)
-        {
+            if(data.success)
+            {
+                $q.notify({
+                    color: 'green',
+                    message: data.message,
+                    position: 'top',
+                    timeout: 1200
+                });
+
+                router.replace({ path: '/login' });
+                
+            };
+            
+        } catch (error: any) {
             $q.notify({
                 color: 'green',
-                message: data.message,
+                message: error.reponse?.data.message || error.reponse?.message,
                 position: 'top',
                 timeout: 1200
             });
-
-            router.replace({ path: '/login' });
-            
-        };
+            console.error('Erro: ', error);
+        };      
     };
 </script>

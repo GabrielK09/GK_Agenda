@@ -1,6 +1,6 @@
 <template>
     <q-layout view="hHr LpR lFf">
-        <q-btn @click="drawerLeft = !drawerLeft" flat class="p-4 rounded btn-menu" icon="menu" />
+        <q-btn @click="drawerLeft = !drawerLeft" flat class="rounded btn-menu" icon="menu" />
 
         <q-drawer
             v-model="drawerLeft"
@@ -8,7 +8,7 @@
             :width="210"
             class="bg-[#03202e] text-white rounded-r-md"
         >
-            <q-toolbar class="mt-8">
+            <q-toolbar class="mt-8" v-if="width > 1100">
                 <img
                     class="rounded mb-4"  
                     :src="surprise ? '../../public/images/GK_agenda.png' : '../../public/images/logo-branca.png'"
@@ -19,7 +19,7 @@
 
             <Links/>
 
-            <div class="fixed ml-16 bottom-0 mb-2">
+            <div class="fixed ml-16 mt-4 bottom-0 mb-2">
                 <span
                     class="p-2 rounded-md cursor-pointer"
                     @click="confirm"
@@ -53,12 +53,25 @@
         $q.dialog({
             title: 'Confirme',
             message: 'Deseja realmente sair?',
-            cancel: true,
-            persistent: true
+            
+            cancel: {
+                push: true,
+                label: 'Não',
+                color: 'red',
+            },
+
+            ok: {
+                push: true,
+                label: 'Sim',
+                color: 'green',
+            },
+
         }).onOk(() => {
             logout();
+
         }).onCancel(() => {
             return;
+
         });;
     }
 
