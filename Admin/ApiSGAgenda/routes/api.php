@@ -2,7 +2,8 @@
 
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Owner\OwnerController;
-use App\Http\Controllers\Site\SiteController;
+use App\Http\Controllers\Site\ServicesManagementController;
+use App\Http\Controllers\Site\SiteManagementController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('/v1')->group(function() {
@@ -15,10 +16,13 @@ Route::prefix('/v1')->group(function() {
     });
 
     Route::prefix('/site')->group(function() {
-        Route::post('/create-url', [SiteController::class, 'createURL']);
+        Route::post('/create-url', [SiteManagementController::class, 'createURL']);
 
     });
 
     Route::middleware('auth:sanctum')->group(function() {
+        Route::prefix('/services')->group(function() {
+            Route::post('/create', [ServicesManagementController::class, 'create']); 
+        });
     });
 });

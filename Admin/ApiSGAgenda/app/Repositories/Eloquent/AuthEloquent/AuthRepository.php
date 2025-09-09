@@ -12,10 +12,10 @@ class AuthRepository implements AuthInterface {
     public function firstRegisterOwner(array $data)
     {
         $transaction = DB::transaction(function() use ($data) {
-            $lastOwner = Owner::max('owner_code');
+            $maxCode = Owner::max('owner_code');
             
             $owner = Owner::create([
-                'owner_code' => $lastOwner ? $lastOwner + 1 : 1, 
+                'owner_code' => $maxCode ? $maxCode + 1 : 1, 
                 'name' => $data['name'],  
                 'email' => $data['email'],  
                 'phone' => $data['phone'], 

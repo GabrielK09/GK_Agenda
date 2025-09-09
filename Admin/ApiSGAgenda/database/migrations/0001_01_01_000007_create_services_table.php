@@ -17,9 +17,9 @@ return new class extends Migration
             $table->unsignedBigInteger('owner_code');
             $table->foreign('owner_code')->references('owner_code')->on('owners')->restrictOnDelete();
 
-            $table->unsignedBigInteger('category_code');
+            $table->unsignedBigInteger('category_code')->nullable();
             $table->foreign('category_code')->references('category_code')->on('categories')->restrictOnDelete();
-            $table->string('category', 120); 
+            $table->string('category', 120)->nullable();
 
             $table->string('name', 120); 
             $table->float('price', 16.2);

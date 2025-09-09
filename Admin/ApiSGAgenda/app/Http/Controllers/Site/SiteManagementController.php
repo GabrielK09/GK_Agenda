@@ -5,10 +5,9 @@ namespace App\Http\Controllers\Site;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Site\CreateURLSiteRequest;
 use App\Services\URLService\URLService;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
-class SiteController extends Controller
+class SiteManagementController extends Controller
 {
     public function __construct(
         protected URLService $uRLService
