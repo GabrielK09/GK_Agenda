@@ -22,6 +22,8 @@ Route::prefix('/v1')->group(function() {
 
     Route::middleware('auth:sanctum')->group(function() {
         Route::prefix('/services')->group(function() {
+            Route::get('/all/{id}', [ServicesManagementController::class, 'getAll']); 
+            Route::get('/find/{owner_code}/{service_code}', [ServicesManagementController::class, 'findByID']); 
             Route::post('/create', [ServicesManagementController::class, 'create']); 
         });
     });

@@ -19,9 +19,9 @@
 
             <Links/>
 
-            <div class="fixed ml-16 mt-4 bottom-0 mb-2">
+            <div class="fixed mt-5 bottom-0 mb-2 bg-[#03202e] w-full ml-auto text-center">
                 <span
-                    class="p-2 rounded-md cursor-pointer"
+                    class="p-2 rounded-md cursor-pointer "
                     @click="confirm"
                 >
                     Sair

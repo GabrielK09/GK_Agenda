@@ -16,6 +16,7 @@ class Servicee extends Model
         'name',
         'price',
         'description',
+        'duration_string',
         'duration',
         'is_home_service', 
         'check_availability', 

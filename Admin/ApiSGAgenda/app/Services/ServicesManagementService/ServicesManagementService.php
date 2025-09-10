@@ -2,29 +2,47 @@
 
 namespace App\Services\ServicesManagementService;
 
+use App\Repositories\Eloquent\ServicesManagementEloquent\ServicesManagementRepository;
 use Exception;
 
 class ServicesManagementService 
 {
     public function __construct(
-        protected ServicesManagementService $servicesManagementService
+        protected ServicesManagementRepository $servicesManagementRepository
     ){}
 
-    public function getAll(int $id): array
-    {
+    public function getAll(int $id)
+    {           
+        $allServices = $this->servicesManagementRepository->getAll($id);
         
-        return [];
-        
+        if(!$allServices)
+        {
+            throw new Exception("Erro ao localizar todos os serviços!", 1);
+        }
+
+        return $allServices;
     }  
 
     public function create(array $data)
     {
-        $service = $this->servicesManagementService->create($data);
+        $service = $this->servicesManagementRepository->create($data);
 
         if(!$service)
         {
             throw new Exception("Erro ao cadastrar o serviço", 1);
         }
+
+        return $service;
+    }
+
+    public function findByID(int $ownerCode, int $serviceCode)
+    {
+        $service = $this->servicesManagementRepository->findByID($ownerCode, $serviceCode);
+
+        if(!$service)
+        {
+            throw new Exception("Erro ao buscar o produto: {$service}", 1);
+        };
 
         return $service;
     }

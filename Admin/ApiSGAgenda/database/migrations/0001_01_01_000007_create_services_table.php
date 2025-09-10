@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('name', 120); 
             $table->float('price', 16.2);
             $table->text('description');
+            $table->string('duration_string', 120);
             $table->string('duration', 120);
             $table->boolean('is_home_service', 1)->default(0)->nullable();
             $table->boolean('check_availability', 1)->default(0)->nullable();

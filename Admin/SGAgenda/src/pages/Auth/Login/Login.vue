@@ -165,6 +165,7 @@
                 LocalStorage.set("authToken", data.token);
                 LocalStorage.set("isAttendant", data.isAttendant);
                 LocalStorage.set("siteName", data.siteName);
+                LocalStorage.set("ownerCode", data.ownerCode);
 
                 LocalStorage.set("lastCheck", 0);
 

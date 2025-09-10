@@ -21,7 +21,8 @@
                     </div>
 
                     <div class="ml-auto mr-14">
-                        <q-btn 
+                        <q-btn  
+                            no-caps
                             :style="`background-color: rgb(59 130 200 / var(--tw-bg-opacity, 1))`"
                             class="mr-4"
                             label="Criar conta"
@@ -29,6 +30,7 @@
                         />
 
                         <q-btn 
+                            no-caps
                             :style="`background-color: #fff`"
                             class="text-blue-600"
                             label="Entrar"
@@ -61,6 +63,7 @@
                             </div>
 
                             <q-btn 
+                                no-caps
                                 :style="`background-color: rgb(59 130 200 / var(--tw-bg-opacity, 1))`"
                                 class="mb-2 mt-2 flex justify-center text-white"
                                 label="Criar conta"
@@ -68,6 +71,7 @@
                             />  
 
                             <q-btn 
+                                no-caps
                                 :style="`background-color: #fff`"
                                 class="text-blue-600 mt-2 mb-4"
                                 label="Entrar"

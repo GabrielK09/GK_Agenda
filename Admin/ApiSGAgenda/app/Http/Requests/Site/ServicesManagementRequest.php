@@ -24,10 +24,11 @@ class ServicesManagementRequest extends FormRequest
     {
         return [
             'ownerCode' => ['required'],
-            'categoryCode' => ['required'],
+            'categoryCode' => ['nullable'],
             'name' => ['required', 'string'],
             'price' => ['required', 'numeric'],
             'description' => ['required', 'string'],
+            'durationString' => ['required'],
             'duration' => ['required'],
             'isHomeService' => ['required'],
             'checkAvailability' => ['required'],

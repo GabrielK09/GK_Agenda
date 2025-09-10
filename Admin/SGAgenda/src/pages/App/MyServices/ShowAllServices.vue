@@ -11,7 +11,7 @@
                         <q-btn 
                             no-caps 
                             class="bg-sky-500 text-white" 
-                            @click="showServiceManagement" 
+                            @click="showServiceManagement('create', undefined)" 
                             label="Cadastrar novo serviço"
                         
                         />
@@ -51,8 +51,8 @@
                                 >
                                     <template v-if="col.name === 'actions'">
                                         <div class="text-center">
-                                            <q-btn no-caps color="black" icon="edit" flat @click=""/>
-                                            <q-btn no-caps color="red" icon="delete" flat @click=""/>
+                                            <q-btn size="10px" no-caps color="black" icon="edit_square" flat @click="showServiceManagement('update', props.row.serviceCode)"/>
+                                            <q-btn size="10px" no-caps color="red" icon="delete" flat @click="deleteService(props.row.serviceCode)"/>
 
                                         </div>
                                     </template>
@@ -94,6 +94,9 @@
         <ServiceManagement
             v-if="serviceManagement"
             @close="serviceManagement = !$event"
+            :action="action"
+            :service-code="selectedServiceCode"
+
         />
     </q-page>
 </template>
@@ -103,6 +106,7 @@
     import { LocalStorage, QTableColumn } from 'quasar';
     import { onMounted, ref } from 'vue';
     import ServiceManagement from 'src/components/App/ServiceManagement/ServiceManagement.vue';
+    import camelcaseKeys from 'camelcase-keys';
 
     interface Services {
         serviceCode: number,
@@ -162,20 +166,14 @@
         }
     ];
 
-    let allServices = ref<Services[]>([
-        {
-            name: 'Teste',
-            price: 10.20,
-            serviceCode: 1,
-            category: 'Teste',
-            isHomeService: false,
-            checkAvailability: true
-        }
-    ]);
-
+    let allServices = ref<Services[]>([]);
     let services = ref<Services[]>([]);
+
     let searchInput = ref<string>('');
     let serviceManagement = ref<boolean>(false);
+
+    let action = ref<string>('');
+    let selectedServiceCode = ref<number|undefined>(0);
 
     function formatVal(val: number | string) 
     {    
@@ -186,11 +184,35 @@
         }).format(num);
     };
 
+    const search = () => {
+        
+    };
+
     const getAllServices = async () => {
+        try {
+            const res = await api.get(`/services/all/${ownerCode}`);
+            const data = camelcaseKeys(res.data.data, { deep: true });
+            services.value = data;
+            allServices.value = [...services.value];
+            
+        } catch (error) {
+            console.error('Erro: ', error);
+        };
+    };
+
+    const editService = (id: number) => {
+        console.log(id);
 
     };
 
-    const showServiceManagement = () => {
+    const deleteService = (id: number) => {
+        console.log(id);
+
+    };
+
+    const showServiceManagement = (management: string, serviceCode:number|undefined) => {
+        action.value = management;
+        selectedServiceCode.value = serviceCode;
         serviceManagement.value = !serviceManagement.value;
     };
 

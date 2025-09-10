@@ -13,6 +13,11 @@ class ServicesManagementController extends Controller
         protected ServicesManagementService $servicesManagementService
     ){}
 
+    public function getAll(int $id)
+    {
+        return apiSuccess('Retornando todos os serviços!', $this->servicesManagementService->getAll($id));        
+    }
+
     public function create(ServicesManagementRequest $request) 
     {
         return apiSuccess(
@@ -20,11 +25,11 @@ class ServicesManagementController extends Controller
             $this->servicesManagementService->create($request->validated())
             
         );
-
     }
 
-    public function findByID(int $id)
+    public function findByID(int $ownerCode, int $serviceCode)
     {
+        return apiSuccess('Serviço encontrado!', $this->servicesManagementService->findByID($ownerCode, $serviceCode));
 
     }
 
