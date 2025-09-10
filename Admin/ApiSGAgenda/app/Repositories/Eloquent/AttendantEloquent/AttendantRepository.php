@@ -22,9 +22,9 @@ class AttendantRepository {
         return $attendant;
     }
 
-    public function findByID(int $id)
+    public function findByID(int $ownerCode, int $attendantCode)
     {
-        return Attendant::where('id', $id)->first();
+        return Attendant::where('id', $attendantCode)->first();
     }
 
     public function findByMail(string $mail)
@@ -32,10 +32,10 @@ class AttendantRepository {
         return Attendant::where('email', $mail)->first();
     }
 
-    public function update(array $data, int $id)
+    public function update(array $data, int $attendantCode)
     {
-        $id = DB::transaction(function () use ($data, $id) {
-            $attendant = $this->findByID($id);
+        $id = DB::transaction(function () use ($data, $attendantCode) {
+            $attendant = $this->findByID($data['ownerCode'], $attendantCode);
             
             return $attendant;
         });
