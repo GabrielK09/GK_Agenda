@@ -27,11 +27,6 @@ class OwnerService {
     {
         $owner = $this->ownerRepository->findByMail($mail);
 
-        if (!$owner) {
-            return null;
-
-        }
-        
         return $owner;   
     }
 

@@ -37,6 +37,7 @@ class AuthController extends Controller
         $owner = $this->ownerService->findByMail($data['email']);
 
         $password = $data['password'];
+        Log::info($owner);
 
         if($owner && Hash::check($password, $owner->password))
         {
@@ -59,8 +60,10 @@ class AuthController extends Controller
         } else if (!$owner) {
             Log::info("E-mail: {$data['email']} não localizado na base de dados");
             Log::info("Conferindo se não é um atendente...");
+
             $attendant = $this->attendantService->findByMail($data['email']);
-            
+            Log::info($attendant);
+
             if($attendant && Hash::check($password, $attendant->password)) 
             {
                 Auth::login($attendant);
@@ -78,22 +81,31 @@ class AuthController extends Controller
 
                 ]);
 
-            } else if ($attendant) {
-                Log::warning("E-mail: {$data['email']} também não localizado na base de dados");
-                throw new Exception("E-mail: {$data['email']} não localizado na base de dados");
+            } else if (!$attendant) {
+                return response()->json([
+                    'success' => false,
+                    'message' => "Usuário não cadastrado!"
+                ]);
 
             } else {
-                Log::warning('As senhas não são iguais');
-                throw new Exception('Credencias incorretas!');
-                
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Credencias incorretas'
+                ]);
             }
+
             Log::warning('Não está cadastrado');
-            throw new Exception("E-mail: {$data['email']} não localizado na base de dados");
+            return response()->json([
+                'success' => false,
+                'message' => 'Credencias incorretas!'
+            ]);
             
         } else {
             Log::warning('As senhas não são iguais');
-            throw new Exception('Credencias incorretas!');
-
+            return response()->json([
+                'success' => false,
+                'message' => 'Credencias incorretas!'
+            ]);
         }
     }
 

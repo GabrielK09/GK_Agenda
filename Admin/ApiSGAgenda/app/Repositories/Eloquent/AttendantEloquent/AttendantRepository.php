@@ -29,7 +29,14 @@ class AttendantRepository {
 
     public function findByMail(string $mail)
     {
-        return Attendant::where('email', $mail)->first();
+        $attendant = Attendant::where('email', $mail)->first();
+        if(!$attendant)
+        {
+            return null;
+
+        }
+        
+        return $attendant;
     }
 
     public function update(array $data, int $attendantCode)

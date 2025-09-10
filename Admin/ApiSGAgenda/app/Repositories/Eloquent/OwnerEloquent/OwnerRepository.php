@@ -16,7 +16,14 @@ class OwnerRepository implements OwnerInterface {
 
     public function findByMail(string $mail)
     {
-        return Owner::where('email', $mail)->first();
+        $owner = Owner::where('email', $mail)->first();
+
+        if(!$owner)
+        {
+            return null;
+        }
+        
+        return $owner;
     }
 
     public function update(array $data, int $id)

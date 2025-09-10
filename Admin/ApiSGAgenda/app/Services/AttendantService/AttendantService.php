@@ -24,14 +24,14 @@ class AttendantService {
 
     public function findByMail(string $mail)
     {
-        $owner = $this->attendantRepository->findByMail($mail);
+        $attendant = $this->attendantRepository->findByMail($mail);
 
-        if (!$owner) {
-            throw new Exception("Erro ao localizar o proprietário por e-mail!", 1);
+        if (!$attendant) {
+            return null;
 
         }
         
-        return $owner;   
+        return $attendant;   
     }
 
     public function update(array $data, int $id) 
