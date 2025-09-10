@@ -24,6 +24,7 @@ export default defineBoot(({ app, router }) => {
                 '/auth/login',
 
             ];
+
             const isPublic = publicRoutes.some(route => config.url?.includes(route));
 
             const token = LocalStorage.getItem("authToken");
@@ -49,7 +50,26 @@ export default defineBoot(({ app, router }) => {
 
             return config;
         }
-    )
+    );
+
+    api.interceptors.response.use(
+        (response) => response,
+        (config) => {
+            if (config.status === 401) {
+                app.config.globalProperties.$q.notify({
+                    color: 'red',
+                    message: 'O usuário não está logado!',
+                    position: 'top',
+                    timeout: 2000
+                    
+                });
+
+                router.replace({
+                    path: '/login'
+                });
+            };
+        }
+    );
 
     app.config.globalProperties.$axios = axios;
   

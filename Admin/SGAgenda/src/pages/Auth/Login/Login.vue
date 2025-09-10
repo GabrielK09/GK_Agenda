@@ -113,7 +113,7 @@
 <script setup lang="ts">
     import { LocalStorage, useQuasar } from 'quasar';
     import { api } from 'src/boot/axios';
-    import { ref } from 'vue';
+    import { onMounted, ref } from 'vue';
     import { useRouter } from 'vue-router';
     import ShowPassword from 'src/components/ShowPassword/ShowPassword.vue';
 
@@ -185,4 +185,10 @@
         };
     };
 
+    onMounted(() => {
+        LocalStorage.remove("authToken");
+        LocalStorage.remove("siteName");            
+        LocalStorage.remove("lastCheck"); 
+        LocalStorage.remove("lastURL"); 
+    });
 </script>

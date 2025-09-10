@@ -52,7 +52,7 @@
                                     <template v-if="col.name === 'actions'">
                                         <div class="text-center">
                                             <q-btn size="10px" no-caps color="black" icon="edit_square" flat @click="showServiceManagement('update', props.row.serviceCode)"/>
-                                            <q-btn size="10px" no-caps color="red" icon="delete" flat @click="deleteService(props.row.serviceCode)"/>
+                                            <q-btn size="10px" no-caps color="red" icon="delete" flat @click="showDialogDeleteService(props.row.serviceCode)"/>
 
                                         </div>
                                     </template>
@@ -93,7 +93,7 @@
         </section>
         <ServiceManagement
             v-if="serviceManagement"
-            @close="serviceManagement = !$event"
+            @close="attPage($event)"
             :action="action"
             :service-code="selectedServiceCode"
 
@@ -103,7 +103,7 @@
 
 <script setup lang="ts">
     import { api } from 'src/boot/axios';
-    import { LocalStorage, QTableColumn } from 'quasar';
+    import { LocalStorage, QTableColumn, useQuasar } from 'quasar';
     import { onMounted, ref } from 'vue';
     import ServiceManagement from 'src/components/App/ServiceManagement/ServiceManagement.vue';
     import camelcaseKeys from 'camelcase-keys';
@@ -117,6 +117,7 @@
         checkAvailability: boolean
     };
 
+    const $q = useQuasar();
     const ownerCode = LocalStorage.getItem("ownerCode") as number;
     const width = LocalStorage.getItem("width") as number;
 
@@ -200,13 +201,33 @@
         };
     };
 
-    const editService = (id: number) => {
-        console.log(id);
+    const showDialogDeleteService = (serviceCode: number) => {
+        $q.dialog({
+            title: 'Excluir serviço',
+            message: `Deseja realmente remover esse serviço (${serviceCode})?`,
+            cancel: {
+                push: true,
+                label: 'Não',
+                color: 'red',
+            },
 
+            ok: {
+                push: true,
+                label: 'Sim',
+                color: 'green',
+            },
+
+        }).onOk(() => {
+            deleteService(serviceCode);
+
+        }).onCancel(() => {
+            return;
+        });
     };
 
-    const deleteService = (id: number) => {
-        console.log(id);
+    const deleteService = async (serviceCode: number) => {
+        const res = await api.delete(`/services/delete/${ownerCode}/${serviceCode}`);
+        console.log(res.data);
 
     };
 
@@ -214,6 +235,11 @@
         action.value = management;
         selectedServiceCode.value = serviceCode;
         serviceManagement.value = !serviceManagement.value;
+    };
+
+    const attPage = (event: boolean) => {
+        serviceManagement.value = !event;
+        getAllServices();
     };
 
     onMounted(() => {

@@ -215,8 +215,8 @@
             isHomeService: data.isHomeService ? true : false,
             checkAvailability: data.checkAvailability ? true : false,
             description: data.description,
-            durationString: data.duration.toString().replace(/\D/g, ''),
-            duration: data.duration.toString().replace(/\D/g, ''),
+            durationString: data.durationString,
+            duration: data.durationString,
             name: data.name,
             ownerCode: data.ownerCode,
             price: data.price
@@ -257,7 +257,7 @@
         };
     
         try {
-            console.log(payload);
+            console.log('payload:', payload);
 
             if(props.action === 'create' && props.serviceCode === undefined)
             {
@@ -279,7 +279,20 @@
 
             if(props.action === 'update' && props.serviceCode !== undefined)
             {
-                // const res = await api.put('');
+                const res = await api.put(`/services/update/${ownerCode}/${props.serviceCode}`, payload);
+                const data = res.data;
+                if(data.success)
+                {
+                    $q.notify({
+                        color: 'green',
+                        message: 'Serviço alterado com sucesso!',
+                        position: 'top',
+                        timeout: 1200
+
+                    });
+
+                    emits('close', true);
+                };
             };
         } catch (error) {
             console.error('Erro:', error);
