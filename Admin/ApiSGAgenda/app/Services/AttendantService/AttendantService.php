@@ -10,9 +10,9 @@ class AttendantService {
         protected AttendantRepository $attendantRepository
     ){}
 
-    public function findByID(int $id)
+    public function findByID(int $ownerCode, int $id)
     {
-        $owner = $this->attendantRepository->findByID($id);
+        $owner = $this->attendantRepository->findByID($ownerCode, $id);
 
         if (!$owner) {
             throw new Exception("Erro ao localizar o proprietário!", 1);

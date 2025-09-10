@@ -11,8 +11,11 @@ use App\Services\AttendantService\AttendantService;
 use Illuminate\Support\Facades\Log;
 use App\Services\AuthService\AuthService;
 use App\Services\OwnerService\OwnerService;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+
+use function PHPUnit\Framework\isObject;
 
 class AuthController extends Controller
 {
@@ -30,11 +33,10 @@ class AuthController extends Controller
     public function auth(AuthLoginRequest $request) 
     {
         $data = $request->validated();
+        Log::info($data);
         $owner = $this->ownerService->findByMail($data['email']);
 
         $password = $data['password'];
-
-        Log::info("Login: {$owner->email}, senha: {$password}");
 
         if($owner && Hash::check($password, $owner->password))
         {
@@ -58,6 +60,7 @@ class AuthController extends Controller
             Log::info("E-mail: {$data['email']} não localizado na base de dados");
             Log::info("Conferindo se não é um atendente...");
             $attendant = $this->attendantService->findByMail($data['email']);
+            
             if($attendant && Hash::check($password, $attendant->password)) 
             {
                 Auth::login($attendant);
@@ -76,18 +79,20 @@ class AuthController extends Controller
                 ]);
 
             } else if ($attendant) {
-                Log::info("E-mail: {$data['email']} também não localizado na base de dados");
-                return apiError("E-mail: {$data['email']} não localizado na base de dados");
+                Log::warning("E-mail: {$data['email']} também não localizado na base de dados");
+                throw new Exception("E-mail: {$data['email']} não localizado na base de dados");
 
             } else {
-                Log::info('As senhas não são iguais');
-                return apiError('Credencias incorretas!');
+                Log::warning('As senhas não são iguais');
+                throw new Exception('Credencias incorretas!');
                 
             }
-            return apiError("E-mail: {$data['email']} não localizado na base de dados");
+            Log::warning('Não está cadastrado');
+            throw new Exception("E-mail: {$data['email']} não localizado na base de dados");
+            
         } else {
-            Log::info('As senhas não são iguais');
-            return apiError('Credencias incorretas!');
+            Log::warning('As senhas não são iguais');
+            throw new Exception('Credencias incorretas!');
 
         }
     }

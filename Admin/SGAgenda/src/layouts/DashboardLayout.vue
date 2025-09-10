@@ -76,6 +76,14 @@
     }
 
     const logout = async () => {
+        $q.notify({
+            color: 'green',
+            message: 'Saindo ...',
+            position: 'top',
+            timeout: 2000
+
+        });
+
         const res = await api.post('/auth/logout');
         if(res.data) 
         {

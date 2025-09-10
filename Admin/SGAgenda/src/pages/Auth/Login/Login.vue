@@ -142,16 +142,19 @@
             timeout: 1200
 
         });
+
         const payload: AuthData = {
             email: auth.value.email,
             password: auth.value.password
         };
 
         try {
+            console.log(payload);
             const res = await api.post('/auth/login', payload);
-            const data = res.data;
-            console.log(data);
+            console.log(res);
+            //const data = res.data;
 
+            /*
             if(data.success) 
             { 
                 $q.notify({
@@ -171,9 +174,9 @@
 
                 router.replace({ path: `/admin/${data.siteName}/dashboard` });
                 
-            };
+            };*/
         } catch (error: any) {
-            console.error(error);
+            console.error('Erro:', error);
 
             $q.notify({
                 color: 'red',

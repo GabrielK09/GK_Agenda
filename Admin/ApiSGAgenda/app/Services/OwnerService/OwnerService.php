@@ -28,7 +28,7 @@ class OwnerService {
         $owner = $this->ownerRepository->findByMail($mail);
 
         if (!$owner) {
-            throw new Exception("Erro ao localizar o proprietário por e-mail!", 1);
+            return null;
 
         }
         
