@@ -22,16 +22,17 @@ class ServicesManagementRequest extends FormRequest
      */
     public function rules(): array
     {
+        $required = $this->method('POST') ? 'required' : 'sometimes';
         return [
-            'ownerCode' => ['required'],
+            'ownerCode' => [$required],
             'categoryCode' => ['nullable'],
-            'name' => ['required', 'string'],
-            'price' => ['required', 'numeric'],
-            'description' => ['required', 'string'],
-            'durationString' => ['required'],
-            'duration' => ['required'],
-            'isHomeService' => ['required'],
-            'checkAvailability' => ['required'],
+            'name' => [$required, 'string'],
+            'price' => [$required, 'numeric'],
+            'description' => [$required, 'string'],
+            'durationString' => [$required],
+            'duration' => [$required],
+            'isHomeService' => [$required],
+            'checkAvailability' => [$required],
         ];
     }
 }

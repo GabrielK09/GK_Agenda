@@ -33,9 +33,9 @@ class ServicesManagementController extends Controller
 
     }
 
-    public function update(int $id)
+    public function update(ServicesManagementRequest $request, int $ownerCode, int $serviceCode)
     {
-        
+        return apiSuccess('Serviço alterado com sucesso!', $this->servicesManagementService->update($request->validated(), $ownerCode, $serviceCode));
     }
 
 }

@@ -37,7 +37,7 @@ class ServicesManagementRepository
                 'name' => $data['name'],
                 'price' => $data['price'],
                 'description' => $data['description'],
-                'duration_string' => $data['duration'],
+                'duration_string' => $data['durationString'],
                 'duration' => $data['duration'],
                 'is_home_service' => $data['isHomeService'],
                 'check_availability' => $data['checkAvailability'],
@@ -64,4 +64,36 @@ class ServicesManagementRepository
         
         return $service;
     }   
+
+    public function update(array $data, int $ownerCode, int $serviceCode)
+    {
+        $id = DB::transaction(function() use ($data, $ownerCode, $serviceCode) {
+            $service = $this->findByID($ownerCode, $serviceCode);
+            $category = Category::where('category_code', $data['categoryCode'])
+                                  ->where('owner_code', $data['ownerCode'])
+                                  ->first();
+
+            Log::alert('update service');
+            Log::alert($service);
+
+            if(!$service) return;
+            
+            $service->update([
+                'category_code' => $category->category_code ?? null,
+                'category' => $category->name ?? null,
+                'name' => $data['name'],
+                'price' => $data['price'],
+                'description' => $data['description'],
+                'duration_string' => $data['durationString'],
+                'duration' => $data['duration'],
+                'is_home_service' => $data['isHomeService'],
+                'check_availability' => $data['checkAvailability'],
+
+            ]);
+
+            return $service;
+        });
+
+        return $id;
+    }
 }

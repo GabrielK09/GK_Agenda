@@ -41,7 +41,19 @@ class ServicesManagementService
 
         if(!$service)
         {
-            throw new Exception("Erro ao buscar o produto: {$service}", 1);
+            throw new Exception("Erro ao buscar o serviço: {$service}", 1);
+        };
+
+        return $service;
+    }
+
+    public function update(array $data, int $ownerCode, int $serviceCode)
+    {
+        $service = $this->servicesManagementRepository->update($data, $ownerCode, $serviceCode);
+
+        if(!$service)
+        {
+            throw new Exception("Erro ao alterar o serviço: {$service}", 1);
         };
 
         return $service;

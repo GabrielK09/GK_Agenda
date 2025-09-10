@@ -24,6 +24,8 @@ Route::prefix('/v1')->group(function() {
         Route::prefix('/services')->group(function() {
             Route::get('/all/{id}', [ServicesManagementController::class, 'getAll']); 
             Route::get('/find/{owner_code}/{service_code}', [ServicesManagementController::class, 'findByID']); 
+            Route::put('/update/{owner_code}/{service_code}', [ServicesManagementController::class, 'update']); 
+            Route::delete('/delete/{owner_code}/{service_code}', [ServicesManagementController::class, 'delete ']); 
             Route::post('/create', [ServicesManagementController::class, 'create']); 
         });
     });
