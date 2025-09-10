@@ -5,7 +5,7 @@
                 class="m-2"
             >
                 <div class="flex justify-between">                    
-                    <h2 class="text-gray-600 m-2">Cadastrar serviço</h2>
+                    <h2 class="text-gray-600 m-2">Cadastrar um atendete</h2>
                 </div>
 
                 <div class="bg-white p-8 text-xs">
@@ -21,11 +21,6 @@
                             <span>
                                 Voltar para listagem
                             </span>
-                        </div>
-
-                        <div>
-                            <q-checkbox left-label v-model="service.isHomeService" label="Serviço a domicílio" />
-                            <q-checkbox left-label v-model="service.checkAvailability" label="Checar horários" />
                         </div>
                     </div>
 

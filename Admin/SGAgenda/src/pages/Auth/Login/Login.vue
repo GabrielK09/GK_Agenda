@@ -148,39 +148,36 @@
             password: auth.value.password
         };
 
-        try {
-            console.log(payload);
-            const res = await api.post('/auth/login', payload);
-            console.log(res);
-            //const data = res.data;
+        const res = await api.post('/auth/login', payload, {
+            headers: {
+                Accept: 'application/json'
+            }
+        });
+        const data = res.data;
+        console.log(data);
 
-            /*
-            if(data.success) 
-            { 
-                $q.notify({
-                    color: 'green',
-                    message: 'Login bem sucedido!',
-                    position: 'top',
-                    timeout: 1200
+        if(data.success) 
+        { 
+            $q.notify({
+                color: 'green',
+                message: 'Login bem sucedido!',
+                position: 'top',
+                timeout: 1200
 
-                });
+            });
 
-                LocalStorage.set("authToken", data.token);
-                LocalStorage.set("isAttendant", data.isAttendant);
-                LocalStorage.set("siteName", data.siteName);
-                LocalStorage.set("ownerCode", data.ownerCode);
+            LocalStorage.set("authToken", data.token);
+            LocalStorage.set("isAttendant", data.isAttendant);
+            LocalStorage.set("siteName", data.siteName);
+            LocalStorage.set("ownerCode", data.ownerCode);
+            LocalStorage.set("lastCheck", 0);
 
-                LocalStorage.set("lastCheck", 0);
-
-                router.replace({ path: `/admin/${data.siteName}/dashboard` });
-                
-            };*/
-        } catch (error: any) {
-            console.error('Erro:', error);
-
+            router.replace({ path: `/admin/${data.siteName}/dashboard` });
+            
+        } else {
             $q.notify({
                 color: 'red',
-                message: error.response?.data?.message,
+                message: data.message,
                 position: 'top',
                 timeout: 1200
 

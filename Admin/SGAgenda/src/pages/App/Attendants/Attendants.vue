@@ -1,18 +1,18 @@
 <template>
     <q-page padding>
-        <section class="text-xl" v-if="!serviceManagement">
+        <section class="text-xl" v-if="!attendantManagement">
             <div
                 class="m-2"
             >
                 <div class="flex justify-between">
-                    <h2 class="text-gray-600 m-2">Serviços</h2>
+                    <h2 class="text-gray-600 m-2">Atendentes</h2>
 
                     <div class="mt-auto mb-auto">
                         <q-btn 
                             no-caps 
                             class="bg-sky-500 text-white" 
-                            @click="showServiceManagement('create', undefined)" 
-                            label="Cadastrar novo serviço"
+                            @click="" 
+                            label="Cadastrar novo atendente"
                         
                         />
                     </div>
@@ -21,7 +21,7 @@
                 <div class="">
                     <q-table
                         borded
-                        :rows="allServices"
+                        :rows="allAttendant"
                         :columns="columns"
                         row-key="name"
                         class="rounded-xl"
@@ -37,7 +37,7 @@
                                     <q-icon name="search" />
                                 </template>
                                 <template v-slot:label>
-                                    <span class="text-xs">Buscar por um serviço ...</span>
+                                    <span class="text-xs">Buscar por um atendente ...</span>
                                 </template>
                             </q-input>
                         </template>
@@ -51,8 +51,8 @@
                                 >
                                     <template v-if="col.name === 'actions'">
                                         <div class="text-center">
-                                            <q-btn size="10px" no-caps color="black" icon="edit_square" flat @click="showServiceManagement('update', props.row.serviceCode)"/>
-                                            <q-btn size="10px" no-caps color="red" icon="delete" flat @click="showDialogDeleteService(props.row.serviceCode)"/>
+                                            <q-btn size="10px" no-caps color="black" icon="edit_square" flat @click=""/>
+                                            <q-btn size="10px" no-caps color="red" icon="delete" flat @click="(props.row.serviceCode)"/>
 
                                         </div>
                                     </template>
@@ -82,7 +82,7 @@
                         <template v-slot:no-data>
                             <div class="ml-auto mr-auto">
                                 <q-icon name="warning" size="30px"/>
-                                <span class="mt-auto mb-auto ml-2 text-xs">Sem serviços cadastrados</span>
+                                <span class="mt-auto mb-auto ml-2 text-xs">Sem atendentes cadastrados</span>
 
                             </div>
                         </template>
@@ -92,30 +92,20 @@
             </div>
         </section>
         
-        <ServiceManagement
-            v-if="serviceManagement"
-            @close="attPage($event)"
-            :action="action"
-            :service-code="selectedServiceCode"
-
-        />
+        
     </q-page>
 </template>
 
 <script setup lang="ts">
-    import { api } from 'src/boot/axios';
     import { LocalStorage, QTableColumn, useQuasar } from 'quasar';
     import { onMounted, ref } from 'vue';
-    import ServiceManagement from 'src/components/App/ServiceManagement/ServiceManagement.vue';
     import camelcaseKeys from 'camelcase-keys';
-
-    interface Services {
-        serviceCode: number,
+    
+    interface AttendantData {
+        attendantCode: number,
         name: string,
-        category: string,
-        price: number,
-        isHomeService: boolean,
-        checkAvailability: boolean
+        email: string,
+
     };
 
     const $q = useQuasar();
@@ -124,40 +114,21 @@
 
     const columns: QTableColumn[] = [
         {
-            name: 'serviceCode',
+            name: 'attendantCode',
             label: 'Cód',
-            field: 'serviceCode',
+            field: 'attendantCode',
             align: 'center'
         },
         {
             name: 'name',
-            label: 'Nome',
+            label: 'Atendente',
             field: 'name',
             align: 'center'
         },
         {
-            name: 'category',
-            label: 'Categoria',
-            field: 'category',
-            align: 'center'
-        },
-        {
-            name: 'price',
-            label: 'Preço',
-            field: 'price',
-            align: 'center',
-            format: formatVal
-        },
-        {
-            name: 'isHomeService',
-            label: 'A domícilio',
-            field: 'isHomeService',
-            align: 'center'
-        },
-        {
-            name: 'checkAvailability',
-            label: 'Checar a disponibilidade',
-            field: 'checkAvailability',
+            name: 'email',
+            label: 'E-mail',
+            field: 'email',
             align: 'center'
         },
         {
@@ -166,84 +137,13 @@
             field: 'actions',
             align: 'right'
         }
+        
     ];
 
-    let allServices = ref<Services[]>([]);
-    let services = ref<Services[]>([]);
+    let attendantManagement = ref<boolean>(false);
 
+    let allAttendant = ref<AttendantData[]>([]);
+    let attendants = ref<AttendantData[]>([]);
     let searchInput = ref<string>('');
-    let serviceManagement = ref<boolean>(false);
 
-    let action = ref<string>('');
-    let selectedServiceCode = ref<number|undefined>(0);
-
-    function formatVal(val: number | string) 
-    {    
-        const num = typeof val === 'string' ? parseFloat(val) : val;
-        return new Intl.NumberFormat('pt-BR', {
-            style: 'currency',
-            currency: 'BRL'
-        }).format(num);
-    };
-
-    const search = () => {
-        
-    };
-
-    const getAllServices = async () => {
-        try {
-            const res = await api.get(`/services/all/${ownerCode}`);
-            const data = camelcaseKeys(res.data.data, { deep: true });
-            services.value = data;
-            allServices.value = [...services.value];
-            
-        } catch (error) {
-            console.error('Erro: ', error);
-        };
-    };
-
-    const showDialogDeleteService = (serviceCode: number) => {
-        $q.dialog({
-            title: 'Excluir serviço',
-            message: `Deseja realmente remover esse serviço (${serviceCode})?`,
-            cancel: {
-                push: true,
-                label: 'Não',
-                color: 'red',
-            },
-
-            ok: {
-                push: true,
-                label: 'Sim',
-                color: 'green',
-            },
-
-        }).onOk(() => {
-            deleteService(serviceCode);
-
-        }).onCancel(() => {
-            return;
-        });
-    };
-
-    const deleteService = async (serviceCode: number) => {
-        const res = await api.delete(`/services/delete/${ownerCode}/${serviceCode}`);
-        console.log(res.data);
-
-    };
-
-    const showServiceManagement = (management: string, serviceCode:number|undefined) => {
-        action.value = management;
-        selectedServiceCode.value = serviceCode;
-        serviceManagement.value = !serviceManagement.value;
-    };
-
-    const attPage = (event: boolean) => {
-        serviceManagement.value = !event;
-        getAllServices();
-    };
-
-    onMounted(() => {
-        getAllServices();
-    });
 </script>
