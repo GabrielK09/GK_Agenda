@@ -2,17 +2,21 @@
 
 namespace App\Repositories\Eloquent\AuthEloquent;
 
+use App\Models\Attendant;
 use App\Models\Owner;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Repositories\Interfaces\AuthInterface\AuthInterface;
 use Illuminate\Support\Facades\Hash;
 
-class AuthRepository implements AuthInterface {
+class AuthRepository implements AuthInterface
+{
+
     public function firstRegisterOwner(array $data)
     {
         $transaction = DB::transaction(function() use ($data) {
             $maxCode = Owner::max('owner_code');
+            $maxCode = Attendant::max('attendant_code');
             
             $owner = Owner::create([
                 'owner_code' => $maxCode ? $maxCode + 1 : 1, 
@@ -24,9 +28,19 @@ class AuthRepository implements AuthInterface {
 
             Log::info($owner);
 
+            $attendentOwner = Attendant::create([
+                'attendant_code' => $maxCode ? $maxCode + 1 : 1,
+                'owner_code' => $owner->owner_code,
+                'name' => $owner->name,
+                'email' => $owner->email,
+                'password' => Hash::make($owner->password),
+                'is_attendant' => 0
+            ]);
+
+            Log::info($attendentOwner);
+
             return $owner;
         });    
-
         return $transaction;
     }
 

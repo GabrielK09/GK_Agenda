@@ -16,6 +16,7 @@ class Attendant extends Authenticatable implements CanResetPassword
     
     protected $fillable = [
         'owner_code',
+        'attendant_code',
         'name',
         'email',
         'password',

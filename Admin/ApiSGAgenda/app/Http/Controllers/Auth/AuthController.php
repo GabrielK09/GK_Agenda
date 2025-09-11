@@ -74,7 +74,7 @@ class AuthController extends Controller
                 return response()->json([
                     'success' => true,
                     'isAttendant' => true,
-                    'ownerCode' => $owner->owner_code,
+                    'ownerCode' => $attendant->owner_code,
                     'siteName' => $siteName,
                     'message' => 'Login bem sucedido!',
                     'token' => $attendantToken

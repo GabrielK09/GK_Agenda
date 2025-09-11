@@ -4,22 +4,49 @@ namespace App\Services\AttendantService;
 
 use App\Repositories\Eloquent\AttendantEloquent\AttendantRepository;
 use Exception;
-
 class AttendantService {
     public function __construct(
         protected AttendantRepository $attendantRepository
     ){}
 
-    public function findByID(int $ownerCode, int $id)
+    public function getAll(int $ownerCode)
     {
-        $owner = $this->attendantRepository->findByID($ownerCode, $id);
+        $attendants = $this->attendantRepository->getAll($ownerCode);
 
-        if (!$owner) {
-            throw new Exception("Erro ao localizar o proprietário!", 1);
+        return $attendants;
+    }
+
+    public function create(array $data)
+    {
+        $attendant = $this->findByMail($data['email']);
+
+        if($attendant)
+        {
+            throw new Exception('Atendente já cadastrado!');
+
+        }
+
+        $createdAttendant = $this->attendantRepository->create($data);
+
+        if(!$createdAttendant)
+        {
+            throw new Exception('Erro ao cadastrado o atendente!');
 
         }
         
-        return $owner;   
+        return $createdAttendant;
+    }
+
+    public function findByID(int $ownerCode, int $attendantCode)
+    {
+        $attendant = $this->attendantRepository->findByID($ownerCode, $attendantCode);
+
+        if (!$attendant) {
+            return null;
+
+        }
+        
+        return $attendant;   
     }
 
     public function findByMail(string $mail)
@@ -36,15 +63,15 @@ class AttendantService {
 
     public function update(array $data, int $id) 
     {
-        $newOwner = $this->attendantRepository->update($data, $id);
+        $newAttendant = $this->attendantRepository->update($data, $id);
 
-        if(!$newOwner) 
+        if(!$newAttendant) 
         {
-            throw new Exception("Erro ao alterar os dados do proprietário!", 1);
+            throw new Exception("Erro ao alterar os dados do atendente!", 1);
 
         }
 
-        return $newOwner;
+        return $newAttendant;
 
     }
 }

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('owner_code');
             $table->foreign('owner_code')->references('owner_code')->on('owners')->restrictOnDelete();
+            $table->unsignedBigInteger('attendant_code')->index();
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');

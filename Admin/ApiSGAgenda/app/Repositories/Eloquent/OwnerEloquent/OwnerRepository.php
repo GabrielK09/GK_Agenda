@@ -8,7 +8,8 @@ use App\Repositories\Interfaces\OwnerInterface\OwnerInterface;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class OwnerRepository implements OwnerInterface {
+class OwnerRepository implements OwnerInterface
+{
     public function findByID(int $id)
     {
         return Owner::where('id', $id)->first();

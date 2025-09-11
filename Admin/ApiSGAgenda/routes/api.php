@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Attendant\AttendantController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Owner\OwnerController;
 use App\Http\Controllers\Site\ServicesManagementController;
@@ -27,6 +28,14 @@ Route::prefix('/v1')->group(function() {
             Route::put('/update/{owner_code}/{service_code}', [ServicesManagementController::class, 'update']); 
             Route::delete('/delete/{owner_code}/{service_code}', [ServicesManagementController::class, 'delete ']); 
             Route::post('/create', [ServicesManagementController::class, 'create']); 
+        });
+        
+        Route::prefix('/attendants')->group(function() {
+            Route::get('/all/{id}', [AttendantController::class, 'getAll']); 
+            Route::post('/create', [AttendantController::class, 'create']); 
+            Route::get('/find/{owner_code}/{service_code}', [AttendantController::class, 'findByID']); 
+            Route::put('/update/{owner_code}/{service_code}', [AttendantController::class, 'update']); 
+            Route::delete('/delete/{owner_code}/{service_code}', [AttendantController::class, 'delete ']); 
         });
     });
 });
