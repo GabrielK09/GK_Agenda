@@ -13,7 +13,7 @@
                     class="rounded mb-4"  
                     :src="surprise ? '../../public/images/GK_agenda.png' : '../../public/images/logo-branca.png'"
                     @click="surprise = !surprise"
-                >
+                />
 
             </q-toolbar>
 

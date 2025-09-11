@@ -11,7 +11,7 @@
                         <q-btn 
                             no-caps 
                             class="bg-sky-500 text-white" 
-                            @click="" 
+                            @click="attendantManagement = !attendantManagement" 
                             label="Cadastrar novo atendente"
                         
                         />
@@ -48,24 +48,10 @@
                             >
                                 <q-td
                                     v-for="(col, i) in props.cols"
-                                >
-                                    <template v-if="col.name === 'actions'">
+                                >   
+                                    <template v-if="col.name === 'isAttendant'">
                                         <div class="text-center">
-                                            <q-btn size="10px" no-caps color="black" icon="edit_square" flat @click=""/>
-                                            <q-btn size="10px" no-caps color="red" icon="delete" flat @click="(props.row.serviceCode)"/>
-
-                                        </div>
-                                    </template>
-
-                                    <template v-else-if="col.name === 'checkAvailability'">
-                                        <div class="text-center">
-                                            <q-icon :name="col.value ? 'check' : 'close'" :color="col.value ? 'green' : 'red'" size="25px"/>
-                                        </div>
-                                    </template>
-
-                                    <template v-else-if="col.name === 'isHomeService'">
-                                        <div class="text-center">
-                                            <q-icon :name="col.value ? 'check' : 'close'" :color="col.value ? 'green' : 'red'" size="25px"/>
+                                            {{ col.value ? 'Atendente' : 'Administrador' }}
                                         </div>
                                     </template>
 
@@ -73,6 +59,19 @@
                                         <div class="text-center">
                                             {{ col.value }}
 
+                                        </div>
+                                    </template>
+
+                                    <template v-if="col.name === 'actions'">
+                                        <div class="text-center">
+                                            |
+                                                <q-btn size="10px" no-caps color="black" icon="alarm_add" flat @click="(props.row.serviceCode)"/> <!-- Horários -->
+                                                <q-btn size="10px" no-caps color="black" icon="money" flat @click="(props.row.serviceCode)"/> <!-- Comissão -->
+                                                <q-btn size="10px" no-caps color="black" icon="hourglass_disabled" flat @click="(props.row.serviceCode)"/> <!-- Exceções -->
+                                            |
+                                                <q-btn size="10px" no-caps color="black" icon="edit_square" flat @click=""/>
+                                                <q-btn size="10px" no-caps color="red" icon="delete" flat @click="(props.row.serviceCode)"/>
+                                            |
                                         </div>
                                     </template>
                                 </q-td>
@@ -91,7 +90,14 @@
                 </div>
             </div>
         </section>
-        
+
+        <AttendantManagement 
+            v-if="attendantManagement"
+            @close="attPage($event)"
+            :action="'create'"
+            :attendant-code="undefined"
+
+        />
         
     </q-page>
 </template>
@@ -99,7 +105,9 @@
 <script setup lang="ts">
     import { LocalStorage, QTableColumn, useQuasar } from 'quasar';
     import { onMounted, ref } from 'vue';
+    import AttendantManagement from 'src/components/App/AttendantManagement/AttendantManagement.vue';
     import camelcaseKeys from 'camelcase-keys';
+    import { api } from 'src/boot/axios';
     
     interface AttendantData {
         attendantCode: number,
@@ -110,7 +118,6 @@
 
     const $q = useQuasar();
     const ownerCode = LocalStorage.getItem("ownerCode") as number;
-    const width = LocalStorage.getItem("width") as number;
 
     const columns: QTableColumn[] = [
         {
@@ -132,10 +139,16 @@
             align: 'center'
         },
         {
+            name: 'isAttendant',
+            label: 'Função',
+            field: 'isAttendant',
+            align: 'center'
+        },
+        {
             name: 'actions',
-            label: '',
+            label: 'Ações',
             field: 'actions',
-            align: 'right'
+            'align': 'center'
         }
         
     ];
@@ -146,4 +159,33 @@
     let attendants = ref<AttendantData[]>([]);
     let searchInput = ref<string>('');
 
+    const getAllAttendant = async () => {
+        const res = await api.get(`/attendants/all/${ownerCode}`); 
+        const data = camelcaseKeys(res.data, { deep: true });
+
+        allAttendant.value = data.data;
+        attendants.value = [...allAttendant.value];
+    };  
+
+    const attPage = (event: boolean) => {
+        attendantManagement.value = !event;
+        getAllAttendant();
+    };
+
+    const commissionManagement = () => {
+        
+
+    };
+
+    const exceptionsManagement = () => {
+
+    };
+
+    const hoursManagement = () => {
+
+    };
+
+    onMounted(() => {
+        getAllAttendant();
+    });
 </script>

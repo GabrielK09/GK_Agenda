@@ -73,6 +73,8 @@
                                 label="Preço do serviço" 
                                 stack-label
                                 outlined
+                                mask="##,##"
+                                reverse-fill-mask
                                 class="mr-6"
                                 :rules="[]"    
                             >
@@ -108,6 +110,7 @@
                                 v-model="service.description" 
                                 type="textarea"
                                 label=""
+                                :rules="[validateDescriptionField]"
                                 maxlength="255"
                             />
                             <div class="mt-1.5">
@@ -182,6 +185,17 @@
 
     const categorys = ref<Categories[]>([]);
     
+    function validateDescriptionField(val: string) {
+        if(val.length < 10) 
+        {
+            return 'A descrição deve conter pelo menos 10 caracteres!'
+            
+        }
+
+        return true;
+
+    }
+
     function validateDurationField(val: string)
     {
         if(!val)
@@ -219,7 +233,7 @@
             duration: data.durationString,
             name: data.name,
             ownerCode: data.ownerCode,
-            price: data.price
+            price: Number(data.price.toString().replace(',', '.'))
         };
 
         console.log(service.value);

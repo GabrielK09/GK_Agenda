@@ -49,6 +49,7 @@
         {icon: 'checklist', title: 'Serviços', position: 4, marked: false, url: `services` },
         {icon: 'list_alt', title: 'Produtos', position: 5, marked: false, url: `agenda` },
         {icon: 'wallet', title: 'Caixa', position: 6, marked: false, url: `agenda` },
+        {icon: 'link', title: 'Meu Site', position: 7, marked: false, url: `agenda` },
         
     ]);
 

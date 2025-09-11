@@ -25,89 +25,51 @@
                     </div>
 
                     <q-form
-                        @submit="createService"
+                        @submit="createAttendant"
                         class="q-gutter-md mt-4 rounded-xl"
                     >
-                        <div class="">
+                        <div class="grid grid-cols-2">
                             <q-input 
-                                label="Nome do serviço" 
-                                v-model="service.name" 
+                                label="Nome do atedendente *" 
+                                v-model="attendant.name" 
                                 stack-label
                                 outlined
-                                type="text" 
-                                
-                                :rules="[
-                                    val => !!val || 'O nome do serviço é necessário!'
-                                ]"
-                            />
-                        </div>
-                        <div class="grid grid-cols-3">
-                            <q-input 
-                                v-model="service.duration" 
-                                type="number" 
-                                input-class="text-right"
-                                label="" 
-                                stack-label
-                                outlined
-                                class="mr-6"
-                                lazy-rules
-                                :rules="[validateDurationField]"
-                            >
-                                <template v-slot:label>
-                                    <div class="mt-2">
-                                        <span>Duração em minutos</span>
-                                        <q-avatar size="35px" icon="alarm" />
-                                    </div>
-                                </template>
-                            </q-input>
-
-                            <q-input 
-                                v-model="service.price" 
                                 type="text"
-                                input-class="text-right"
-                                label="Preço do serviço" 
+                                class="mr-4" 
+                                dense
+                            />
+                        
+                            <q-input 
+                                v-model="attendant.email" 
+                                type="text" 
+                                label="E-mail *" 
                                 stack-label
                                 outlined
-                                class="mr-6"
-                                :rules="[]"    
-                            >
-                                <template v-slot:label>
-                                    <div class="mt-2">
-                                        <span>Valor do serviço</span>
-                                        <q-avatar size="35px" icon="payments" />
-                                    </div>
-                                </template>
-                            </q-input>
-
-                            <q-select 
-                                v-model="service.categoryCode" 
-                                :options="categorys" 
-                                label="Categoria"
-                                stack-label
-                                outlined
-                            >
-                                <template v-slot:label>
-                                    <div class="mt-2">
-                                        <span>Categoria</span>
-                                        <q-avatar size="35px" icon="category" />
-                                        
-                                    </div>
-                                </template>
-                            </q-select>
+                                dense
+                                :rules="[validateMail]"
+                            />
                         </div>
 
-                        <div class="">
+                        <div class="grid grid-cols-2">
                             <q-input 
-                                outlined
+                                label="Senha *" 
+                                v-model="attendant.password" 
                                 stack-label
-                                v-model="service.description" 
-                                type="textarea"
-                                label=""
-                                maxlength="255"
+                                outlined
+                                type="text"
+                                class="mr-4" 
+                                dense
                             />
-                            <div class="mt-1.5">
-                                <span>* Descrição máxima de 255 caracteres</span>
-                            </div>
+                        
+                            <q-input 
+                                v-model="attendant.confirmPassword" 
+                                type="text" 
+                                label="Confirme sua senha *" 
+                                stack-label
+                                outlined
+                                dense
+                                :rules="[validatePassword]"
+                            />
                         </div>
                         
                         <div class="flex justify-end">
@@ -133,21 +95,12 @@
     import { api } from 'src/boot/axios';
     import { onMounted, ref } from 'vue';
 
-    interface Categories {
-        categoryCode: number,
-        category: string
-    }
-
-    interface ServiceData {
+    interface AttendantData {
         ownerCode: number,
-        categoryCode: number|string,
         name: string,
-        price: number,
-        description: string,
-        durationString: string,
-        duration: string,
-        isHomeService: boolean, 
-        checkAvailability: boolean, 
+        email: string,
+        confirmPassword: string,
+        password: string,
     };  
 
     const emits = defineEmits([
@@ -156,44 +109,22 @@
 
     const props = defineProps<{
         action: string,
-        serviceCode: number|undefined
+        attendantCode: number|undefined
 
     }>();
 
     const $q = useQuasar();
     const ownerCode = LocalStorage.getItem("ownerCode") as number;
     
-    const service = ref<ServiceData>({
-        ownerCode: LocalStorage.getItem("ownerID") as number,
-        categoryCode: '',
+    const attendant = ref<AttendantData>({
+        ownerCode: ownerCode,
         name: '',
-        price: 0,
-        description: '',
-        durationString: '',
-        duration: '',
-        isHomeService: false, 
-        checkAvailability: false 
+        email: '',
+        confirmPassword: '',
+        password: ''
     });
 
-    const categorys = ref<Categories[]>([]);
-    
-    function validateDurationField(val: string)
-    {
-        if(!val)
-        {
-            return 'Esse campo é necessário!';
-        };
-
-        if(Number(val) > 1440)
-        {
-            service.value.duration = '';
-            return 'O valor deve ser no máximo 1440';
-        };
-
-        return true;
-    };
-
-    const getServiceData = async () => {
+    const getAttendantData = async () => {
         $q.notify({
             color: 'green',
             message: 'Carregando dados do serviço ...',
@@ -202,29 +133,22 @@
 
         });
 
-        const res = await api.get(`/services/find/${ownerCode}/${props.serviceCode}`);
-        const data: ServiceData = camelcaseKeys(res.data.data, { deep: true });
+        const res = await api.get(`/attendants/find/${ownerCode}/${props.attendantCode}`);
+        const data: AttendantData = camelcaseKeys(res.data.data, { deep: true });
+
         console.log(data);
-        service.value = {
-            categoryCode: data.categoryCode,
-            isHomeService: data.isHomeService ? true : false,
-            checkAvailability: data.checkAvailability ? true : false,
-            description: data.description,
-            durationString: data.durationString,
-            duration: data.durationString,
-            name: data.name,
+        attendant.value = {
             ownerCode: data.ownerCode,
-            price: data.price
+            name: data.name,
+            email: data.email,
+            confirmPassword: data.password,
+            password: data.password
         };
 
-        console.log(service.value);
+        console.log(attendant.value);
     };
 
-    const getCategories = async () => {
-
-    };
-
-    const createService = async () => {
+    const createAttendant = async () => {
         $q.notify({
             color: 'green',
             message: props.action === 'create' ? 'Validando dados ...' : 'Alterando dados ...',
@@ -233,36 +157,28 @@
 
         }); 
 
-        const minutes = Math.floor(Number(service.value.duration) / 60);
-        const seconds = Number(service.value.duration) % 60;
-        const newDuration = minutes + ':' + (seconds === 0 ? '00' : seconds);
-
-        console.log(`Duração: ${newDuration}`);
-
-        const payload: ServiceData = {
-            categoryCode: service.value.categoryCode,
-            checkAvailability: service.value.checkAvailability,
-            description: service.value.description,
-            durationString: service.value.duration,
-            duration: newDuration,
-            isHomeService: service.value.isHomeService,
-            name: service.value.name,
-            ownerCode: service.value.ownerCode,
-            price: Number(service.value.price.toString().replace(',', '.'))
+        const payload: AttendantData = {
+            ownerCode: attendant.value.ownerCode,
+            name: attendant.value.name,
+            email: attendant.value.email,
+            password: attendant.value.password,
+            confirmPassword: attendant.value.confirmPassword
         };
     
         try {
             console.log('payload:', payload);
 
-            if(props.action === 'create' && props.serviceCode === undefined)
+            if(props.action === 'create' && props.attendantCode === undefined)
             {
-                const res = await api.post('/services/create', payload);
+                const res = await api.post('/attendants/create', payload);
+                console.log(res);
                 const data = res.data;
+
                 if(data.success)
                 {
                     $q.notify({
                         color: 'green',
-                        message: 'Serviço cadastrado com sucesso!',
+                        message: 'Atendente cadastrado com sucesso!',
                         position: 'top',
                         timeout: 1200
 
@@ -272,9 +188,9 @@
                 };
             };
 
-            if(props.action === 'update' && props.serviceCode !== undefined)
+            if(props.action === 'update' && props.attendantCode !== undefined)
             {
-                const res = await api.put(`/services/update/${ownerCode}/${props.serviceCode}`, payload);
+                const res = await api.put(`/attendants/update/${ownerCode}/${props.attendantCode}`, payload);
                 const data = res.data;
                 if(data.success)
                 {
@@ -295,9 +211,26 @@
         };
     };
 
+    const validatePassword = () => {
+        if(attendant.value.confirmPassword !== attendant.value.password)
+        {
+            return 'A senhas devem ser iguais!'
+
+        };
+        return true;
+    };  
+
+    const validateMail = () => {
+        if(!attendant.value.email.trim().includes('@'))
+        {
+            return 'Insira um e-mail válido!'
+            
+        }
+
+        return true;
+    };
+
     onMounted(() => {
-        if(props.action === 'update') getServiceData();
-        
-        getCategories();
+        if(props.action === 'update') getAttendantData();
     });     
 </script>

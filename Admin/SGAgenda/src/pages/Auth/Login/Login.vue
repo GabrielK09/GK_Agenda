@@ -187,6 +187,7 @@
 
     onMounted(() => {
         LocalStorage.remove("authToken");
+        LocalStorage.remove("isAttendant");
         LocalStorage.remove("siteName");            
         LocalStorage.remove("lastCheck"); 
         LocalStorage.remove("lastURL"); 
