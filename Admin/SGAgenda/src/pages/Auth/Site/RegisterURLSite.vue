@@ -81,7 +81,7 @@
 
     const $q = useQuasar();
     const router = useRouter();
-    const ownerID = LocalStorage.getItem("ownerID") as number;
+    const ownerCode = LocalStorage.getItem("ownerCode") as number;
     const width = LocalStorage.getItem("width") as number;
 
     let informedURL = ref<string>('');
@@ -102,7 +102,7 @@
         console.log('Endereço urlName: ', informedURL.value);
 
         const payload: SaveURL = {
-            ownerCode: ownerID,
+            ownerCode: ownerCode,
             urlName: informedURL.value,
             url: prefix
         };

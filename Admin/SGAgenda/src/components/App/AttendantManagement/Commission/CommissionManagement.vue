@@ -5,7 +5,7 @@
                 class="m-2"
             >
                 <div class="flex justify-between">                    
-                    <h2 class="text-gray-600 m-2">Cadastrar um atendete</h2>
+                    <h2 class="text-gray-600 m-2">Comissões do atendente: {{ props.attendantName }}</h2>
                 </div>
 
                 <div class="bg-white p-8 text-xs">
@@ -25,53 +25,83 @@
                     </div>
 
                     <q-form
-                        @submit="createAttendant"
+                        @submit="createCommission"
                         class="q-gutter-md mt-4 rounded-xl"
-                    >
-                        <div class="grid grid-cols-2">
-                            <q-input 
-                                label="Nome do atedendente *" 
-                                v-model="attendant.name" 
-                                stack-label
-                                outlined
-                                type="text"
-                                class="mr-4" 
-                                dense
-                            />
-                        
-                            <q-input 
-                                v-model="attendant.email" 
-                                type="text" 
-                                label="E-mail *" 
-                                stack-label
-                                outlined
-                                dense
-                                :rules="[validateMail]"
-                            />
+                    >   
+                        <div class="grid grid-cols-3">
+                            <div class="">
+                                <q-checkbox left-label v-model="commissionByCategory" label="Comissão por Categoria" />
+                                <q-avatar size="35px" icon="category" />
+
+                                <q-checkbox left-label v-model="commissionByService" label="Comissão por Serviço" />
+                                <q-avatar size="35px" icon="home_repair_service" />
+
+                                <q-checkbox left-label v-model="valueCommissionByPercent" label="Comissão por %" />
+                                <q-avatar size="35px" icon="percent" />
+
+                                <q-checkbox left-label v-model="valueCommissionByMoney" label="Comissão por R$" />
+                                <q-avatar size="35px" icon="money" />
+                                
+                            </div>
                         </div>
 
-                        <div class="grid grid-cols-2">
-                            <q-input 
-                                label="Senha *" 
-                                v-model="attendant.password" 
-                                stack-label
-                                outlined
-                                type="text"
-                                class="mr-4" 
-                                dense
-                            />
-                        
-                            <q-input 
-                                v-model="attendant.confirmPassword" 
-                                type="text" 
-                                label="Confirme sua senha *" 
-                                stack-label
-                                outlined
-                                dense
-                                :rules="[validatePassword]"
-                            />
+                        <div class="grid grid-cols-2 mb-2" >
+                            <div v-if="commissionByCategory">                                
+                                <q-select 
+                                    v-model="commission.categoryCode" 
+                                    :options="categories" 
+                                    label="Categoria"
+                                    stack-label
+                                    outlined
+                                >
+                                    <template v-slot:label>
+                                        <div class="mt-2">
+                                            <span>Categoria</span>
+                                            <q-avatar size="35px" icon="category" />
+                                            
+                                        </div>
+                                    </template>
+                                </q-select>
+                                <span class="ml-1">'*Valor de comissão definido por categoria será atribuido a <span class="text-red-400">todos</span> os serviços dentro desta categoria*'</span>
+                            </div>
+                            <div v-else>
+                                <q-select 
+                                    v-model="commission.serviceCode" 
+                                    :options="services" 
+                                    label="Serviço"
+                                    stack-label
+                                    outlined
+                                >
+                                    <template v-slot:label>
+                                        <div class="mt-2">
+                                            <span>Serviço</span>
+                                            <q-avatar size="35px" icon="home_repair_service" />
+                                            
+                                        </div>
+                                    </template>
+                                </q-select>
+                            </div>
+
+                            <div class="ml-12">
+                                <div v-if="valueCommissionByMoney">
+                                    <q-input 
+                                        v-model="commission.fixCommission" 
+                                        outlined
+                                        type="text" 
+                                        label="Valor em R$" 
+                                    />
+                                </div>
+                                <div v-else>
+                                    <q-input 
+                                        v-model="commission.percCommission" 
+                                        outlined
+                                        type="text" 
+                                        label="Valor em %"
+                                    />
+                                </div>
+                            </div>
                         </div>
-                        
+                    
                         <div class="flex justify-end">
                             <q-btn 
                                 no-caps
@@ -88,3 +118,109 @@
         </section>
     </q-page>
 </template>
+
+<script setup lang="ts">
+    import camelcaseKeys from 'camelcase-keys';
+    import { LocalStorage } from 'quasar';
+    import { api } from 'src/boot/axios';
+    import { onMounted, ref, watch } from 'vue';
+
+    interface Service {
+        serviceCode: number,
+        service: string
+    };
+
+    interface Category {
+        categoryCode: number,
+        category: string
+    };
+
+    interface Commission {
+        ownerCode: number, 
+        serviceCode: number|undefined, 
+        categoryCode: number|undefined, 
+        attendantCode: number, 
+        percCommission: number,
+        fixCommission: number,
+    };
+    
+    const emits = defineEmits([
+        'close'
+    ]);
+
+    const props = defineProps<{
+        attendantName: string,
+        attendantCode: number
+    }>();
+
+    const ownerCode = LocalStorage.getItem("ownerCode") as number;
+
+    const allServices = ref<Service[]>([]);
+    const services = ref<Service[]>([]);
+
+    const allCategories = ref<Category[]>([]);
+    const categories = ref<Category[]>([]);
+    
+    const commission = ref<Commission>({
+        attendantCode: 0,
+        categoryCode: undefined,
+        fixCommission: 0,
+        ownerCode: 0,
+        percCommission: 0,
+        serviceCode: undefined 
+    });
+
+    let commissionByService = ref<boolean>(false);
+    let commissionByCategory = ref<boolean>(false);
+
+    let valueCommissionByPercent = ref<boolean>(false);
+    let valueCommissionByMoney = ref<boolean>(false);
+
+    watch(commissionByCategory, () => {
+        if(commissionByCategory.value)
+        {
+            commissionByService.value = false;  
+        };
+    });
+
+    watch(commissionByService, () => {
+        if(commissionByService.value)
+        {
+            commissionByCategory.value = false;  
+        };
+    });
+
+    watch(valueCommissionByPercent, () => {
+        if(valueCommissionByPercent.value)
+        {
+            valueCommissionByMoney.value = false;  
+        };
+    });
+
+    watch(valueCommissionByMoney, () => {
+        if(valueCommissionByMoney.value)
+        {
+            valueCommissionByPercent.value = false;  
+        };
+    });
+
+    const getAllServices = async () => {
+        try {
+            const res = await api.get(`/services/all/${ownerCode}`);
+            const data = camelcaseKeys(res.data.data, { deep: true });
+            services.value = data;
+            allServices.value = [...services.value];
+            
+        } catch (error) {
+            console.error('Erro: ', error);
+        };
+    };
+
+    const createCommission = async () => {
+        //const res = await api.post()
+    };  
+
+    onMounted(() => {
+        getAllServices();
+    }); 
+</script>

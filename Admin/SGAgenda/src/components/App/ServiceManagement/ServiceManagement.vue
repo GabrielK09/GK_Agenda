@@ -172,7 +172,7 @@
     const ownerCode = LocalStorage.getItem("ownerCode") as number;
     
     const service = ref<ServiceData>({
-        ownerCode: LocalStorage.getItem("ownerID") as number,
+        ownerCode: ownerCode,
         categoryCode: '',
         name: '',
         price: 0,
