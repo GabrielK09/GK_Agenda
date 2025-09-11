@@ -41,12 +41,32 @@ class AuthController extends Controller
 
         if($owner && Hash::check($password, $owner->password))
         {
-            Log::info('As senhas são iguais');
+            if(is_null($owner->cnpj_cpf))
+            {
+                Log::warning('Proprietário não possui a empresa cadastrada');
+                return response()->json([
+                    'success' => false,
+                    'ownerCode' => $owner->owner_code,
+                    'route' => 'complete-register',
+                    'message' => 'Cadastro pendente!',
+
+                ]);
+            } else if (!$this->ownerService->getNameApp($owner->owner_code)) {
+                Log::warning('Proprietário não possui a URL do site cadastrada');
+                return response()->json([
+                    'success' => false,
+                    'ownerCode' => $owner->owner_code,
+                    'route' => 'complete-register',
+                    'message' => 'Cadastro pendente!',
+
+                ]);
+            }
+            
             Auth::login($owner);
 
             $token = $owner->createToken('auth_token')->plainTextToken;
             $siteName = $this->ownerService->getNameApp($owner->owner_code);
-    
+            
             return response()->json([
                 'success' => true,
                 'isAttendant' => false,
@@ -84,13 +104,13 @@ class AuthController extends Controller
             } else if (!$attendant) {
                 return response()->json([
                     'success' => false,
-                    'message' => "Usuário não cadastrado!"
+                    'message' => 'Credencias incorretas!'
                 ]);
 
             } else {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Credencias incorretas'
+                    'message' => 'Credencias incorretas!'
                 ]);
             }
 

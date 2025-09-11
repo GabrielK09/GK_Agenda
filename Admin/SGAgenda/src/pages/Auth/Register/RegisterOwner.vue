@@ -196,6 +196,7 @@
     import { ref } from 'vue';
     import { useRouter } from 'vue-router';
     import ShowPassword from 'src/components/ShowPassword/ShowPassword.vue';
+import camelcaseKeys from 'camelcase-keys';
     
     interface Owner {
         name: string,
@@ -244,16 +245,21 @@
                         Accept: 'application/json'
                     }
                 });
+
+                console.log('Res:', res);
+                const data = camelcaseKeys(res.data, { deep: true });
                 
-                if(res.data.success) {
+                if(data.success) {
                     $q.notify({
                         color: 'green',
-                        message: res.data.message,
+                        message: data.message,
                         position: 'top',
                         timeout: 2000
 
                     });
-                    LocalStorage.set("ownerID", res.data.data.id);
+                    console.log(data.data.ownerCode);
+
+                    LocalStorage.set("ownerCode", data.data.ownerCode);
                     
                     router.replace({ path: '/complete-register' });
                 };
@@ -261,7 +267,8 @@
             } catch (error: any) {
                 console.error('Erro: ', error);
                 const e: string = error.response?.data?.message;
-                const isDuplicateMail = e.trim().includes("SQLSTATE[23000]")
+                let isDuplicateMail;
+                if(e) isDuplicateMail = e.trim().includes("SQLSTATE[23000]")
                 
                 if (isDuplicateMail) {
                     $q.notify({

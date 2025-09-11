@@ -12,7 +12,7 @@ class OwnerRepository implements OwnerInterface
 {
     public function findByID(int $id)
     {
-        return Owner::where('id', $id)->first();
+        return Owner::where('owner_code', $id)->first();
     }
 
     public function findByMail(string $mail)
@@ -35,7 +35,6 @@ class OwnerRepository implements OwnerInterface
                 'company_name' => $data['companyName'], 
                 'trade_name' => $data['tradeName'], 
                 'cnpj_cpf' => preg_replace('/[^a-zA-Z0-9]/', '', $data['cnpjCpf']),
-                'completed' => 1
 
             ]);
             

@@ -11,9 +11,9 @@ class URLService
         protected URLRepository $urlRepository
     ){}
 
-    public function createURL(string $url, string $urlName, int $ownerID)
+    public function createURL(string $url, string $urlName, int $ownerCode)
     {
-        $url = $this->urlRepository->createURL($url, $urlName, $ownerID);
+        $url = $this->urlRepository->createURL($url, $urlName, $ownerCode);
 
         if (!$url) 
         {

@@ -153,6 +153,7 @@
                 Accept: 'application/json'
             }
         });
+
         const data = res.data;
         console.log(data);
 
@@ -182,6 +183,11 @@
                 timeout: 1200
 
             });
+
+            if(data.route)
+            {
+                router.replace({ path: data.route });
+            };
         };
     };
 

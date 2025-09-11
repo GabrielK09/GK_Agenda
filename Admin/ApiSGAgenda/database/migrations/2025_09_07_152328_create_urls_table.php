@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('urls', function (Blueprint $table) {
             // O prefixo do site: https://app.gkagenda.com.br/ nome a ser inserido
-            // No caso iria ficar http://localhost/ip:9000/app.gkagenda/ nome a ser inserido
+            // No caso iria ficar http://localhost ou ip:9000/app.gkagenda/nome a ser inserido
 
             $table->id();
             $table->unsignedBigInteger('owner_code');

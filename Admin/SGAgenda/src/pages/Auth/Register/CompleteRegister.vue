@@ -143,7 +143,7 @@
 
     const $q = useQuasar();
     const router = useRouter();
-    const ownerID = LocalStorage.getItem("ownerID");
+    const ownerCode = LocalStorage.getItem("ownerCode");
     const width = LocalStorage.getItem("width") as number;
 
     const owner = ref<Owner>({
@@ -159,10 +159,10 @@
             tradeName: owner.value.tradeName,
             cnpjCpf: owner.value.cnpjCpf 
         };
-        console.log('ownerID: ', ownerID);
         
+        console.log('ownerCode: ', ownerCode); 
 
-        const res = await api.put(`/auth/update-owner/${ownerID}`, payload, {
+        const res = await api.put(`/auth/update-owner/${ownerCode}`, payload, {
             headers: {
                 Accept: 'application/json'
             }

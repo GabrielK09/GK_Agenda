@@ -19,11 +19,16 @@ class URLRepository
         if ($owner) 
         {
             Log::info('O owner foi encontrado');
-            $urlSite = DB::transaction(function() use ($url, $urlName, $ownerID) {
+            $urlSite = DB::transaction(function() use ($url, $urlName, $ownerID, $owner) {
                 $site = SiteURL::create([
                     'owner_code' => $ownerID,
                     'site_name' => $urlName,
                     'site_url' => $url
+                ]);
+
+                Log::alert('URLRepository: Vai completar o cadastro do owner');
+                $owner->update([
+                    'completed' => 1
                 ]);
 
                 return $site;
