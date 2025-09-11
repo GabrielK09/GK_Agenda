@@ -13,15 +13,15 @@ class URLRepository
         protected OwnerRepository $ownerRepository
     ){}
 
-    public function createURL(string $url, string $urlName, int $ownerID)
+    public function createURL(string $url, string $urlName, int $ownerCode)
     {   
-        $owner = $this->ownerRepository->findByID($ownerID);
+        $owner = $this->ownerRepository->findByID($ownerCode);
         if ($owner) 
         {
             Log::info('O owner foi encontrado');
-            $urlSite = DB::transaction(function() use ($url, $urlName, $ownerID, $owner) {
+            $urlSite = DB::transaction(function() use ($url, $urlName, $ownerCode, $owner) {
                 $site = SiteURL::create([
-                    'owner_code' => $ownerID,
+                    'owner_code' => $ownerCode,
                     'site_name' => $urlName,
                     'site_url' => $url
                 ]);
