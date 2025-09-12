@@ -15,8 +15,6 @@ const api = axios.create({ baseURL: process.env.API_URL });
 export default defineBoot(({ app, router }) => {
     api.interceptors.request.use(
         (config) => {
-            config.headers.Accept = 'application/json';
-
             const publicRoutes: string[] = [
                 '/site/create-url',
                 '/auth/register-owner',
@@ -54,8 +52,10 @@ export default defineBoot(({ app, router }) => {
 
     api.interceptors.response.use(
         (response) => response,
-        (config) => {
-            if (config.status === 401) {
+        (error) => {
+            console.log('Config:', error);
+
+            if (error.status === 401) {
                 app.config.globalProperties.$q.notify({
                     color: 'red',
                     message: 'O usuário não está logado!',
@@ -68,6 +68,8 @@ export default defineBoot(({ app, router }) => {
                     path: '/login'
                 });
             };
+            
+            return Promise.reject(error);
         }
     );
 

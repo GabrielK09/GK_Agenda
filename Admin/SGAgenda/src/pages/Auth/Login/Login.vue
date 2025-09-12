@@ -35,14 +35,15 @@
                         <div class="flex-row m-auto">
                             <q-input 
                                 v-model="auth.email" 
-                                type="email" 
+                                type="text" 
+                                label=""
                                 stack-label
-                                label-slot
-                                borderless
+                                outlined
                                 color="grey"
-                                label="Email"
-                                class="w-[120%] mb-4 border rounded-md"
-                                required
+                                class="w-[120%] mb-4 rounded-md"
+                                :rules="[checkMail]"
+                                hide-bottom-space
+                                
                             >
                                 <template v-slot:label>
                                     <div class="border-b">E-mail <span class="text-red-500 text-xs relative bottom-1">*</span></div>
@@ -190,6 +191,12 @@
             };
         };
     };
+
+    const checkMail = () => {
+        if(!auth.value.email.trim().includes('@')) return 'E-mail inválido!';
+        
+        return true;
+    };  
 
     onMounted(() => {
         LocalStorage.remove("authToken");

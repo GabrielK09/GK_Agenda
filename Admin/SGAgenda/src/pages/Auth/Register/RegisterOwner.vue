@@ -3,9 +3,10 @@
         <router-link to="/">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
-            </svg>      
-
+            </svg>
+            
         </router-link>
+        
         <div 
             class="text-2xl " 
             :class="{
@@ -31,7 +32,7 @@
                         <h2 class="text-center">
                             Faça seu cadastro aqui!
                         </h2>
-                        <div class="flex-row">
+                        <div class="flex-row ">
                             <q-input 
                                 v-model="owner.name" 
                                 type="text" 
@@ -40,7 +41,8 @@
                                 borderless
                                 color="grey"
                                 label="Nome"
-                                class="max-w-[130%] mb-4 border rounded-md"
+                                outlined
+                                class="max-w-[140%] mb-4 rounded-md"
                                 required
                             >
                                 <template v-slot:label>
@@ -48,7 +50,7 @@
                                 </template>
 
                                 <template v-slot:prepend>
-                                    <div class="flex mt-3 ml-4">
+                                    <div class="flex mt-3 ml-2">
                                         <q-icon name="person" />
                                         
                                     </div>
@@ -57,13 +59,16 @@
 
                             <q-input 
                                 v-model="owner.email" 
-                                type="email" 
+                                type="text" 
                                 stack-label
                                 label-slot
                                 borderless
                                 color="grey"
                                 label="Nome"
-                                class="w-[100%] mb-4 border rounded-md"
+                                outlined
+                                class="w-[100%] mb-4 rounded-md"
+                                :rules="[checkMail]"
+                                hide-bottom-space
                                 required
                             >
                                 <template v-slot:label>
@@ -71,7 +76,7 @@
                                 </template>
 
                                 <template v-slot:prepend>
-                                    <div class="flex mt-3 ml-4">
+                                    <div class="flex mt-3 ml-2">
                                         <q-icon name="mail" />
                                         
                                     </div>
@@ -87,7 +92,8 @@
                                 borderless
                                 color="grey"
                                 label="Nome"
-                                class="w-[100%] mb-4 border rounded-md"
+                                outlined
+                                class="w-[100%] mb-4 rounded-md"
                                 mask="(##) #####-####"
                             >
                                 <template v-slot:label>
@@ -95,7 +101,7 @@
                                 </template>
 
                                 <template v-slot:prepend>
-                                    <div class="flex mt-3 ml-4">
+                                    <div class="flex mt-3 ml-2">
                                         <q-icon name="phone" />
                                         
                                     </div>
@@ -105,6 +111,7 @@
                         </div>        
 
                         <div
+                            class="min-w-60"
                             :class="{
                                 'flex gap-10': width >= 1100
                             }"
@@ -113,61 +120,60 @@
                             <q-input 
                                 v-model="owner.password" 
                                 :type="show ? 'text' : 'password'" 
+                                label=""
                                 stack-label
-                                label-slot
-                                borderless
+                                outlined
                                 color="grey"
-                                label="Nome"
-                                class="mb-4 border rounded-md"
+                                class="rounded-md w-60"
+                                :rules="[validatePassword]"
+                                hide-bottom-space
                                 required
                             >
-                                <template v-slot:label>
-                                    <div>Senha <span class="text-red-500 text-xs relative bottom-1">*</span></div>
-                                </template>
-
                                 <template v-slot:prepend>
-                                    <div class="flex mt-2 ml-4">
+                                    <div class="flex ml-2">
                                         <ShowPassword
                                             @show="show = $event"
                                         />
                                         
                                     </div>
                                 </template>
-                                
-                            </q-input>
 
+                                <template #label>
+                                    <div class="">Senha</div>
+                                </template>
+                            </q-input>
+                            
                             <q-input 
                                 v-model="confirmPassword" 
                                 :type="showConfirm ? 'text' : 'password'" 
+                                label=""
                                 stack-label
-                                label-slot
-                                borderless
+                                outlined
                                 color="grey"
-                                label="Confirme a sua senha "
-                                class="mb-4 border rounded-md"
-                                required
-                                @update:model-value="checkPasswords"
-                                
-                            >
-                                <template v-slot:label>
-                                    <div>Confirme a sua senha <span class="text-red-500 text-xs relative bottom-1">*</span></div>
-                                </template>
-
+                                class="rounded-md w-60"
+                                :rules="[validatePassword, checkPasswords]"
+                                hide-bottom-space
+                                required        
+                            >   
                                 <template v-slot:prepend>
-                                    <div class="flex mt-2 ml-4">
+                                    <div class="flex ml-4 mt-1">
                                         <ShowPassword
                                             @show="showConfirm = $event"
                                         />
-
+                                        
                                     </div>
+                                </template>
+
+                                <template #label>
+                                    <div class="">Confirme sua senha</div>
                                 </template>
                                 
                             </q-input>
+
                         </div>                    
                         
                         <div class="w-40 ml-auto mr-auto">
-                            <q-btn label="Criar conta" type="submit" class="w-full" color="primary"/>
-
+                            <q-btn label="Criar conta" type="submit" class="w-full mt-1" color="primary"/>
                             
                         </div>
                             <span 
@@ -196,8 +202,8 @@
     import { ref } from 'vue';
     import { useRouter } from 'vue-router';
     import ShowPassword from 'src/components/ShowPassword/ShowPassword.vue';
-import camelcaseKeys from 'camelcase-keys';
-    
+    import camelcaseKeys from 'camelcase-keys';
+
     interface Owner {
         name: string,
         email: string,
@@ -216,7 +222,7 @@ import camelcaseKeys from 'camelcase-keys';
     });
 
     const width = LocalStorage.getItem("width") as number;
-
+    
     let confirmPassword = ref<string>('');
     let show = ref<boolean>(false);
     let confirmToEmit = ref<boolean>(false);
@@ -265,7 +271,7 @@ import camelcaseKeys from 'camelcase-keys';
                 };
 
             } catch (error: any) {
-                console.error('Erro: ', error);
+                console.error('Erro do djabo: ', error);
                 const e: string = error.response?.data?.message;
                 let isDuplicateMail;
                 if(e) isDuplicateMail = e.trim().includes("SQLSTATE[23000]")
@@ -299,18 +305,28 @@ import camelcaseKeys from 'camelcase-keys';
 
     };
 
+    const checkMail = () => {
+        if(!owner.value.email.trim().includes('@')) return 'E-mail inválido!';
+        
+        return true;
+    };  
+
     const checkPasswords = () => {
         if(confirmPassword.value != owner.value.password) {
-            $q.notify({
-                color: 'red',
-                message: 'As senhas não são iguais!',
-                position: 'top',
-                timeout: 2000
-
-            });
             confirmToEmit.value = false;
+            return 'As senhas não são iguais!';
         } else {
             confirmToEmit.value = true;
+            return true;
         };
+    };
+
+    const validatePassword = (val: string) => {
+        if(val.length < 8)
+        {
+            return 'A senha deve conter pelo menos 8 caracteres'; 
+        }
+
+        return true;
     };
 </script>

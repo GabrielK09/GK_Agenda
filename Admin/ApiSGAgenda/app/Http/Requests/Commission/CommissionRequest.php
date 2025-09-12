@@ -24,8 +24,8 @@ class CommissionRequest extends FormRequest
     {
         return [
             'ownerCode' => ['required'],
-            'serviceCode' => ['required'],
-            'categoryCode' => ['required'],
+            'serviceCode' => ['nullable', 'required_without:categoryCode'],
+            'categoryCode' => ['nullable', 'required_without:serviceCode'],
             'attendantCode' => ['required'],
             'percCommission' => ['required', 'numeric'],
             'fixCommission' => ['required', 'numeric'],

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Attendant\AttendantController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Commission\CommissionController;
 use App\Http\Controllers\Owner\OwnerController;
 use App\Http\Controllers\Site\ServicesManagementController;
 use App\Http\Controllers\Site\SiteManagementController;
@@ -36,6 +37,10 @@ Route::prefix('/v1')->group(function() {
             Route::get('/find/{owner_code}/{service_code}', [AttendantController::class, 'findByID']); 
             Route::put('/update/{owner_code}/{service_code}', [AttendantController::class, 'update']); 
             Route::delete('/delete/{owner_code}/{service_code}', [AttendantController::class, 'delete ']); 
+        });
+
+        Route::prefix('/commission')->group(function() {
+            Route::post('/create', [CommissionController::class, 'create']);
         });
     });
 });
