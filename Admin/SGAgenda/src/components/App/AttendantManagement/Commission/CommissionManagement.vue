@@ -111,6 +111,8 @@
                                         v-model="commission.fixCommission" 
                                         outlined
                                         type="text" 
+                                        mask="##,##"
+                                        reverse-fill-mask
                                         label="Valor em R$" 
                                         :rules="[validateValueCommission]"
                                     />
@@ -121,6 +123,8 @@
                                         v-model="commission.percCommission" 
                                         outlined
                                         type="text" 
+                                        mask="##,##"
+                                        reverse-fill-mask
                                         label="Valor em %"
                                         :rules="[validateValueCommission]"
                                     />
@@ -197,7 +201,7 @@
         attendantCode: 0,
         categoryCode: undefined,
         fixCommission: 0,
-        ownerCode: 0,
+        ownerCode: ownerCode,
         percCommission: 0,
         serviceCode: undefined 
     });
@@ -226,6 +230,8 @@
             releaseValueTypeCommission.value = false;  
             valueCommissionByMoney.value = false;
             valueCommissionByPercent.value = false;
+            releaseForEmit.value.hasByOne = false;
+
         };
     });
 
@@ -241,6 +247,7 @@
             releaseValueTypeCommission.value = false;  
             valueCommissionByMoney.value = false;
             valueCommissionByPercent.value = false;
+            releaseForEmit.value.hasByOne = false;
         };
     });
 
@@ -249,6 +256,8 @@
         {
             valueCommissionByMoney.value = false;  
             releaseForEmit.value.hasValueByOne = true;
+        } else {
+            releaseForEmit.value.hasValueByOne = false;
         };
     });
 
@@ -257,6 +266,8 @@
         {        
             valueCommissionByPercent.value = false;  
             releaseForEmit.value.hasValueByOne = true;
+        } else {
+            releaseForEmit.value.hasValueByOne = false;
         };
     });
 
@@ -315,8 +326,8 @@
                 attendantCode: props.attendantCode,
                 categoryCode: isCategory ? isCategory.categoryCode : null,
                 serviceCode: isService ? isService.serviceCode : null,
-                fixCommission: commission.value.fixCommission,
-                percCommission: commission.value.percCommission,
+                fixCommission: Number(commission.value.fixCommission.toString().replace(',', '.')),
+                percCommission: Number(commission.value.percCommission.toString().replace(',', '.')),
                 ownerCode: commission.value.ownerCode
             };
 

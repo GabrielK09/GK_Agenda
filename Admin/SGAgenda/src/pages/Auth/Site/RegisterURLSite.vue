@@ -37,6 +37,7 @@
                                 :rules="[
                                     val => !!val || 'Esse campo é necessário!'
                                 ]"
+                                hide-bottom-space
                                 required
                             >
                                 <template v-slot:before>

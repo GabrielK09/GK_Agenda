@@ -23,10 +23,10 @@ class CommissionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'ownerCode' => ['required'],
+            'ownerCode' => ['required', 'exists:owners,owner_code'],
             'serviceCode' => ['nullable', 'required_without:categoryCode'],
             'categoryCode' => ['nullable', 'required_without:serviceCode'],
-            'attendantCode' => ['required'],
+            'attendantCode' => ['required', 'exists:attendants,attendant_code'],
             'percCommission' => ['required', 'numeric'],
             'fixCommission' => ['required', 'numeric'],
         ];

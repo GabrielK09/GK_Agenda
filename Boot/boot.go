@@ -33,6 +33,8 @@ func getPath() Paths {
 	_, currentDir, _, _ := runtime.Caller(0)
 	dir := filepath.Dir(filepath.Dir(currentDir))
 
+	log.Printf("Dir: %s", dir)
+
 	apiPath := filepath.Join(dir, "Admin", "ApiSGAgenda")
 	frontPath := filepath.Join(dir, "Admin", "SGAgenda")
 

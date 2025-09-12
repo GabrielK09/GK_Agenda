@@ -11,7 +11,7 @@ class CommissionController extends Controller
 {
     public function create(CommissionRequest $request)
     {
-        Log::info('');
+        Log::info('Dados recebidos');
         Log::info($request->all());
         
     }
