@@ -23,6 +23,19 @@ class ServicesManagementService
         return $allServices;
     }  
 
+    public function getAllNotHasCommission(int $id)
+    {
+        $allServices = $this->servicesManagementRepository->getAllNotHasCommission($id);
+        
+        if(!$allServices)
+        {
+            throw new Exception("Erro ao localizar todos os serviços sem comissão!", 1);
+        }
+
+        return $allServices;
+
+    }
+
     public function create(array $data)
     {
         $service = $this->servicesManagementRepository->create($data);

@@ -23,6 +23,7 @@ return new class extends Migration
 
             $table->string('name', 120); 
             $table->text('description');
+            $table->boolean('active', 1)->default(1);
             
             $table->timestamps();
         });

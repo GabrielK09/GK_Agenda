@@ -3,6 +3,7 @@
 namespace App\Repositories\Eloquent\ServicesManagementEloquent;
 
 use App\Models\Category;
+use App\Models\CommissionAttendant;
 use App\Models\Servicee;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -16,6 +17,20 @@ class ServicesManagementRepository
         return $services;
 
     }
+
+    public function getAllNotHasCommission(int $id)
+    {
+        $services = Servicee::where('owner_code', $id)->get();
+        Log::info($services);
+
+        $allServices = array_filter($services, 'a');
+
+        Log::info($allServices);
+
+        return $services;
+
+    }
+
 
     public function create(array $data) 
     {

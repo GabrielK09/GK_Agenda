@@ -14,5 +14,6 @@ class Category extends Model
         'parent_category',
         'name',
         'description',
+        'active',
     ];
 }

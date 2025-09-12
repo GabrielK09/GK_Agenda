@@ -21,6 +21,7 @@ class Attendant extends Authenticatable implements CanResetPassword
         'email',
         'password',
         'is_attendant',
+        'active',
         
     ];
 

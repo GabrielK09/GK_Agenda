@@ -18,6 +18,11 @@ class ServicesManagementController extends Controller
         return apiSuccess('Retornando todos os serviços!', $this->servicesManagementService->getAll($id));        
     }
 
+    public function getAllNotHasCommission(int $id)
+    {
+        return apiSuccess('Retornando todos os serviços sem comissão!', $this->servicesManagementService->getAllNotHasCommission($id));        
+    }
+
     public function create(ServicesManagementRequest $request) 
     {
         return apiSuccess(

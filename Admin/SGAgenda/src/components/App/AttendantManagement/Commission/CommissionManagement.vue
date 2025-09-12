@@ -282,7 +282,7 @@
 
     const getAllServices = async () => {
         try {
-            const res = await api.get(`/services/all/${ownerCode}`);
+            const res = await api.get(`/services/all/not-commission/${ownerCode}`);
             const data = camelcaseKeys(res.data.data, { deep: true });
 
             services.value = data;

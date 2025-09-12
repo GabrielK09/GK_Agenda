@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Log;
 
 class AttendantRepository 
 {
-
     public function getAll(int $ownerCode)
     {
         return Attendant::where('owner_code', $ownerCode)->get();

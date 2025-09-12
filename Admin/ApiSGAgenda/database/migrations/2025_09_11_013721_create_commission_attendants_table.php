@@ -30,7 +30,9 @@ return new class extends Migration
             $table->string('category_name', 120); 
 
             $table->float('perc_commission', 16.2)->nullable();
-            $table->float('fixed_commission', 16.2)->nullable();
+            $table->float('fixed_commission', 16.2)->nullable();    
+            
+            $table->timestamps();
 
         });
     }
