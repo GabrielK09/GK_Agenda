@@ -12,6 +12,19 @@ class CommissionService
         protected CommissionRepository $commissionRepository
     ){}
     
+    public function getAll(int $ownerCode, int $attendantCode)
+    {        
+        $commissions = $this->commissionRepository->getAll($ownerCode, $attendantCode);
+
+        if(!$commissions)
+        {
+            throw new Exception("Erro ao retornar todas a comissões");
+
+        }
+
+        return $commissions;
+    }
+
     public function create(array $data)
     {
         $commission = $this->commissionRepository->create($data);

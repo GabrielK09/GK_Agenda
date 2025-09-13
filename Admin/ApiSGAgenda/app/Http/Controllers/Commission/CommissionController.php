@@ -14,6 +14,11 @@ class CommissionController extends Controller
         protected CommissionService $commissionService
     ){}
 
+    public function getAll(int $ownerCode, int $attendantCode)
+    {
+        return apiSuccess('Todas as comissões do atendente', $this->commissionService->getAll($ownerCode, $attendantCode));
+    }
+
     public function create(CommissionRequest $request)
     {
         Log::info('Dados recebidos');

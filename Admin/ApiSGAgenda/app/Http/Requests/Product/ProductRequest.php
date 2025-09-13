@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Site;
+namespace App\Http\Requests\Product;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
-class ServicesManagementRequest extends FormRequest
+class ProductRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,17 +22,11 @@ class ServicesManagementRequest extends FormRequest
      */
     public function rules(): array
     {
-        $required = $this->method('POST') ? 'required' : 'sometimes';
         return [
             'ownerCode' => ['required', 'exists:owners,owner_code'],
-            'categoryCode' => ['nullable'],
-            'name' => [$required, 'string'],
-            'price' => [$required, 'numeric'],
-            'description' => [$required, 'string'],
-            'durationString' => [$required],
-            'duration' => [$required],
-            'isHomeService' => [$required],
-            'checkAvailability' => [$required],
+            'name'  => ['required', 'string'],
+            'amount'  => ['required', 'numeric'],
+            'price' => ['required', 'numeric']
         ];
     }
 }

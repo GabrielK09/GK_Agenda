@@ -9,12 +9,24 @@ use App\Models\{
     Category,
     Owner
 };
-use App\Repositories\Eloquent\OwnerEloquent\OwnerRepository;
+
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class CommissionRepository
 {   
+    public function getAll(int $ownerCode, int $attendantCode)
+    {        
+        $commissions = Commission::where('owner_code', $ownerCode)
+                            ->where('attendant_code', $attendantCode)
+                            ->get();
+                            
+        Log::debug("Todos as comissões do atendente: {$attendantCode}");
+        Log::debug($commissions);
+
+        return $commissions;
+    }
+
     public function create(array $data)
     {
         Log::info('Dados no repositório');
@@ -62,7 +74,9 @@ class CommissionRepository
         Log::debug($category);
 
         $id = DB::transaction(function() use ($attendant, $owner, $category, $service, $data){ 
+            $maxCode = Commission::max('commission_attendants_code');
             $commission = Commission::create([
+                'commission_attendants_code' => $maxCode ? $maxCode + 1 : 1,
                 'owner_code' => $owner->owner_code,
                 'attendant_code' => $attendant->attendant_code,
                 'attendant_name' => $attendant->name,

@@ -9,6 +9,7 @@ class CommissionAttendant extends Model
     protected $table = 'commission_attendants';
 
     protected $fillable = [
+        'commission_attendants_code',
         'owner_code',
         'attendant_code',
         'attendant_name',
@@ -18,5 +19,6 @@ class CommissionAttendant extends Model
         'category_name',
         'perc_commission', 
         'fixed_commission',
+        'active',
     ];
 }

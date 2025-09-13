@@ -13,7 +13,8 @@ class Product extends Model
         'owner_code',
         'name',
         'price', 
-        'amount' 
+        'amount', 
+        'active' 
 
     ];
 }

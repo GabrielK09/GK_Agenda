@@ -71,4 +71,28 @@ class ServicesManagementService
 
         return $service;
     }
+
+    public function delete(int $ownerCode, int $serviceCode)
+    {
+        $product = $this->servicesManagementRepository->delete($ownerCode, $serviceCode);
+
+        if(!$product)
+        {
+            throw new Exception("Erro ao deletar o serviço: {$product}", 1);
+        };
+
+        return $product;
+    }
+
+    public function active(int $ownerCode, int $serviceCode)
+    {
+        $product = $this->servicesManagementRepository->active($ownerCode, $serviceCode);
+
+        if(!$product)
+        {
+            throw new Exception("Erro ao ativar o serviço: {$product}", 1);
+        };
+
+        return $product;
+    }
 }

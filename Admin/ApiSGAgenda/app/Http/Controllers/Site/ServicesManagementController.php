@@ -43,4 +43,14 @@ class ServicesManagementController extends Controller
         return apiSuccess('Serviço alterado com sucesso!', $this->servicesManagementService->update($request->validated(), $ownerCode, $serviceCode));
     }
 
+    public function delete(int $ownerCode, int $productCode)
+    {
+        return apiSuccess('Serviço deletado com sucesso!', $this->servicesManagementService->delete($ownerCode, $productCode));
+    }
+
+    public function active(int $ownerCode, int $productCode)
+    {
+        return apiSuccess('Serviço ativado com sucesso!', $this->servicesManagementService->active($ownerCode, $productCode));
+    }
+
 }

@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('commission_attendants', function (Blueprint $table) {
             $table->id();
 
+            $table->unsignedBigInteger('commission_attendants_code')->index();
+
             $table->unsignedBigInteger('owner_code');
             $table->foreign('owner_code')->references('owner_code')->on('owners')->restrictOnDelete();
 
@@ -30,7 +32,9 @@ return new class extends Migration
             $table->string('category_name', 120); 
 
             $table->float('perc_commission', 16.2)->nullable();
-            $table->float('fixed_commission', 16.2)->nullable();    
+            $table->float('fixed_commission', 16.2)->nullable();
+            
+            $table->boolean('active', 1)->default(1);
             
             $table->timestamps();
 

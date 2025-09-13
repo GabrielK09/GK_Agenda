@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('name');
             $table->float('price', 16.2);
             $table->float('amount', 16.2);
+            $table->boolean('active', 1)->default(1);
             $table->timestamps();
 
         });

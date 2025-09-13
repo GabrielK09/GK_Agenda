@@ -20,15 +20,27 @@ class ServicesManagementRepository
 
     public function getAllNotHasCommission(int $id)
     {
-        $services = Servicee::where('owner_code', $id)->get();
-        Log::info($services);
+        $allServices = Servicee::where('owner_code', $id)->get();
+        $newServices = [];
+        foreach ($allServices as $service) {
+            Log::debug('Dentro do foreach');
+            Log::debug($service);
+            $commissionService = CommissionAttendant::where('owner_code', $id)
+                                                        ->where('service_code', $service->service_code)
+                                                        ->first();
 
-        $allServices = array_filter($services, 'a');
+            if($commissionService) 
+            {
+                continue;
+            } else {
+                array_push($newServices, $service);
+            };
+        }
 
-        Log::info($allServices);
+        Log::debug('Fora do foreach');
+        Log::debug($newServices);
 
-        return $services;
-
+        return $newServices;
     }
 
 
@@ -73,6 +85,7 @@ class ServicesManagementRepository
         if(!$service)
         {
             Log::warning("Serviço não encontado!, owner_code: {$ownerCode} | service_code: {$serviceCode}");
+            return;
         }
 
         Log::info($service);
@@ -107,6 +120,38 @@ class ServicesManagementRepository
             ]);
 
             return $service;
+        });
+
+        return $id;
+    }
+
+    public function delete(int $ownerCode, int $serviceCode)
+    {  
+        $id = DB::transaction(function() use ($ownerCode, $serviceCode) {
+            $service = $this->findByID($ownerCode, $serviceCode);
+            
+            if(!$service) return;
+
+            return $service->update([
+                'active' => 0
+            ]);
+        });
+
+        return $id;
+    }
+
+    public function active(int $ownerCode, int $serviceCode)
+    {  
+        $id = DB::transaction(function() use ($ownerCode, $serviceCode) {
+            $service = Servicee::where('owner_code', $ownerCode)
+                            ->where('service_code', $serviceCode)
+                            ->first();
+            
+            if(!$service) return;
+
+            return $service->update([
+                'active' => 1
+            ]);
         });
 
         return $id;
