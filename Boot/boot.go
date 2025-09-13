@@ -33,8 +33,6 @@ func getPath() Paths {
 	_, currentDir, _, _ := runtime.Caller(0)
 	dir := filepath.Dir(filepath.Dir(currentDir))
 
-	log.Printf("Dir: %s", dir)
-
 	apiPath := filepath.Join(dir, "Admin", "ApiSGAgenda")
 	frontPath := filepath.Join(dir, "Admin", "SGAgenda")
 
@@ -47,7 +45,10 @@ func getPath() Paths {
 func boot(paths Paths) {
 	ip := getLocalIP()
 	ipCmd := fmt.Sprintf("--host=%s", ip.String())
+
+	log.Println(paths)
 	log.Println(ipCmd)
+
 	cmdApi := exec.Command("php", "artisan", "serve", ipCmd)
 	cmdApi.Dir = paths.ApiPath
 	cmdApi.Stdout = os.Stdout

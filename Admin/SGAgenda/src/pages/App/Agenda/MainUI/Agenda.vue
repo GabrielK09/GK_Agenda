@@ -2,142 +2,105 @@
     <q-page padding>
         <section class="text-xl">
             <div
-                class="m-4"  
+                class="m-2"
             >
-                <div class="bg-white">
-                    <div class="w-max border p-2">
-                        <div class="grid grid-cols-3">
-                            <q-btn no-caps color="primary" label="Dia" @click="changeShowAgenda('day')" class="mr-4"/>
-                            <q-btn no-caps color="primary" label="Semana" @click="changeShowAgenda('week')" class="mr-4"/>
-                            <q-btn no-caps color="primary" label="Mês" @click="changeShowAgenda('month')" class="mr-4"/>
-
-                        </div>            
-                    </div>
-
-                    <div class="grid grid-cols-2">
-                        <div class="p-5">
-                            <div v-if="showAgenda.isInDay">
-                                <AgendaDay/>
-
-                            </div>
-                            <div v-else-if="showAgenda.isInWeek">
-                                <AgendaWeek/>
-
-                            </div>
-                            <div v-else-if="showAgenda.isInMonth">
-                                <AgendaMonth/>
-
-                            </div>
+                <div class="flex justify-between">
+                    <h2 class="text-gray-600 m-2">Agendamentos</h2>
+                </div>
+                
+                <div class="rounded-md bg-white shadow-md">
+                    <div class="grid-calender grid grid-cols-2">
+                        <div class="calender">
+                            <AgendaDay
+                                :active-scheduling="activeSchedulings"
+                                @change-date="changeDateTable($event)"
+                            />
                         </div>
-                        
-                        <div class="">
-                             <div style="display: flex; justify-content: center">
-                                <div
-                                    style="
-                                    max-width: 280px;
-                                    width: 100%;
-                                    display: flex;
-                                    flex-direction: column;
-                                    justify-content: center;
-                                    border: 1px solid #ccc;
-                                    border-radius: 4px;
-                                    padding: 10px;
-                                    "
-                                >
-                                    <div style="width: 100%; display: flex; justify-content: space-evenly">
-                                    <div style="width: 50%; display: flex; justify-content: space-between">
-                                        <span class="q-button" style="cursor: pointer; user-select: none" @click="onPrev"
-                                        >&lt;</span
-                                        >
-                                        {{ formattedMonth }}
-                                        <span class="q-button" style="cursor: pointer; user-select: none" @click="onNext"
-                                        >&gt;</span
-                                        >
-                                    </div>
-                                    <div style="width: 30%; display: flex; justify-content: space-between">
-                                        <span class="q-button" style="cursor: pointer; user-select: none" @click="addToYear(-1)"
-                                        >&lt;</span
-                                        >
-                                        {{ selectedYear }}
-                                        <span class="q-button" style="cursor: pointer; user-select: none" @click="addToYear(1)"
-                                        >&gt;</span
-                                        >
-                                    </div>
-                                    </div>
 
-                                    <div style="display: flex; justify-content: center; align-items: center; flex-wrap: nowrap">
-                                    <div style="display: flex; max-width: 280px; width: 100%">
-                                        <q-calendar-month
-                                        ref="calendar"
-                                        v-model="selectedDate"
-                                        mini-mode
-                                        use-navigation
-                                        no-active-date
-                                        hoverable
-                                        focusable
-                                        :focus-type="['date', 'weekday']"
-                                        :min-weeks="6"
-                                        animated
-                                        @change="onChange"
-                                        @moved="onMoved"
-                                        @click-date="onClickDate"
-                                        @click-day="onClickDay"
-                                        @click-workweek="onClickWorkweek"
-                                        @click-head-workweek="onClickHeadWorkweek"
-                                        @click-head-day="onClickHeadDay"
-                                        />
-                                    </div>
-                                    </div>
-                                </div>
-    </div>
+                        <div class="list-calender">
+                            <q-table
+                                flat 
+                                bordered
+                                hide-bottom
+                                :rows="schedulings"
+                                :columns="columns"
+                                row-key="schedulingDate"
+                            >
+                                <template v-slot:body="props">
+                                    <q-tr
+                                        :props="props"
+                                    >
+                                        <q-td
+                                            v-for="col in props.cols"
+                                            @click="showDetailScheduling = !showDetailScheduling"
+                                            class="cursor-pointer"
+                                        >  
+                                            <div 
+                                                class="text-center"                
+                                            >
+                                                {{ col.value }} 
+
+                                            </div>
+                                        </q-td>
+                                    </q-tr>
+                                </template>
+                            </q-table>
                         </div>
                     </div>
-                </div>
-
-                <!--div class="flex">
-                    <div class="grid grid-cols-3">
-                        <q-btn no-caps color="primary" label="Dia" @click="changeShowAgenda('day')" class="mr-4"/>
-                        <q-btn no-caps color="primary" label="Semana" @click="changeShowAgenda('week')" class="mr-4"/>
-                        <q-btn no-caps color="primary" label="Mês" @click="changeShowAgenda('month')" class="mr-4"/>
-
-                    </div>            
-                </div>    
-
-                <div v-if="showAgenda.isInDay">
-                    <AgendaDay/>
-
-                </div>
-                <div v-else-if="showAgenda.isInWeek">
-                    <AgendaWeek/>
-
-                </div>
-                <div v-else-if="showAgenda.isInMonth">
-                    <AgendaMonth/>
-
-                </div-->        
+                </div>        
             </div>
         </section>
+
+        <q-dialog v-model="showDetailScheduling" persistent>
+            <q-card>
+                <q-card-section class="row items-center">
+                    <q-avatar icon="signal_wifi_off" color="primary" text-color="white" />
+                    <span class="q-ml-sm">You are currently not connected to any network.</span>
+                </q-card-section>
+                <q-card-actions align="right">
+                    <q-btn flat label="Cancel" color="primary" v-close-popup />
+                    <q-btn flat label="Turn on Wifi" color="primary" v-close-popup />
+                </q-card-actions>
+            </q-card>
+        </q-dialog>
     </q-page>
 </template>
 
 <script setup lang="ts">
-import {
-  QCalendarMonth,
-  addToDate,
-  parseTimestamp,
-  today,
-  Timestamp,
-} from '@quasar/quasar-ui-qcalendar'
-import '@quasar/quasar-ui-qcalendar/index.css'
     import AgendaDay from '../Agendas/Day/AgendaDay.vue';
-    import AgendaWeek from '../Agendas/Week/AgendaWeek.vue';
-    import AgendaMonth from '../Agendas/Month/AgendaMonth.vue';
-    import { ref, computed  } from 'vue';
+    import { onMounted, ref } from 'vue';
+    import { QTableColumn } from 'quasar';
+    import dayjs from 'dayjs';
 
     interface ShowAgenda {
         isInDay: boolean,
         isInWeek: boolean,
         isInMonth: boolean,
+    };
+
+    interface Service {
+        serviceCode: number,
+        name: string
+    };
+
+    interface Attendant {
+        attendantCode: number,
+        name: string
+    };
+
+    interface SchedulingData {
+        schedulingCode: number,
+        schedulingDuration: string,
+        schedulingCustomerPhone: string,
+        schedulingCustomer: string,
+    };
+
+    interface Scheduling {
+        scheduling: SchedulingData,
+        service: Service,
+        attendant: Attendant,   
+        schedulingHour: string,
+        schedulingDate: string,
     };
 
     const showAgenda = ref<ShowAgenda>({
@@ -146,111 +109,154 @@ import '@quasar/quasar-ui-qcalendar/index.css'
         isInMonth: false
     }); 
 
+    const activeSchedulings = ref<string[]>([]);
 
-    const changeShowAgenda = (agendaType: string) => {
-        switch (agendaType) {
-            case 'day':
-                showAgenda.value = {
-                    isInDay: true,
-                    isInMonth: false,
-                    isInWeek: false,
-                };  
-                break;
+    const columns = ref<QTableColumn[]>([
+        {
+            field: 'schedulingDate',
+            label: 'Data do agendamento',
+            name: 'schedulingDate',
+            align: 'center'
+        },
+        {
+            field: 'schedulingHour',
+            label: 'Horário',
+            name: 'schedulingHour',
+            align: 'center'
+        },
+        {
+            field: 'scheduling',
+            label: 'Cliente',
+            name: 'scheduling',
+            align: 'center',
+            sortable: true,
+            format(val) {
+                const data: SchedulingData = val;
+                return data.schedulingCustomer;
+            }
+        },
+        {
+            field: 'service',
+            label: 'Serviço',
+            name: 'service',
+            align: 'center',
+            sortable: true,
+            format(val) {
+                const data: Service = val;
+                return data.name;
+            }
+        }
+    ]);
 
-            case 'week':
-                showAgenda.value = {
-                    isInDay: false,
-                    isInWeek: true,
-                    isInMonth: false,
-                };  
-                break;
+    const allSchedulings = ref<Scheduling[]>([]);
 
-            case 'month':
-                showAgenda.value = {
-                    isInDay: false,
-                    isInWeek: false,
-                    isInMonth: true,
-                };  
-                break;
-        
-            default:
-                showAgenda.value = {
-                    isInDay: true,
-                    isInMonth: false,
-                    isInWeek: false,
-                };  
-                break;
-        };
+    const schedulings = ref<Scheduling[]>([
+        {
+            attendant: {
+                attendantCode: 1,
+                name: 'Gabriel'
+            },
+            service: {
+                serviceCode: 1,
+                name: 'Corte de cabelo'
+            },
+            scheduling: {
+                schedulingCode: 1,
+                schedulingCustomer: 'Carlos',
+                schedulingCustomerPhone: '(49) 99948-2859',
+                schedulingDuration: '12'
+            },
+            schedulingHour: '12:00',
+            schedulingDate: dayjs().add(1, 'day').format('DD/MM/YYYY')
+        },
+        {
+            attendant: {
+                attendantCode: 1,
+                name: 'Gabriel'
+            },
+            service: {
+                serviceCode: 1,
+                name: 'Corte de cabelo'
+            },
+            scheduling: {
+                schedulingCode: 1,
+                schedulingCustomer: 'André',
+                schedulingCustomerPhone: '(49) 99948-2859',
+                schedulingDuration: '11'
+            },
+            schedulingHour: '12:00',
+            schedulingDate: dayjs().format('DD/MM/YYYY')
+        },
+    ]);
+
+    let formatedDate = ref<string>(dayjs().format('DD/MM/YYYY')); 
+    let showDetailScheduling = ref<boolean>(false);
+
+    const changeDateTable = (date: string) => {
+        formatedDate.value = date;
+        filter(date);
     };
 
-    const calendar = ref<QCalendarMonth>(),
-  selectedDate = ref(today()),
-  selectedYear = ref(new Date().getFullYear()),
-  locale = ref('en-US')
+    const filter = (date: string) => {
+        schedulings.value = allSchedulings.value.filter(scheduling => scheduling.schedulingDate === date);
+    };
 
-const formattedMonth = computed(() => {
-  const date = new Date(selectedDate.value)
-  const formatter = monthFormatter()
-  return formatter ? formatter.format(date) : ''
-})
+    const getAllSchedulings = () => {
 
-function monthFormatter() {
-  try {
-    return new Intl.DateTimeFormat(locale.value || undefined, {
-      month: 'long',
-      timeZone: 'UTC',
-    })
-  } catch {
-    //
-  }
-}
+    };
 
-function addToYear(amount: number) {
-  // parse current date to timestamp
-  let ts = parseTimestamp(selectedDate.value)
-  if (ts) {
-    // add specified amount of days
-    ts = addToDate(ts, { year: amount })
-    // re-assign values
-    selectedDate.value = ts.date
-    selectedYear.value = ts.year
-  }
-}
+    const convertStringDate = (stringDate: string): string => {
+        let newString = '';
+        const splitString: string[] = stringDate.split('/');
+        const day = splitString[0];
+        const month = splitString[1];
+        const year = splitString[2];
+        newString = `${year}/${month}/${day}`;
 
-function onToday() {
-  if (calendar.value) {
-    calendar.value.moveToToday()
-  }
-}
-function onPrev() {
-  if (calendar.value) {
-    calendar.value.prev()
-  }
-}
-function onNext() {
-  if (calendar.value) {
-    calendar.value.next()
-  }
-}
-function onMoved(data: Timestamp) {
-  console.info('onMoved', data)
-}
-function onChange(data: { start: Timestamp; end: Timestamp; days: Timestamp[] }) {
-  console.info('onChange', data)
-}
-function onClickDate(data: Timestamp) {
-  console.info('onClickDate', data)
-}
-function onClickDay(data: Timestamp) {
-  console.info('onClickDay', data)
-}
-function onClickWorkweek(data: Timestamp) {
-  console.info('onClickWorkweek', data)
-}
-function onClickHeadDay(data: Timestamp) {
-  console.info('onClickHeadDay', data)
-}
-function onClickHeadWorkweek(data: Timestamp) {
-  console.info('onClickHeadWorkweek', data)
-}
+        return newString;
+    };
+
+    onMounted(() => {
+        allSchedulings.value = [...schedulings.value];
+        
+        console.log(schedulings.value.map(scheduling => convertStringDate(scheduling.schedulingDate)));
+        activeSchedulings.value = schedulings.value.map(scheduling => convertStringDate(scheduling.schedulingDate));
+
+        filter(dayjs().format('DD/MM/YYYY'));
+        getAllSchedulings();
+    }); 
+
 </script>
+
+<style lang="scss">
+    @media (min-width: 1000px) {
+        .grid-calender {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            margin: 0 2rem 0 auto;    
+
+            .calender {
+                display: flex;
+                justify-content: center;
+            }
+
+            .list-calender {
+                margin: 5rem 0 0 0;
+            }
+        }   
+    }
+
+    @media (max-width: 1000px) {
+        .grid-calender {
+            display: grid;
+            grid-template-columns: repeat(1, minmax(0, 1fr));
+            padding: 2rem;
+            overflow-x: hidden ;
+
+            .calender {
+                display: flex;
+                justify-content: center;
+            }
+        }   
+    }
+</style>

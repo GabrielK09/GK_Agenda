@@ -19,7 +19,7 @@
                             </span>
                         </div>
                     </div>
-                    {{ services }}
+                    
                     <q-form
                         @submit="createCommission"
                         class="q-gutter-md mt-4 rounded-xl"
