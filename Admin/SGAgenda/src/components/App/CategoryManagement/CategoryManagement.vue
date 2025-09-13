@@ -43,7 +43,7 @@
                             />
                                               
                             <q-select 
-                                v-model="category.parentCode" 
+                                v-model="category.parentCategory" 
                                 :options="categorys" 
                                 label="Categoria"
                                 stack-label
@@ -99,7 +99,7 @@
 
     interface CategoriesData {
         ownerCode: number,
-        parentCode: number|string,
+        parentCategory: number|string,
         name: string,
         description: string,
     };  
@@ -119,7 +119,7 @@
     
     const category = ref<CategoriesData>({
         ownerCode: ownerCode,
-        parentCode: '',
+        parentCategory: '',
         name: '',
         description: ''
     });
@@ -149,7 +149,7 @@
         const data: CategoriesData = camelcaseKeys(res.data.data, { deep: true });
         console.log(data);
         category.value = {
-            parentCode: data.parentCode,
+            parentCategory: data.parentCategory,
             description: data.description,
             name: data.name,
             ownerCode: data.ownerCode,
@@ -172,7 +172,7 @@
         }); 
 
         const payload: CategoriesData = {
-            parentCode: category.value.parentCode,
+            parentCategory: category.value.parentCategory,
             description: category.value.description,
             name: category.value.name,
             ownerCode: category.value.ownerCode,
@@ -216,7 +216,16 @@
                     emits('close', true);
                 };
             };
-        } catch (error) {
+            
+        } catch (error: any) {
+            $q.notify({
+                color: 'red',
+                message: error.response?.data?.message,
+                position: 'top',
+                timeout: 2000
+
+            }); 
+
             console.error('Erro:', error);
 
         };

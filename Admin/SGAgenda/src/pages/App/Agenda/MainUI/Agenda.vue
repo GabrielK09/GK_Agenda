@@ -32,7 +32,7 @@
                                     >
                                         <q-td
                                             v-for="col in props.cols"
-                                            @click="showDetailScheduling = !showDetailScheduling"
+                                            @click="openSchedulingDetails"
                                             class="cursor-pointer"
                                         >  
                                             <div 
@@ -51,32 +51,23 @@
             </div>
         </section>
 
-        <q-dialog v-model="showDetailScheduling" persistent>
-            <q-card>
-                <q-card-section class="row items-center">
-                    <q-avatar icon="signal_wifi_off" color="primary" text-color="white" />
-                    <span class="q-ml-sm">You are currently not connected to any network.</span>
-                </q-card-section>
-                <q-card-actions align="right">
-                    <q-btn flat label="Cancel" color="primary" v-close-popup />
-                    <q-btn flat label="Turn on Wifi" color="primary" v-close-popup />
-                </q-card-actions>
-            </q-card>
-        </q-dialog>
+        <SchedulingManagement
+            v-if="showDetailScheduling"
+            :show-detail-scheduling="showDetailScheduling"
+            :scheduling-code="selectedSchedulingCode"
+            @close="showDetailScheduling = !$event"
+
+        />
+            
     </q-page>
 </template>
 
 <script setup lang="ts">
-    import AgendaDay from '../Agendas/Day/AgendaDay.vue';
+    import AgendaDay from '../Calender/AgendaDay.vue';
+    import SchedulingManagement from 'src/components/App/AgendaManagement/SchedulingManagement.vue';
     import { onMounted, ref } from 'vue';
     import { QTableColumn } from 'quasar';
     import dayjs from 'dayjs';
-
-    interface ShowAgenda {
-        isInDay: boolean,
-        isInWeek: boolean,
-        isInMonth: boolean,
-    };
 
     interface Service {
         serviceCode: number,
@@ -102,12 +93,6 @@
         schedulingHour: string,
         schedulingDate: string,
     };
-
-    const showAgenda = ref<ShowAgenda>({
-        isInDay: true,
-        isInWeek: false,
-        isInMonth: false
-    }); 
 
     const activeSchedulings = ref<string[]>([]);
 
@@ -191,6 +176,7 @@
 
     let formatedDate = ref<string>(dayjs().format('DD/MM/YYYY')); 
     let showDetailScheduling = ref<boolean>(false);
+    let selectedSchedulingCode = ref<number>(0);
 
     const changeDateTable = (date: string) => {
         formatedDate.value = date;
@@ -214,6 +200,13 @@
         newString = `${year}/${month}/${day}`;
 
         return newString;
+    };
+
+    const openSchedulingDetails = () => {
+        console.log('openSchedulingDetails');
+        
+        showDetailScheduling.value = !showDetailScheduling.value;
+
     };
 
     onMounted(() => {

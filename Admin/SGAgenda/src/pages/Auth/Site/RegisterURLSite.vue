@@ -72,7 +72,7 @@
     import { useRouter } from 'vue-router';
 
     // O prefixo do site: https://app.gkagenda.com.br/ nome a ser inserido
-    // No caso iria ficar http://localhost/ip:9000/app.gkagenda/ nome a ser inserido
+    // No caso iria ficar http://localhost/ip:9090/app.gkagenda/ nome a ser inserido
 
     interface SaveURL {
         ownerCode: number,
@@ -86,10 +86,10 @@
     const width = LocalStorage.getItem("width") as number;
 
     let informedURL = ref<string>('');
-    let prefix = `http://localhost:9000/app.gkagenda/`;
+    let prefix = `http://localhost:9090/app.gkagenda/`;
 
     watch(informedURL, (newValue) => {
-        prefix = `http://localhost:9000/app.gkagenda/` + newValue;
+        prefix = `http://localhost:9090/app.gkagenda/` + newValue;
     });
 
     const makeSiteURL = async () => {

@@ -5,7 +5,7 @@ namespace App\Repositories\Eloquent\CategoriesManagementEloquent;
 
 use App\Models\Category;
 use App\Models\CommissionAttendant;
-
+use App\Models\Servicee;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -43,8 +43,7 @@ class CategoriesManagementRepository
 
         return $newCategories;
     }
-
-
+    
     public function create(array $data) 
     {
         Log::info('Dados para o create');
@@ -60,7 +59,6 @@ class CategoriesManagementRepository
                                             ->first();
             } else {
                 Log::warning('Não tem uma categoria pai');
-                return;    
             }
 
             Log::info($parentCategory); 

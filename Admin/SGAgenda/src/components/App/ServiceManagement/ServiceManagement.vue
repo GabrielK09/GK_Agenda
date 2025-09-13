@@ -88,10 +88,11 @@
 
                             <q-select 
                                 v-model="service.categoryCode" 
-                                :options="categorys" 
+                                :options="categories" 
                                 label="Categoria"
                                 stack-label
                                 outlined
+                                :option-label="val => `${val.categoryCode} - ${val.name}`"
                             >
                                 <template v-slot:label>
                                     <div class="mt-2">
@@ -183,7 +184,7 @@
         checkAvailability: false 
     });
 
-    const categorys = ref<Categories[]>([]);
+    const categories = ref<Categories[]>([]);
     
     function validateDescriptionField(val: string) {
         if(val.length < 10) 
@@ -240,7 +241,9 @@
     };
 
     const getCategories = async () => {
-
+        const res = await api.get(`/categories/all/${ownerCode}`);
+        const data = camelcaseKeys(res.data.data, { deep: true });
+        categories.value = data;
     };
 
     const createService = async () => {

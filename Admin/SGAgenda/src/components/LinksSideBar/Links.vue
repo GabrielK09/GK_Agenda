@@ -39,7 +39,6 @@
     };
 
     const router = useRouter();
-    const siteName = ref(LocalStorage.getItem("siteName") as string);
 
     let links: ILinks[] = reactive([
         {icon: 'dashboard', title: 'Dashboard', position: 0, marked: true, url: `dashboard` },
@@ -50,7 +49,7 @@
         {icon: 'category', title: 'Categorias', position: 5, marked: false, url: `categories` },
         {icon: 'list_alt', title: 'Produtos', position: 6, marked: false, url: `products` },
         {icon: 'wallet', title: 'Caixa', position: 7, marked: false, url: `agenda` },
-        {icon: 'link', title: 'Meu Site', position: 8, marked: false, url: `agenda` },
+        {icon: 'link', title: 'Meu Site', position: 8, marked: false, url: `site` },
         
     ]);
 

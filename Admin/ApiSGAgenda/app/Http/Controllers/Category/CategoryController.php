@@ -15,7 +15,7 @@ class CategoryController extends Controller
 
     public function getAll(int $ownerCode)
     {
-        return apiSuccess('Categoria cadastrada com sucesso!', $this->categoriesManagementService->getAll($ownerCode));
+        return apiSuccess('', $this->categoriesManagementService->getAll($ownerCode));
     }
 
     public function create(CategoryRequest $request)

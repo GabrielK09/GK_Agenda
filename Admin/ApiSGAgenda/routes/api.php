@@ -21,6 +21,8 @@ Route::prefix('/v1')->group(function() {
 
     Route::prefix('/site')->group(function() {
         Route::post('/create-url', [SiteManagementController::class, 'createURL']);
+        Route::get('/get-categories/{siteName}', [SiteManagementController::class, 'getCategories']);
+        Route::get('/get-services/{siteName}', [SiteManagementController::class, 'getServices']);
 
     });
 
@@ -67,6 +69,10 @@ Route::prefix('/v1')->group(function() {
         Route::prefix('/commission')->group(function() {
             Route::get('/all/{owner_code}/{attendant_code}', [CommissionController::class, 'getAll']);
             Route::post('/create', [CommissionController::class, 'create']);
+        });
+
+        Route::prefix('/site')->group(function() {
+            Route::get('/get-url/{owner_code}', [SiteManagementController::class, 'getURL']);
         });
     });
 });
