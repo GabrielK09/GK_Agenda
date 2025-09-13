@@ -4,10 +4,6 @@
             <div
                 class="m-2"
             >
-                <div class="flex justify-between">                    
-                    <h2 class="text-gray-600 m-2">Comissões do atendente: {{ props.attendantName }}</h2>
-                </div>
-
                 <div class="bg-white p-8 text-xs">
                     <div class="flex justify-between">
                         <div 
@@ -23,12 +19,12 @@
                             </span>
                         </div>
                     </div>
-
+                    {{ services }}
                     <q-form
                         @submit="createCommission"
                         class="q-gutter-md mt-4 rounded-xl"
                     >   
-                        <div class="grid grid-cols-3">
+                        <div class="grid grid-cols-2">
                             <div>
                                 <div>
                                     <q-checkbox left-label v-model="commissionByCategory" label="Comissão por Categoria" />
@@ -38,7 +34,7 @@
                                     <q-avatar size="35px" icon="home_repair_service" />
 
                                 </div>
-
+                                
                                 <q-checkbox left-label v-model="valueCommissionByPercent" label="Comissão por %" :disable="!releaseValueTypeCommission" />
                                 <q-avatar size="35px" icon="percent" />
 
@@ -224,31 +220,28 @@
         {
             releaseValueTypeCommission.value = true;  
             commissionByService.value = false;  
-
             releaseForEmit.value.hasByOne = true;
-        } else {
-            releaseValueTypeCommission.value = false;  
-            valueCommissionByMoney.value = false;
-            valueCommissionByPercent.value = false;
-            releaseForEmit.value.hasByOne = false;
 
+        } else {
+            releaseForEmit.value.hasByOne = false;
         };
+
+        if(!commissionByCategory.value && !commissionByService.value) releaseValueTypeCommission.value = false;
+
     });
 
     watch(commissionByService, () => {
         if(commissionByService.value)
         {
-            releaseValueTypeCommission.value = true;  
+            releaseValueTypeCommission.value = true;
             commissionByCategory.value = false;  
-            
             releaseForEmit.value.hasByOne = true;
 
         } else {
-            releaseValueTypeCommission.value = false;  
-            valueCommissionByMoney.value = false;
-            valueCommissionByPercent.value = false;
             releaseForEmit.value.hasByOne = false;
         };
+
+        if(!commissionByService.value && !commissionByCategory.value) releaseValueTypeCommission.value = false; 
     });
 
     watch(valueCommissionByPercent, () => {

@@ -25,7 +25,7 @@ const routes: RouteRecordRaw[] = [
             },
             {
                 path: 'agenda',
-                component: () => import('pages/App/Dashboard/Dashboard.vue'),
+                component: () => import('pages/App/Agenda/MainUI/Agenda.vue'),
                 name: 'agenda'
             },
             {
@@ -37,9 +37,17 @@ const routes: RouteRecordRaw[] = [
                 path: 'attendants',
                 component: () => import('pages/App/Attendants/Attendants.vue'),
                 name: 'attendants'
-
-            }
-
+            },
+            {
+                path: 'categories',
+                component: () => import('pages/App/MyCategories/ShowAllCategories.vue'),
+                name: 'categories'
+            },
+            {
+                path: 'products',
+                component: () => import('pages/App/MyProducts/ShowAllProducts.vue'),
+                name: 'products'
+            },
         ]
     },
     {

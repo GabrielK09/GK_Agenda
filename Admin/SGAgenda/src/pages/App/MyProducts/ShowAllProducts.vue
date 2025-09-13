@@ -1,18 +1,18 @@
 <template>
     <q-page padding>
-        <section class="text-xl" v-if="!serviceManagement">
+        <section class="text-xl" v-if="!productManagement">
             <div
                 class="m-2"
             >
                 <div class="flex justify-between">
-                    <h2 class="text-gray-600 m-2">Serviços</h2>
+                    <h2 class="text-gray-600 m-2">Produtos</h2>
 
                     <div class="mt-auto mb-auto">
                         <q-btn 
                             no-caps 
                             class="bg-sky-500 text-white" 
-                            @click="showServiceManagement('create', undefined)" 
-                            label="Cadastrar novo serviço"
+                            @click="showProductManagement('create', undefined)" 
+                            label="Cadastrar novo produto"
                         
                         />
                     </div>
@@ -21,7 +21,7 @@
                 <div class="">
                     <q-table
                         borded
-                        :rows="allServices"
+                        :rows="allProducts"
                         :columns="columns"
                         row-key="name"
                         class="rounded-xl"
@@ -37,7 +37,7 @@
                                     <q-icon name="search" />
                                 </template>
                                 <template v-slot:label>
-                                    <span class="text-xs">Buscar por um serviço ...</span>
+                                    <span class="text-xs">Buscar por um produto ...</span>
                                 </template>
                             </q-input>
                         </template>
@@ -50,26 +50,16 @@
                                     v-for="(col, i) in props.cols"
                                 >
                                     <template v-if="col.name === 'actions'">
-                                        <div class="text-center">
-                                            <q-btn :disabled="props.row.active !== 1" size="10px" no-caps color="black" icon="edit_square" flat @click="showServiceManagement('update', props.row.serviceCode)"/>
-                                            <q-btn :disabled="props.row.active !== 1" size="10px" no-caps color="red" icon="delete" flat @click="showDialogDeleteService(props.row.serviceCode)"/>
-                                            <q-btn :disabled="props.row.active === 1" size="10px" no-caps color="green" icon="check" flat @click="showDialogActiveService(props.row.serviceCode)"/>
-
+                                        <div 
+                                            class="text-center"
+                                        >
+                                            <q-btn :disabled="props.row.active !== 1" size="10px" no-caps color="black" icon="edit_square" flat @click="showProductManagement('update', props.row.productCode)"/>
+                                            <q-btn :disabled="props.row.active !== 1" size="10px" no-caps color="red" icon="delete" flat @click="showDialogDeleteProduct(props.row.productCode)"/>
+                                            <q-btn :disabled="props.row.active === 1" size="10px" no-caps color="green" icon="check" flat @click="showDialogActiveProduct(props.row.productCode)"/>
+                                            
                                         </div>
                                     </template>
-
-                                    <template v-else-if="col.name === 'checkAvailability'">
-                                        <div class="text-center">
-                                            <q-icon :name="col.value ? 'check' : 'close'" :color="col.value ? 'green' : 'red'" size="25px"/>
-                                        </div>
-                                    </template>
-
-                                    <template v-else-if="col.name === 'isHomeService'">
-                                        <div class="text-center">
-                                            <q-icon :name="col.value ? 'check' : 'close'" :color="col.value ? 'green' : 'red'" size="25px"/>
-                                        </div>
-                                    </template>
-
+                                    
                                     <template v-else>
                                         <div 
                                             class="text-center"
@@ -93,7 +83,7 @@
                         <template v-slot:no-data>
                             <div class="ml-auto mr-auto">
                                 <q-icon name="warning" size="30px"/>
-                                <span class="mt-auto mb-auto ml-2 text-xs">Sem serviços cadastrados</span>
+                                <span class="mt-auto mb-auto ml-2 text-xs">Sem produtos cadastrados</span>
 
                             </div>
                         </template>
@@ -103,11 +93,11 @@
             </div>
         </section>
         
-        <ServiceManagement
-            v-if="serviceManagement"
+        <ProductManagement
+            v-if="productManagement"
             @close="attPage($event)"
             :action="action"
-            :service-code="selectedServiceCode"
+            :product-code="selectedProductCode"
 
         />
     </q-page>
@@ -116,40 +106,30 @@
 <script setup lang="ts">
     import { api } from 'src/boot/axios';
     import { LocalStorage, QTableColumn, useQuasar } from 'quasar';
-    import { onMounted, ref } from 'vue';
-    import ServiceManagement from 'src/components/App/ServiceManagement/ServiceManagement.vue';
+    import { onMounted, ref } from 'vue';    
     import camelcaseKeys from 'camelcase-keys';
+    import ProductManagement from 'src/components/App/ProductManagement/ProductManagement.vue';    
 
-    interface Services {
-        serviceCode: number,
-        name: string,
-        category: string,
+    interface Product {
+        name: string,        
         price: number,
-        isHomeService: boolean,
-        checkAvailability: boolean
+        amount: number,
     };
 
     const $q = useQuasar();
     const ownerCode = LocalStorage.getItem("ownerCode") as number;
-    const width = LocalStorage.getItem("width") as number;
-
+    
     const columns: QTableColumn[] = [
         {
-            name: 'serviceCode',
+            name: 'productCode',
             label: 'Cód',
-            field: 'serviceCode',
+            field: 'productCode',
             align: 'center'
         },
         {
             name: 'name',
-            label: 'Nome',
+            label: 'Produto',
             field: 'name',
-            align: 'center'
-        },
-        {
-            name: 'category',
-            label: 'Categoria',
-            field: 'category',
             align: 'center'
         },
         {
@@ -157,18 +137,14 @@
             label: 'Preço',
             field: 'price',
             align: 'center',
-            format: formatVal
+            format(val: number) {
+                return `R$ ${val.toFixed(2).toString().replace('.', ',')}`
+            }
         },
         {
-            name: 'isHomeService',
-            label: 'A domícilio',
-            field: 'isHomeService',
-            align: 'center'
-        },
-        {
-            name: 'checkAvailability',
-            label: 'Checar a disponibilidade',
-            field: 'checkAvailability',
+            name: 'amount',
+            label: 'Qtde',
+            field: 'amount',
             align: 'center'
         },
         {
@@ -179,44 +155,32 @@
         }
     ];
 
-    let allServices = ref<Services[]>([]);
-    let services = ref<Services[]>([]);
+    let allProducts = ref<Product[]>([]);
+    let products = ref<Product[]>([]);
 
     let searchInput = ref<string>('');
-    let serviceManagement = ref<boolean>(false);
+    let productManagement = ref<boolean>(false);
 
     let action = ref<string>('');
-    let selectedServiceCode = ref<number|undefined>(0);
-
-    function formatVal(val: number | string) 
-    {    
-        const num = typeof val === 'string' ? parseFloat(val) : val;
-        return new Intl.NumberFormat('pt-BR', {
-            style: 'currency',
-            currency: 'BRL'
-        }).format(num);
-    };
+    let selectedProductCode = ref<number|undefined>(0);
 
     const search = () => {
         
     };
 
-    const getAllServices = async () => {
-        try {
-            const res = await api.get(`/services/all/${ownerCode}`);
-            const data = camelcaseKeys(res.data.data, { deep: true });
-            services.value = data;
-            allServices.value = [...services.value];
-            
-        } catch (error) {
-            console.error('Erro: ', error);
-        };
+    const getAllProducts = async () => {
+        const res = await api.get(`/products/all/${ownerCode}`);
+        const data = camelcaseKeys(res.data.data, { deep: true });
+
+        products.value = data;
+        allProducts.value = [...products.value];
+        
     };
 
-    const showDialogDeleteService = (serviceCode: number) => {
+    const showDialogDeleteProduct = (productCode: number) => {
         $q.dialog({
-            title: 'Excluir serviço',
-            message: `Deseja realmente remover esse serviço (${serviceCode})?`,
+            title: 'Excluir produto',
+            message: `Deseja realmente remover esse produto (${productCode})?`,
             cancel: {
                 push: true,
                 label: 'Não',
@@ -230,17 +194,17 @@
             },
 
         }).onOk(() => {
-            deleteService(serviceCode);
+            deleteProduct(productCode);
 
         }).onCancel(() => {
             return;
         });
     };
 
-    const showDialogActiveService = (serviceCode: number) => {
+    const showDialogActiveProduct = (productCode: number) => {
         $q.dialog({
             title: 'Ativar produto',
-            message: `Deseja realmente ativar esse produto (${serviceCode})?`,
+            message: `Deseja realmente ativar esse produto (${productCode})?`,
             cancel: {
                 push: true,
                 label: 'Não',
@@ -254,15 +218,15 @@
             },
 
         }).onOk(() => {
-            activeService(serviceCode);
+            activeProduct(productCode);
 
         }).onCancel(() => {
             return;
         });
     };
 
-    const deleteService = async (serviceCode: number) => {
-        const res = await api.delete(`/services/delete/${ownerCode}/${serviceCode}`);
+    const deleteProduct = async (productCode: number) => {
+        const res = await api.delete(`/products/delete/${ownerCode}/${productCode}`);
         const data = res.data;
 
         if(data.success)
@@ -274,11 +238,11 @@
                 timeout: 1200
             });
         };
-        getAllServices();
+        getAllProducts();
     };
 
-    const activeService = async (serviceCode: number) => {
-        const res = await api.put(`/services/active/${ownerCode}/${serviceCode}`);
+    const activeProduct = async (productCode: number) => {
+        const res = await api.put(`/products/active/${ownerCode}/${productCode}`);
         const data = res.data;
 
         if(data.success)
@@ -290,21 +254,21 @@
                 timeout: 1200
             });
         };
-        getAllServices();
+        getAllProducts();
     };
 
-    const showServiceManagement = (management: string, serviceCode:number|undefined) => {
+    const showProductManagement = (management: string, productCode:number|undefined) => {
+        productManagement.value = true;
         action.value = management;
-        selectedServiceCode.value = serviceCode;
-        serviceManagement.value = !serviceManagement.value;
+        selectedProductCode.value = productCode;
     };
 
     const attPage = (event: boolean) => {
-        serviceManagement.value = !event;
-        getAllServices();
+        productManagement.value = !event;
+        getAllProducts();
     };
 
     onMounted(() => {
-        getAllServices();
+        getAllProducts();
     });
 </script>

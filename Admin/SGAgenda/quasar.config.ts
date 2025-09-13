@@ -19,7 +19,7 @@ export default defineConfig((ctx) => {
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-file#css
     css: [
-      'app.scss'
+      'app.scss',
     ],
 
     // https://github.com/quasarframework/quasar/tree/dev/extras
@@ -82,6 +82,10 @@ export default defineConfig((ctx) => {
           // you need to set i18n resource including paths !
           include: [ fileURLToPath(new URL('./src/i18n', import.meta.url)) ]
         }]
+      ],
+      webpackTranspile: true,
+      webpackTranspileDependencies: [
+        /quasar-ui-qcalendar[\\/]src/
       ]
     },
 

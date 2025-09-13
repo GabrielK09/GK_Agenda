@@ -1,0 +1,219 @@
+<template>
+    <q-page padding>
+        <section class="text-xl" v-if="!categoryManagement">
+            <div
+                class="m-2"
+            >
+                <div class="flex justify-between">
+                    <h2 class="text-gray-600 m-2">Categorias</h2>
+
+                    <div class="mt-auto mb-auto">
+                        <q-btn 
+                            no-caps 
+                            class="bg-sky-500 text-white" 
+                            @click="showCategoryManagement('create', undefined)" 
+                            label="Cadastrar nova categoria"
+                        
+                        />
+                    </div>
+                </div>
+
+                <div class="">
+                    <q-table
+                        borded
+                        :rows="allCategories"
+                        :columns="columns"
+                        row-key="name"
+                        class="rounded-xl"
+                    >
+                        <template v-slot:top-right>
+                            <q-input 
+                                outlined
+                                v-model="searchInput" 
+                                type="text" 
+                                label="" 
+                            >
+                                <template v-slot:append>
+                                    <q-icon name="search" />
+                                </template>
+                                <template v-slot:label>
+                                    <span class="text-xs">Buscar por uma categoria ...</span>
+                                </template>
+                            </q-input>
+                        </template>
+
+                        <template v-slot:body="props">
+                            <q-tr
+                                :props="props"
+                            >
+                                <q-td
+                                    v-for="(col, i) in props.cols"
+                                >
+                                    <template v-if="col.name === 'actions'">
+                                        <div class="text-center">
+                                            <q-btn size="10px" no-caps color="black" icon="edit_square" flat @click="showCategoryManagement('update', props.row.categoryCode)"/>
+                                            <q-btn size="10px" no-caps color="red" icon="delete" flat @click="showDialogDeleteCategory(props.row.categoryCode)"/>
+
+                                        </div>
+                                    </template>
+                                    
+                                    <template v-else>
+                                        <div class="text-center">
+                                            {{ col.value }}
+
+                                        </div>
+                                    </template>
+                                </q-td>
+                            </q-tr>
+                        </template>
+
+                        <template v-slot:no-data>
+                            <div class="ml-auto mr-auto">
+                                <q-icon name="warning" size="30px"/>
+                                <span class="mt-auto mb-auto ml-2 text-xs">Sem categorias cadastrados</span>
+
+                            </div>
+                        </template>
+
+                    </q-table>
+                </div>
+            </div>
+        </section>
+        
+        <CategoryManagement
+            v-if="categoryManagement"
+            @close="attPage($event)"
+            :action="action"
+            :category-code="selectedCategoryCode"
+
+        />
+    </q-page>
+</template>
+
+<script setup lang="ts">
+    import { api } from 'src/boot/axios';
+    import { LocalStorage, QTableColumn, useQuasar } from 'quasar';
+    import { onMounted, ref } from 'vue';    
+    import CategoryManagement from 'src/components/App/CategoryManagement/CategoryManagement.vue';
+    import camelcaseKeys from 'camelcase-keys';
+
+    interface Categories {
+        categoryCode: number,
+        name: string,
+        parentCategory: string,
+        category: string,
+        description: string
+        
+    };
+
+    const $q = useQuasar();
+    const ownerCode = LocalStorage.getItem("ownerCode") as number;
+    
+    const columns: QTableColumn[] = [
+        {
+            name: 'categoryCode',
+            label: 'Cód',
+            field: 'categoryCode',
+            align: 'center'
+        },
+        {
+            name: 'parentCategory',
+            label: 'Categoria pai',
+            field: 'parentCategory',
+            align: 'center'
+        },
+        {
+            name: 'name',
+            label: 'Categoria',
+            field: 'name',
+            align: 'center'
+        },
+        {
+            name: 'description',
+            label: 'Descrição',
+            field: 'description',
+            align: 'center'
+        },
+        {
+            name: 'actions',
+            label: '',
+            field: 'actions',
+            align: 'right'
+        }
+    ];
+
+    let allCategories = ref<Categories[]>([]);
+    let categories = ref<Categories[]>([]);
+
+    let searchInput = ref<string>('');
+    let categoryManagement = ref<boolean>(false);
+
+    let action = ref<string>('');
+    let selectedCategoryCode = ref<number|undefined>(0);
+
+    function formatVal(val: number | string) 
+    {    
+        const num = typeof val === 'string' ? parseFloat(val) : val;
+        return new Intl.NumberFormat('pt-BR', {
+            style: 'currency',
+            currency: 'BRL'
+        }).format(num);
+    };
+
+    const search = () => {
+        
+    };
+
+    const getAllCategories = async () => {
+        const res = await api.get(`/categories/all/${ownerCode}`);
+        const data = camelcaseKeys(res.data.data, { deep: true });
+        categories.value = data;
+        allCategories.value = [...categories.value];
+        
+    };
+
+    const showDialogDeleteCategory = (categoryCode: number) => {
+        $q.dialog({
+            title: 'Excluir categoria',
+            message: `Deseja realmente remover essa categoria (${categoryCode})?`,
+            cancel: {
+                push: true,
+                label: 'Não',
+                color: 'red',
+            },
+
+            ok: {
+                push: true,
+                label: 'Sim',
+                color: 'green',
+            },
+
+        }).onOk(() => {
+            deleteCategory(categoryCode);
+
+        }).onCancel(() => {
+            return;
+        });
+    };
+
+    const deleteCategory = async (categoryCode: number) => {
+        const res = await api.delete(`/categories/delete/${ownerCode}/${categoryCode}`);
+        console.log(res.data);
+
+    };
+
+    const showCategoryManagement = (management: string, categoryCode:number|undefined) => {
+        categoryManagement.value = true;
+        action.value = management;
+        selectedCategoryCode.value = categoryCode;
+    };
+
+    const attPage = (event: boolean) => {
+        categoryManagement.value = !event;
+        getAllCategories();
+    };
+
+    onMounted(() => {
+        getAllCategories();
+    });
+</script>

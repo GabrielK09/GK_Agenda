@@ -1,0 +1,48 @@
+<template>
+    <div style="display: flex; max-width: 800px; width: 100%; height: 40rem;">
+        <q-calendar-day
+            ref="calendar"
+            v-model="selectedDate"
+            dark
+            animated
+            @change="onChange"
+            @moved="onMoved"
+            @click-date="onClickDate"
+            @click-time="onClickTime"
+            @click-interval="onClickInterval"
+            @click-head-intervals="onClickHeadIntervals"
+            @click-head-day="onClickHeadDay"
+        />
+    </div>
+</template>
+
+<script setup lang="ts">
+    import { QCalendarDay, today, Timestamp } from '@quasar/quasar-ui-qcalendar'
+    import '@quasar/quasar-ui-qcalendar/index.css'
+    import { ref } from 'vue';
+    const calendar = ref<QCalendarDay>()
+
+    const selectedDate = ref(today())
+
+    function onMoved(data: Timestamp) {
+        console.info('onMoved', data)
+    }
+    function onChange(data: { start: Timestamp; end: Timestamp; days: Timestamp[] }) {
+        console.info('onChange', data)
+    }
+    function onClickDate(data: Timestamp) {
+        console.info('onClickDate', data)
+    }
+    function onClickTime(data: Timestamp) {
+        console.info('onClickTime', data)
+    }
+    function onClickInterval(data: Timestamp) {
+        console.info('onClickInterval', data)
+    }
+    function onClickHeadIntervals(data: Timestamp) {
+        console.info('onClickHeadIntervals', data)
+    }
+    function onClickHeadDay(data: Timestamp) {
+        console.info('onClickHeadDay', data)
+    }
+</script>

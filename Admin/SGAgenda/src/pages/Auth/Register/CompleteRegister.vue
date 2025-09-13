@@ -81,6 +81,7 @@
                                 maxlength="17"
                                 @update:model-value="formatCnpjCpf(owner.cnpjCpf)"
                                 :rules="[cpfInput]"
+                                hide-bottom-space
                             >
                                 <template v-slot:label>
                                     <div >CPF/CNPJ<span class="text-red-500 text-xs relative bottom-1">*</span></div>

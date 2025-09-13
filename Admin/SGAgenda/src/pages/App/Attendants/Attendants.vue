@@ -99,8 +99,8 @@
 
         />
 
-        <CommissionManagement
-            v-if="showCommissionManagement"
+        <CommissionForAttendant
+            v-if="showCommissionForAttendat"
             @close="attPage($event)"
             :attendantName="selecetedAttendantName"
             :attendantCode="selecetedAttendantCode"
@@ -110,12 +110,12 @@
 </template>
 
 <script setup lang="ts">
+    import { api } from 'src/boot/axios';
     import { LocalStorage, QTableColumn, useQuasar } from 'quasar';
     import { onMounted, ref } from 'vue';
-    import AttendantManagement from 'src/components/App/AttendantManagement/AttendantManagement.vue';
-    import CommissionManagement from 'src/components/App/AttendantManagement/Commission/CommissionManagement.vue';
     import camelcaseKeys from 'camelcase-keys';
-    import { api } from 'src/boot/axios';
+    import AttendantManagement from 'src/components/App/AttendantManagement/AttendantManagement.vue';    
+    import CommissionForAttendant from 'src/components/App/AttendantManagement/Commission/CommissionForAttendant.vue';
     
     interface AttendantData {
         attendantCode: number,
@@ -162,12 +162,13 @@
     ];
 
     let showAttendantManagement = ref<boolean>(false);
-    let showCommissionManagement = ref<boolean>(false);
+    
 
     let allAttendant = ref<AttendantData[]>([]);
     let attendants = ref<AttendantData[]>([]);
     let searchInput = ref<string>('');
 
+    let showCommissionForAttendat = ref<boolean>(false); 
     let showAttendant = ref<boolean>(false); 
     let selecetedAttendantName = ref<string>(''); 
     let selecetedAttendantCode = ref<number>(0); 
@@ -182,7 +183,7 @@
 
     const attPage = (event: boolean) => {
         showAttendantManagement.value = !event;
-        showCommissionManagement.value = !event;
+        showCommissionForAttendat.value = !event;
         showAttendant.value = !event;
 
         getAllAttendant();
@@ -198,7 +199,7 @@
         selecetedAttendantCode.value = attendantCode;            
 
         showAttendant.value = true;
-        showCommissionManagement.value = !showCommissionManagement.value;
+        showCommissionForAttendat.value = !showCommissionForAttendat.value;
     };
 
     const exceptionsManagement = () => {

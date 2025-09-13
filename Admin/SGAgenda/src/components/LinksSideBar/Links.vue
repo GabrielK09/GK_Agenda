@@ -47,9 +47,10 @@
         {icon: 'attach_money', title: 'Comissões', position: 2, marked: false, url: `agenda` },
         {icon: 'perm_identity', title: 'Atendentes', position: 3, marked: false, url: `attendants` },
         {icon: 'checklist', title: 'Serviços', position: 4, marked: false, url: `services` },
-        {icon: 'list_alt', title: 'Produtos', position: 5, marked: false, url: `agenda` },
-        {icon: 'wallet', title: 'Caixa', position: 6, marked: false, url: `agenda` },
-        {icon: 'link', title: 'Meu Site', position: 7, marked: false, url: `agenda` },
+        {icon: 'category', title: 'Categorias', position: 5, marked: false, url: `categories` },
+        {icon: 'list_alt', title: 'Produtos', position: 6, marked: false, url: `products` },
+        {icon: 'wallet', title: 'Caixa', position: 7, marked: false, url: `agenda` },
+        {icon: 'link', title: 'Meu Site', position: 8, marked: false, url: `agenda` },
         
     ]);
 
