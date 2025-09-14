@@ -58,4 +58,28 @@ class URLService
 
        return $services;
     }
+
+    public function findServiceByID(string $siteName, int $serviceCode)
+    {
+        $service = $this->urlRepository->findServiceByID($siteName, $serviceCode);
+        
+        if(!$service) 
+        {
+            throw new Exception('Erro ao retornar os serviço para o site', 1);
+        }
+
+        return $service;
+    }
+
+    public function getAttendants(string $siteName)
+    {
+        $attendants = $this->urlRepository->getAttendants($siteName);
+
+        if(!$attendants) 
+        {
+            throw new Exception('Erro ao retornar os atendentes para o site', 1);
+        }
+
+        return $attendants;
+    }
 }

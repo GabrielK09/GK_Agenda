@@ -19,9 +19,7 @@
                         />
                     </div>
                 </div>
-
-                {{ allCommissions }}
-                
+        
                 <div class="">
                     <q-table
                         borded

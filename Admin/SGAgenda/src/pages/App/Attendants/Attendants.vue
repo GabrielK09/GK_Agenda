@@ -65,7 +65,7 @@
                                     <template v-if="col.name === 'actions'">
                                         <div class="text-center">
                                             |
-                                                <q-btn size="10px" no-caps color="black" icon="alarm_add" flat @click=""/> <!-- Horários -->
+                                                <q-btn size="10px" no-caps color="black" icon="alarm_add" flat @click="hoursManagement(props.row.name, props.row.attendantCode)"/> <!-- Horários -->
                                                 <q-btn size="10px" no-caps color="black" icon="money" flat @click="commissionManagement(props.row.name, props.row.attendantCode)"/> <!-- Comissão -->
                                                 <q-btn size="10px" no-caps color="black" icon="hourglass_disabled" flat @click=""/> <!-- Exceções -->
                                             |
@@ -105,7 +105,15 @@
             :attendantName="selecetedAttendantName"
             :attendantCode="selecetedAttendantCode"
         />
-        
+
+        <HourManagement
+            v-if="showHoursForAttendat"
+            @close="attPage($event)"
+            :attendantName="selecetedAttendantName"
+            :attendantCode="selecetedAttendantCode"
+
+        />
+
     </q-page>
 </template>
 
@@ -116,6 +124,7 @@
     import camelcaseKeys from 'camelcase-keys';
     import AttendantManagement from 'src/components/App/AttendantManagement/AttendantManagement.vue';    
     import CommissionForAttendant from 'src/components/App/AttendantManagement/Commission/CommissionForAttendant.vue';
+    import HourManagement from 'src/components/App/AttendantManagement/Hours/HourManagement.vue';
     
     interface AttendantData {
         attendantCode: number,
@@ -157,18 +166,18 @@
             label: 'Ações',
             field: 'actions',
             'align': 'center'
-        }
-        
+        }        
     ];
 
     let showAttendantManagement = ref<boolean>(false);
     
-
     let allAttendant = ref<AttendantData[]>([]);
     let attendants = ref<AttendantData[]>([]);
     let searchInput = ref<string>('');
 
     let showCommissionForAttendat = ref<boolean>(false); 
+    let showHoursForAttendat = ref<boolean>(false); 
+
     let showAttendant = ref<boolean>(false); 
     let selecetedAttendantName = ref<string>(''); 
     let selecetedAttendantCode = ref<number>(0); 
@@ -206,8 +215,12 @@
 
     };
 
-    const hoursManagement = () => {
+    const hoursManagement = (attendantName: string, attendantCode: number) => {
+        selecetedAttendantName.value = attendantName;
+        selecetedAttendantCode.value = attendantCode;            
 
+        showAttendant.value = true;
+        showHoursForAttendat.value = !showHoursForAttendat.value;
     };
 
     onMounted(() => {

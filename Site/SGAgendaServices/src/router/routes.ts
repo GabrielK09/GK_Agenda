@@ -9,6 +9,11 @@ const routes: RouteRecordRaw[] = [
                 path: '', 
                 component: () => import('pages/Home/HomePage.vue'),
                 name: 'index'
+            },
+            {
+                path: '/schedule/:scheduleCode',
+                component: () => import('pages/Scheduling/Open/SchedulingDetails.vue'),
+                name: 'schedule',
             }
         ],
     },

@@ -11,23 +11,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('schedules', function (Blueprint $table) {
+        Schema::create('attendant_hours', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('attendant_hour_code')->index();
 
+            $table->unsignedBigInteger('owner_code');
+            $table->foreign('owner_code')->references('owner_code')->on('owners')->restrictOnDelete();
+            
             $table->unsignedBigInteger('attendant_code');
             $table->foreign('attendant_code')->references('attendant_code')->on('attendants')->onDelete('cascade');
             $table->string('attendant', 120);
 
-            $table->unsignedBigInteger('service_code');
-            $table->foreign('service_code')->references('service_code')->on('services')->restrictOnDelete();
-            $table->string('service', 120);
-
-            $table->string('customer_name', 120);
-            $table->string('customer_phone', 120);
-
             $table->string('day', 12);
-            $table->string('hour', 12);
-            
+            $table->string('time', 12);
+            $table->string('interval', 12);
+            $table->string('interval_between_services', 12);
+
             $table->timestamps();
         });
     }
@@ -37,6 +36,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('schedules');
+        Schema::dropIfExists('attendant_hours');
     }
 };

@@ -5,7 +5,7 @@ namespace App\Http\Requests\Attendant;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
-class AttendantRequest extends FormRequest
+class AttendantHoursRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,9 +24,8 @@ class AttendantRequest extends FormRequest
     {
         return [
             'ownerCode' => ['required', 'exists:owners,owner_code'],
-            'name' => ['required', 'string'],
-            'email' => ['required', 'email'],
-            'password' => ['required', 'string']
+            'attendatCode' => ['required', 'exists:attendants,attendant_code'],
+            'hours' => ['required', 'array']
         ];
     }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Attendant\AttendantController;
+use App\Http\Controllers\Attendant\AttendantHoursController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Category\CategoryController;
 use App\Http\Controllers\Commission\CommissionController;
@@ -23,6 +24,8 @@ Route::prefix('/v1')->group(function() {
         Route::post('/create-url', [SiteManagementController::class, 'createURL']);
         Route::get('/get-categories/{siteName}', [SiteManagementController::class, 'getCategories']);
         Route::get('/get-services/{siteName}', [SiteManagementController::class, 'getServices']);
+        Route::get('/find/{site_name}/{service_code}', [SiteManagementController::class, 'findServiceByID']); 
+        Route::get('/get-attendants/{site_name}', [SiteManagementController::class, 'getAttendants']);
 
     });
 
@@ -55,6 +58,9 @@ Route::prefix('/v1')->group(function() {
             Route::put('/update/{owner_code}/{attendant_code}', [AttendantController::class, 'update']); 
             Route::delete('/delete/{owner_code}/{attendant_code}', [AttendantController::class, 'delete']); 
             Route::put('/active/{owner_code}/{product_code}', [AttendantController::class, 'active']); 
+
+            Route::post('/create/hours', [AttendantHoursController::class, 'create']);
+            
         });
 
         Route::prefix('/products')->group(function() {

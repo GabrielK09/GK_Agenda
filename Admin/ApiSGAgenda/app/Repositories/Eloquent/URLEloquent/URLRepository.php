@@ -3,6 +3,7 @@
 namespace App\Repositories\Eloquent\URLEloquent;
 
 use App\Models\URL as SiteURL;
+use App\Repositories\Eloquent\AttendantEloquent\AttendantRepository;
 use App\Repositories\Eloquent\CategoriesManagementEloquent\CategoriesManagementRepository;
 use App\Repositories\Eloquent\OwnerEloquent\OwnerRepository;
 use App\Repositories\Eloquent\ServicesManagementEloquent\ServicesManagementRepository;
@@ -14,7 +15,8 @@ class URLRepository
     public function __construct(
         protected OwnerRepository $ownerRepository,
         protected ServicesManagementRepository $servicesManagementRepository,
-        protected CategoriesManagementRepository $categoriesManagementRepository
+        protected CategoriesManagementRepository $categoriesManagementRepository,
+        protected AttendantRepository $attendantRepository
     ){}
 
     public function getURL(int $onwerCode)
@@ -79,5 +81,21 @@ class URLRepository
         $services = $this->servicesManagementRepository->getAll($ownerCode);
 
         return $services;
+    }
+
+    public function findServiceByID(string $siteName, int $serviceCode)
+    {
+        $ownerCode = $this->getOwnerCode($siteName);
+        $service = $this->servicesManagementRepository->findByID($ownerCode, $serviceCode);
+
+        return $service;
+    }
+
+    public function getAttendants(string $siteName)
+    {
+        $ownerCode = $this->getOwnerCode($siteName);
+        $attendants = $this->attendantRepository->getAll($ownerCode);
+
+        return $attendants;
     }
 }

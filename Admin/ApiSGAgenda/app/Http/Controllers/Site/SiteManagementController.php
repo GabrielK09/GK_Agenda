@@ -36,4 +36,15 @@ class SiteManagementController extends Controller
     {
         return apiSuccess('Retornando todos os serviços', $this->uRLService->getServices($siteName));
     }
+
+    public function findServiceByID(string $siteName, int $serviceCode)
+    {
+        return apiSuccess('Retornando o serviço selecionado', $this->uRLService->findServiceByID($siteName, $serviceCode));
+    }
+
+    public function getAttendants(string $siteName)
+    {
+        return apiSuccess('Retornando os atendentes!', $this->uRLService->getAttendants($siteName));
+
+    }
 }
