@@ -45,6 +45,10 @@ class SiteManagementController extends Controller
     public function getAttendants(string $siteName)
     {
         return apiSuccess('Retornando os atendentes!', $this->uRLService->getAttendants($siteName));
+    }
 
+    public function getAttendantHour(string $siteName, int $attendantCode)
+    {
+        return apiSuccess('Retornando os horários do atendente!', $this->uRLService->getAttendantHour($siteName, $attendantCode));
     }
 }

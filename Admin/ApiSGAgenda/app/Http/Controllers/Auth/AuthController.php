@@ -11,11 +11,8 @@ use App\Services\AttendantService\AttendantService;
 use Illuminate\Support\Facades\Log;
 use App\Services\AuthService\AuthService;
 use App\Services\OwnerService\OwnerService;
-use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-
-use function PHPUnit\Framework\isObject;
 
 class AuthController extends Controller
 {
@@ -38,7 +35,7 @@ class AuthController extends Controller
 
         $password = $data['password'];
         Log::info($owner);
-
+    
         if($owner && Hash::check($password, $owner->password))
         {
             if(is_null($owner->cnpj_cpf))

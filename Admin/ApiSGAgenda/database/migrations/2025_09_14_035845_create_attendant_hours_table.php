@@ -18,14 +18,15 @@ return new class extends Migration
             $table->unsignedBigInteger('owner_code');
             $table->foreign('owner_code')->references('owner_code')->on('owners')->restrictOnDelete();
             
-            $table->unsignedBigInteger('attendant_code');
+            $table->unsignedBigInteger('attendant_code');   
             $table->foreign('attendant_code')->references('attendant_code')->on('attendants')->onDelete('cascade');
             $table->string('attendant', 120);
 
-            $table->string('day', 12);
-            $table->string('time', 12);
-            $table->string('interval', 12);
-            $table->string('interval_between_services', 12);
+            $table->string('day', 12)->nullable()->default('');
+            $table->string('time', 12)->nullable()->default('');
+            $table->string('interval', 12)->nullable()->default('');
+            $table->string('interval_between_services', 12)->nullable()->default('');
+            $table->boolean('marked_day', 12)->nullable()->default(0);
 
             $table->timestamps();
         });

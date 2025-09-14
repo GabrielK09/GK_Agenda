@@ -3,6 +3,7 @@
 namespace App\Repositories\Eloquent\URLEloquent;
 
 use App\Models\URL as SiteURL;
+use App\Repositories\Eloquent\AttendantEloquent\AttendantHoursRepository;
 use App\Repositories\Eloquent\AttendantEloquent\AttendantRepository;
 use App\Repositories\Eloquent\CategoriesManagementEloquent\CategoriesManagementRepository;
 use App\Repositories\Eloquent\OwnerEloquent\OwnerRepository;
@@ -16,7 +17,8 @@ class URLRepository
         protected OwnerRepository $ownerRepository,
         protected ServicesManagementRepository $servicesManagementRepository,
         protected CategoriesManagementRepository $categoriesManagementRepository,
-        protected AttendantRepository $attendantRepository
+        protected AttendantRepository $attendantRepository,
+        protected AttendantHoursRepository $attendantHoursRepository
     ){}
 
     public function getURL(int $onwerCode)
@@ -97,5 +99,13 @@ class URLRepository
         $attendants = $this->attendantRepository->getAll($ownerCode);
 
         return $attendants;
+    }
+
+    public function getAttendantHour(string $siteName, int $attendantCode)
+    {
+        $ownerCode = $this->getOwnerCode($siteName);
+        $hours = $this->attendantHoursRepository->getHours($ownerCode, $attendantCode);
+
+        return $hours;
     }
 }

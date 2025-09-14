@@ -53,8 +53,6 @@ export default defineBoot(({ app, router }) => {
     api.interceptors.response.use(
         (response) => response,
         (error) => {
-            console.log('Config:', error);
-
             if (error.status === 401) {
                 app.config.globalProperties.$q.notify({
                     color: 'red',

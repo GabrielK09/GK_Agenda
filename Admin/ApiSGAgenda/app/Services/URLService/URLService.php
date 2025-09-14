@@ -82,4 +82,16 @@ class URLService
 
         return $attendants;
     }
+
+    public function getAttendantHour(string $siteName, int $attendantCode)
+    {    
+        $attendantHour = $this->urlRepository->getAttendantHour($siteName, $attendantCode);
+
+        if(!$attendantHour) 
+        {
+            throw new Exception('Erro ao retornar os horários do atendente para o site', 1);
+        }
+
+        return $attendantHour;
+    }
 }

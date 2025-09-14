@@ -11,10 +11,12 @@ class AttendantHour extends Model
     protected $fillable = [
         'attendant_hour_code',
         'attendant_code',
+        'owner_code',
         'attendant',
         'day',
         'time',
         'interval',
-        'interval_between_services'
+        'interval_between_services',
+        'marked_day',
     ];
 }

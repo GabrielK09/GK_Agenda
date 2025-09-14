@@ -13,16 +13,13 @@ class AttendantHoursController extends Controller
         protected AttendantHoursService $attendantHoursService
     ){}
 
-    public function getAll(int $ownerCode)
+    public function getHours(int $ownerCode, int $attendantCode)
     {
-        //return apiSuccess('Todos os atendentes', $this->attendantService->getAll($ownerCode));
+        return apiSuccess('Todos os horários do atendentes', $this->attendantHoursService->getHours($ownerCode, $attendantCode));
     }
     
     public function create(AttendantHoursRequest $request)
-    {
-        Log::info('Dados para criação');
-        Log::info($request->validated());
-        
+    {        
         return apiSuccess('Horário cadastrado com sucesso!', $this->attendantHoursService->create($request->validated()));
     }
 

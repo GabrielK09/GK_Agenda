@@ -24,7 +24,7 @@ class AttendantHoursRequest extends FormRequest
     {
         return [
             'ownerCode' => ['required', 'exists:owners,owner_code'],
-            'attendatCode' => ['required', 'exists:attendants,attendant_code'],
+            'attendantCode' => ['required', 'exists:attendants,attendant_code'],
             'hours' => ['required', 'array']
         ];
     }

@@ -6,30 +6,63 @@ use App\Models\Attendant;
 use App\Models\AttendantHour;
 use Exception;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
-
 class AttendantHoursRepository 
 {
+
+    public function getHours(int $ownerCode, int $attendantCode)
+    {
+        $hours = AttendantHour::where('owner_code', $ownerCode)->where('attendant_code', $attendantCode)->get();
+        return $hours;
+    }
+
+    protected function checkExistHours(int $ownerCode, int $attendantCode): bool
+    {  
+        Log::info('Vai conferir se já não existe horário cadastrado');
+        $hours = AttendantHour::where('owner_code', $ownerCode)->where('attendant_code', $attendantCode)->first();
+        if($hours)
+        {
+            Log::info('Já existe horário cadastrado');
+            return true;
+        }
+
+        Log::info('Não existe horário cadastrado');
+
+        return false;
+    }
+
     public function create(array $data)
     {
-        $attendant = DB::transaction(function() use ($data) {
-            $maxCode = AttendantHour::where('owner_code', $data['ownerCode'])->max('attendant_hour_code');
-            $attendant = Attendant::where('owner_code', $data['ownerCode'])->where('attendant_code', $data['attendantCode'])->first();
+        if($this->checkExistHours($data['ownerCode'], $data['attendantCode']))
+        {
+            return 'callUpdate';
 
-            return AttendantHour::create([
-                'attendant_hour_code' => $maxCode ? $maxCode + 1 : 1,
-                'owner_code' => $data['ownerCode'],
-                'attendant_code' => $attendant->attendant_code,
-                'attendant' => $attendant->name,
-                'day' => $data['day'],
-                'time' => $data['time'],
-                'interval' => $data['interval'],
-                'interval_between_services' => $data['intervalBetweenServices']
-            ]);
-        });
+        } else {
+            $hours = DB::transaction(function() use ($data) {
+                Log::debug($data['ownerCode']);
+                $attendant = Attendant::where('owner_code', $data['ownerCode'])->where('attendant_code', $data['attendantCode'])->first();
+                $maxCode = AttendantHour::where('owner_code', $data['ownerCode'])->max('attendant_hour_code');
 
-        return $attendant;
+                Log::debug('Entrando no foreach');
+                foreach ($data['hours'] as $days) {
+                    AttendantHour::create([
+                        'attendant_hour_code' => $maxCode ? $maxCode + 1 : 1,
+                        'owner_code' => $data['ownerCode'],
+                        'attendant_code' => $attendant->attendant_code,
+                        'attendant' => $attendant->name,
+                        'day' => $days['day'],
+                        'time' => $days['time'],
+                        'marked_day' => $days ['markedDay']
+                        
+                    ]);
+                }
+            });
+
+            Log::info('Horário cadastrado com sucesso!');
+
+            return $hours;
+
+        };
     }
 
     public function findByID(int $ownerCode, int $attendantCode)
@@ -41,24 +74,30 @@ class AttendantHoursRepository
 
     public function update(array $data, int $attendantCode)
     {
-        $id = DB::transaction(function () use ($data, $attendantCode) {
-            $attendant = $this->findByID($data['ownerCode'], $attendantCode);
-            
-            if(!$attendant)
-            {
-                throw new Exception("Erro ao localizar o atendente para alteração");
+        Log::info('Começou o update');
+        Log::info($data);
 
+        $hours = DB::transaction(function() use ($data, $attendantCode) {
+            Log::debug('Entrando no foreach');
+            foreach ($data['hours'] as $days) {
+                $attendantHour = AttendantHour::where('owner_code', $data['ownerCode'])->where('attendant_code', $attendantCode)->where('day', $days['day'])->first();
+                
+                $attendantHour->update([
+                    'day' => $days['day'],
+                    'time' => $days['time'],
+                    'interval' => $days['interval'],
+                    'interval_between_services' => $days['intervalBetweenServices'],
+                    'marked_day' => $days ['markedDay']
+                    
+                ]);
             }
 
-            $attendant->update([
-
-            ]); 
-
-            return $attendant;
+            return $attendantHour;
         });
 
-        Log::info($id);
-        return $id;
+        Log::info('Horários alterados com sucesso!');
+
+        return $hours;
 
     }
 }

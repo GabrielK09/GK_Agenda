@@ -111,7 +111,6 @@
             @close="attPage($event)"
             :attendantName="selecetedAttendantName"
             :attendantCode="selecetedAttendantCode"
-
         />
 
     </q-page>
@@ -193,6 +192,7 @@
     const attPage = (event: boolean) => {
         showAttendantManagement.value = !event;
         showCommissionForAttendat.value = !event;
+        showHoursForAttendat.value = !event;
         showAttendant.value = !event;
 
         getAllAttendant();

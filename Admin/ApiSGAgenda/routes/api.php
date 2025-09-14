@@ -25,7 +25,8 @@ Route::prefix('/v1')->group(function() {
         Route::get('/get-categories/{siteName}', [SiteManagementController::class, 'getCategories']);
         Route::get('/get-services/{siteName}', [SiteManagementController::class, 'getServices']);
         Route::get('/find/{site_name}/{service_code}', [SiteManagementController::class, 'findServiceByID']); 
-        Route::get('/get-attendants/{site_name}', [SiteManagementController::class, 'getAttendants']);
+        Route::get('/get-attendants/{siteName}', [SiteManagementController::class, 'getAttendants']);
+        Route::get('/get-attendants/hours/{siteName}/{attendantCode}', [SiteManagementController::class, 'getAttendantHour']);
 
     });
 
@@ -60,6 +61,7 @@ Route::prefix('/v1')->group(function() {
             Route::put('/active/{owner_code}/{product_code}', [AttendantController::class, 'active']); 
 
             Route::post('/create/hours', [AttendantHoursController::class, 'create']);
+            Route::get('/get/hours/{owner_code}/{attendant_code}', [AttendantHoursController::class, 'getHours']);
             
         });
 
