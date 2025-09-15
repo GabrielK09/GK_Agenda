@@ -67,7 +67,6 @@
                                             |
                                                 <q-btn size="10px" no-caps color="black" icon="alarm_add" flat @click="hoursManagement(props.row.name, props.row.attendantCode)"/> <!-- Horários -->
                                                 <q-btn size="10px" no-caps color="black" icon="money" flat @click="commissionManagement(props.row.name, props.row.attendantCode)"/> <!-- Comissão -->
-                                                <q-btn size="10px" no-caps color="black" icon="hourglass_disabled" flat @click=""/> <!-- Exceções -->
                                             |
                                                 <q-btn size="10px" no-caps color="black" icon="edit_square" flat @click=""/>
                                                 <q-btn size="10px" no-caps color="red" icon="delete" flat @click=""/>

@@ -67,7 +67,6 @@
                                 v-model="category.description" 
                                 type="textarea"
                                 label=""
-                                :rules="[validateDescriptionField]"
                                 maxlength="255"
                             />
                             <div class="mt-1.5">
@@ -127,16 +126,6 @@
 
     const categories = ref<CategoriesData[]>([]);
     
-    function validateDescriptionField(val: string) {
-        if(val.length < 10) 
-        {
-            return 'A descrição deve conter pelo menos 10 caracteres!'
-            
-        }
-
-        return true;
-
-    }
     const getCategoriesData = async () => {
         $q.notify({
             color: 'green',

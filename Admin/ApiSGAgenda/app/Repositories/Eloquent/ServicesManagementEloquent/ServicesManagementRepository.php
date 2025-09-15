@@ -111,9 +111,9 @@ class ServicesManagementRepository
                 'category' => $category->name ?? null,
                 'name' => $data['name'],
                 'price' => $data['price'],
-                'description' => $data['description'],
+                'description' => $data['description'] ?? '',
                 'duration_string' => $data['durationString'],
-                'duration' => $data['duration'] ?? '',
+                'duration' => $data['duration'],
                 'is_home_service' => $data['isHomeService'],
                 'check_availability' => $data['checkAvailability'],
 
