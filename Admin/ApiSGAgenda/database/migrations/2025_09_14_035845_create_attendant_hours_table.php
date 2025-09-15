@@ -23,7 +23,8 @@ return new class extends Migration
             $table->string('attendant', 120);
 
             $table->string('day', 12)->nullable()->default('');
-            $table->string('time', 12)->nullable()->default('');
+            $table->string('start', 12)->nullable()->default('');
+            $table->string('end', 12)->nullable()->default('');
             $table->string('interval', 12)->nullable()->default('');
             $table->string('interval_between_services', 12)->nullable()->default('');
             $table->boolean('marked_day', 12)->nullable()->default(0);

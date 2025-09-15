@@ -54,25 +54,56 @@
                             {{ formatDay(day.day.toString()) + `/0${month + 1}` }} - {{ replaceDayLabel(day.dayWeek.replace('.', '')) }}
                         </div>
                     </div>
+                    <div v-if="daysByMarked.length <= 0">
+                        <span>Sem horários para este atendete</span>
+                    </div>
                 </div>
             </div>    
 
             <div class="">
                 <div v-if="releaseMarkHours">
-                    <div v-for="hour in hoursAttendants">
-                        {{ hour }}
+                    <div v-if="releaseMarkHours" class="mt-6">
+                        <!--Ia-->
+                        <div class="grid grid-cols-4 gap-2">
+                            <q-btn
+                                v-for="(s, i) in slots"
+                                :key="s.time"
+                                class="px-3 py-2 rounded-md border text-sm hover:-translate-y-1 transition-transform"
+                                :class="[
+                                    s.selected ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-700',
+                                    s.disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+                                ]"
+                                    :disabled="s.disabled"
+                                    @click="showConfirmHour(i)"
+                                    title="Selecionar horário"
+                                >
+                                {{ s.time }}
+                            </q-btn>
+                        </div>
                     </div>
-
                 </div>
             </div>
         </div>
     </div>
+
+    <ConfirmHour
+        v-if="shoowConfirmHour"
+        @close="closeAndUncheck($event)"
+        @position="removePosition($event)"
+        :position="positionMarked"
+        :hour="selectedHour"
+        :service-code="codeParam.scheduleCode"
+        :attendant-code="LocalStorage.getItem('attendantCode')"
+        :date="selectedDate"
+
+    />
 </template>
 
 <script setup lang="ts">
     import camelcaseKeys from 'camelcase-keys';
     import { LocalStorage } from 'quasar';
     import { api } from 'src/boot/axios';
+    import ConfirmHour from 'src/components/ConfirmHour.vue';
     import { onMounted, ref } from 'vue';
     import { useRoute } from 'vue-router';
 
@@ -101,6 +132,13 @@
         
     };
 
+    type Slot = {
+        time: string;
+        selected?: boolean,
+        disabled?: boolean
+    };
+    const slots = ref<Slot[]>([]);
+
     const daysByMarked = ref<DayWeek[]>([]);
     const month = new Date().getMonth();
 
@@ -115,6 +153,7 @@
     const attendants = ref<Attendant[]>([]);
     const hoursAttendants = ref([]);
     const allHoursAttendants = ref([]);
+    const showHoursAttendants = ref([]);
     
     const service = ref<Service>({
         serviceCode: 0,
@@ -124,6 +163,11 @@
         duration: ''
 
     });
+
+    let shoowConfirmHour = ref<boolean>(false);
+    let positionMarked = ref<number>(0);
+    let selectedHour = ref<string>('');
+    let selectedDate = ref<string>('');
 
     let releaseHours = ref<boolean>(false);
     let releaseMarkHours = ref<boolean>(false);
@@ -207,6 +251,7 @@
     };
 
     const markAttendant = (attendantCode: number) => {
+        LocalStorage.set("attendantCode", attendantCode);
         const attendant: Attendant[] = attendants.value.filter(attendant => { 
             if(attendant.attendantCode === attendantCode)
             {
@@ -278,21 +323,108 @@
     };
 
     const selectedDay = async (day: string, dayWeek: string, attendantCode: number) => {
-        const res = await api.get(`/site/get-attendants/hours/${urlName}/${attendantCode}`)
-        const data = res.data.data;
-        
-        allHoursAttendants.value = [...hoursAttendants.value];        
+        selectedDate.value = day + '/' + dayWeek;
+        console.log('Chamaou o selectedDay, day: ', day, ' dia da semana: ', dayWeek);
         
         releaseMarkHours.value = true;
-        console.log('Dia selecionado: ', day, ' no: ', dayWeek);
-        console.log('hoursAttendants.value: ', hoursAttendants.value);
+        const res = await api.get(`/site/get-attendants/hours/${urlName}/${attendantCode}`)
+        const data = camelcaseKeys(res.data.data, { deep: true });
+        
+        allHoursAttendants.value = data.filter((d: any) => d.markedDay && d.day.toLowerCase() === dayWeek.replace('.', ''));
+        
+        const startStr = allHoursAttendants.value.map((d: any) => d.start );
+        const endStr = allHoursAttendants.value.map((d: any )=> d.end );
+        const intervalBetweenServicesStr = allHoursAttendants.value.map((d: any )=> d.intervalBetweenServices );
 
-        hoursAttendants.value = allHoursAttendants.value.filter((h: any) => {
-            return h.markedDay === 1 && h.day.toLowerCase() === dayWeek.toLowerCase().replace('.', '')
-        });
+        const interval = setIntervalByStr(intervalBetweenServicesStr[0])
 
-        console.log('hoursAttendants.value: ', hoursAttendants.value);
+        slots.value = buildSlots(startStr[0], endStr[0], interval);
     };
+
+    const setIntervalByStr = (intervalStr: string): number => {
+        let interval = 0;
+        switch (intervalStr) {
+            case '5 minutos':
+                interval = 5;
+                break;
+
+            case '10 minutos':
+                interval = 10;
+                break;
+
+            case '15 minutos':
+                interval = 15;
+                break;
+            case '20 minutos':
+                interval = 20;
+                break;
+            case '25 minutos':
+                interval = 25;
+                break;
+
+            case '30 minutos':
+                interval = 30;
+                break;
+        
+            default:
+                break;
+        }
+        return interval;
+    };
+
+    // ia
+    function buildSlots(startStr: string, endStr: string, stepMin: number): Slot[] {
+        const start = toMinutes(startStr);
+        const end   = toMinutes(endStr);
+
+        if (!stepMin || stepMin <= 0 || end <= start) return [];
+
+        const out: Slot[] = [];
+        for (let t = start; t < end; t += stepMin) {
+            out.push({ time: fromMinutes(t), selected: false, disabled: false });
+        }
+        return out;
+    }
+
+    function toMinutes(hhmm: string): number {
+        const [h, m] = (hhmm ?? '00:00').split(':').map(v => parseInt(v, 10) || 0);
+        return h * 60 + m;
+    }
+
+    function fromMinutes(min: number): string {
+        const h = Math.floor(min / 60);
+        const m = min % 60;
+        const hh = h.toString().padStart(2, '0');
+        const mm = m.toString().padStart(2, '0');
+        return `${hh}:${mm}`;
+    }
+
+    const showConfirmHour = (position: number) => {
+        const slot = slots.value[position];
+
+        if(!slot) return;
+        if(slot) {
+            slot.selected = true;
+            shoowConfirmHour.value = true;
+            positionMarked.value = position;
+            selectedHour.value = slot.time;
+        
+        };
+    };
+
+    const closeAndUncheck = (show: boolean) => {
+        console.log('Vai fechar');
+        shoowConfirmHour.value = !show;
+    };  
+
+    const removePosition = (position: number) => {
+        console.log('Vai desmarcar');
+        
+        const slot = slots.value[position];
+
+        if(!slot) return;
+        if(slot) slot.selected = false;
+    };  
 
     onMounted(() => {
         getAttendantData();

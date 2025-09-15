@@ -51,7 +51,8 @@ class AttendantHoursRepository
                         'attendant_code' => $attendant->attendant_code,
                         'attendant' => $attendant->name,
                         'day' => $days['day'],
-                        'time' => $days['time'],
+                        'start' => $days['start'],
+                        'end' => $days['end'],
                         'marked_day' => $days ['markedDay']
                         
                     ]);
@@ -84,7 +85,8 @@ class AttendantHoursRepository
                 
                 $attendantHour->update([
                     'day' => $days['day'],
-                    'time' => $days['time'],
+                    'start' => $days['start'],
+                    'end' => $days['end'],
                     'interval' => $days['interval'],
                     'interval_between_services' => $days['intervalBetweenServices'],
                     'marked_day' => $days ['markedDay']

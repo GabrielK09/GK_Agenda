@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Schedule extends Model
 {
     protected $fillable = [
+        'scheduling_code',
+        'owner_code',
         'attendant_code',
         'attendant',
         'service_code',

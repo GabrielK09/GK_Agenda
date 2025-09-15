@@ -7,6 +7,7 @@ use App\Http\Controllers\Category\CategoryController;
 use App\Http\Controllers\Commission\CommissionController;
 use App\Http\Controllers\Owner\OwnerController;
 use App\Http\Controllers\Products\ProductsController;
+use App\Http\Controllers\Schedule\ScheduleController;
 use App\Http\Controllers\Site\ServicesManagementController;
 use App\Http\Controllers\Site\SiteManagementController;
 use Illuminate\Support\Facades\Route;
@@ -22,6 +23,8 @@ Route::prefix('/v1')->group(function() {
 
     Route::prefix('/site')->group(function() {
         Route::post('/create-url', [SiteManagementController::class, 'createURL']);
+        Route::post('/create/schedule', [ScheduleController::class, 'create']);
+
         Route::get('/get-categories/{siteName}', [SiteManagementController::class, 'getCategories']);
         Route::get('/get-services/{siteName}', [SiteManagementController::class, 'getServices']);
         Route::get('/find/{site_name}/{service_code}', [SiteManagementController::class, 'findServiceByID']); 
@@ -82,5 +85,11 @@ Route::prefix('/v1')->group(function() {
         Route::prefix('/site')->group(function() {
             Route::get('/get-url/{owner_code}', [SiteManagementController::class, 'getURL']);
         });
+
+        Route::prefix('/schedule')->group(function() {
+            Route::get('/get-all/{owner_code}', [ScheduleController::class, 'getAll']);
+            Route::get('/get-detail/{owner_code}', [ScheduleController::class, 'detail']);
+            Route::put('');
+        }); 
     });
 });

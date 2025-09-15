@@ -255,11 +255,10 @@
 
         }); 
 
-        const minutes = Math.floor(Number(service.value.duration) / 60);
+        //const minutes = Math.floor(Number(service.value.duration) / 60);
+        const minutes = ~~(Number(service.value.duration) / 60);
         const seconds = Number(service.value.duration) % 60;
         const newDuration = minutes + ':' + (seconds === 0 ? '00' : seconds);
-
-        console.log(`Duração: ${newDuration}`);
 
         const payload: ServiceData = {
             categoryCode: service.value.categoryCode,

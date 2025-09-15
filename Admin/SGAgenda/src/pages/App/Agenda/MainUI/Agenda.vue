@@ -66,30 +66,18 @@
     import AgendaDay from '../Calender/AgendaDay.vue';
     import SchedulingManagement from 'src/components/App/AgendaManagement/SchedulingManagement.vue';
     import { onMounted, ref } from 'vue';
-    import { QTableColumn } from 'quasar';
+    import { LocalStorage, QTableColumn } from 'quasar';
     import dayjs from 'dayjs';
+    import { api } from 'src/boot/axios';
+    import camelcaseKeys from 'camelcase-keys';
 
-    interface Service {
+   interface Scheduling {
+        customerName: string,
+        customerPhone: string,
         serviceCode: number,
         name: string
-    };
-
-    interface Attendant {
         attendantCode: number,
-        name: string
-    };
-
-    interface SchedulingData {
-        schedulingCode: number,
-        schedulingDuration: string,
-        schedulingCustomerPhone: string,
-        schedulingCustomer: string,
-    };
-
-    interface Scheduling {
-        scheduling: SchedulingData,
-        service: Service,
-        attendant: Attendant,   
+        name2: string
         schedulingHour: string,
         schedulingDate: string,
     };
@@ -110,14 +98,13 @@
             align: 'center'
         },
         {
-            field: 'scheduling',
+            field: 'customerName',
             label: 'Cliente',
-            name: 'scheduling',
+            name: 'customerName',
             align: 'center',
             sortable: true,
             format(val) {
-                const data: SchedulingData = val;
-                return data.schedulingCustomer;
+                return val.customerName;
             }
         },
         {
@@ -127,52 +114,15 @@
             align: 'center',
             sortable: true,
             format(val) {
-                const data: Service = val;
-                return data.name;
+                return val.name;
             }
         }
     ]);
 
     const allSchedulings = ref<Scheduling[]>([]);
 
-    const schedulings = ref<Scheduling[]>([
-        {
-            attendant: {
-                attendantCode: 1,
-                name: 'Gabriel'
-            },
-            service: {
-                serviceCode: 1,
-                name: 'Corte de cabelo'
-            },
-            scheduling: {
-                schedulingCode: 1,
-                schedulingCustomer: 'Carlos',
-                schedulingCustomerPhone: '(49) 99948-2859',
-                schedulingDuration: '12'
-            },
-            schedulingHour: '12:00',
-            schedulingDate: dayjs().add(1, 'day').format('DD/MM/YYYY')
-        },
-        {
-            attendant: {
-                attendantCode: 1,
-                name: 'Gabriel'
-            },
-            service: {
-                serviceCode: 1,
-                name: 'Corte de cabelo'
-            },
-            scheduling: {
-                schedulingCode: 1,
-                schedulingCustomer: 'André',
-                schedulingCustomerPhone: '(49) 99948-2859',
-                schedulingDuration: '11'
-            },
-            schedulingHour: '12:00',
-            schedulingDate: dayjs().format('DD/MM/YYYY')
-        },
-    ]);
+    const schedulings = ref<Scheduling[]>([]);
+    const ownerCode = LocalStorage.getItem("ownerCode");
 
     let formatedDate = ref<string>(dayjs().format('DD/MM/YYYY')); 
     let showDetailScheduling = ref<boolean>(false);
@@ -187,8 +137,21 @@
         schedulings.value = allSchedulings.value.filter(scheduling => scheduling.schedulingDate === date);
     };
 
-    const getAllSchedulings = () => {
+    const getAllSchedulings = async () => {
+        const res = await api.get(`/schedule/get-all/${ownerCode}`);
+        const data = camelcaseKeys(res.data.data, { deep: true });
+        schedulings.value = data;
 
+        /*'scheduling_code',
+        'owner_code',
+        'attendant_code',
+        'attendant',
+        'service_code',
+        'service',
+        'customer_name',
+        'customer_phone',
+        'day',
+        'hour', */
     };
 
     const convertStringDate = (stringDate: string): string => {

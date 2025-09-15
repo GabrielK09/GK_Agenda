@@ -30,6 +30,7 @@
                     </div>
                 </div>
             </div>
+            
             <div v-if="servicesNotHasCategory.length > 0" class="mt-4 p-8">
                 <span class="p-1 ml-4">Confira os demais serviços!</span>
                 <div v-for="service in servicesNotHasCategory" class="mt-4 bg-gray-500 rounded-md  p-8">
@@ -51,7 +52,7 @@
                                 outline
                                 icon="arrow_forward"
                                 class="ml-24"
-                                @click="" 
+                                :to="`/schedule/${service.serviceCode}`"
                             />
                         </div>
                     </div>

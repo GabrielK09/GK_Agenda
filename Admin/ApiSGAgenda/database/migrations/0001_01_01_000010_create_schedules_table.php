@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('schedules', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('scheduling_code')->index();
+
+            $table->unsignedBigInteger('owner_code');
+            $table->foreign('owner_code')->references('owner_code')->on('owners')->onDelete('cascade');
 
             $table->unsignedBigInteger('attendant_code');
             $table->foreign('attendant_code')->references('attendant_code')->on('attendants')->onDelete('cascade');

@@ -23,7 +23,7 @@
                 </div>
 
                 <q-form
-                        
+                    @submit="saveHours"
                 >   
                     <div class="mt-4 bg-white p-8 grid grid-cols-3 w-max">                 
                         <div v-for="hourLabel in hoursLabel">
@@ -33,14 +33,30 @@
                                     <q-input 
                                         hide-bottom-space
                                         outlined
-                                        v-model="hourLabel.time" 
+                                        v-model="hourLabel.start" 
                                         mask="time" 
-                                        :rules="['time', requiredField]" 
+                                        class="w-20 mr-2"
+                                        :rules="hourLabel.markedDay ? ['time', requiredField] : []" 
                                         stack-label
                                         label=""
                                     >
                                         <template #label>
-                                            <span>Horários de atendimento</span>
+                                            <span>Início</span>
+                                        </template>
+                                    </q-input>
+
+                                    <q-input 
+                                        hide-bottom-space
+                                        outlined
+                                        v-model="hourLabel.end" 
+                                        mask="time" 
+                                        :rules="hourLabel.markedDay ? ['time', requiredField] : []" 
+                                        stack-label
+                                        class="w-20"
+                                        label=""
+                                    >
+                                        <template #label>
+                                            <span>Fim</span>
                                         </template>
                                     </q-input>
                                 </div>
@@ -53,7 +69,7 @@
                                         v-model="hourLabel.interval" 
                                         mask="time" 
                                         class="ml-auto"
-                                        :rules="['time', requiredField]" 
+                                        :rules="hourLabel.markedDay ? ['time', requiredField] : []" 
                                         label=""
                                     >
                                         <template #label>
@@ -67,6 +83,7 @@
                                     <q-select 
                                         v-model="hourLabel.intervalBetweenServices" 
                                         :options="intervalBetweenServicesOptions" 
+                                        :rules="hourLabel.markedDay ? [requiredField] : []"
                                         label=""
                                         :disable="hourLabel.markedDay ? false : true"
                                         class="w-28 ml-auto"
@@ -77,18 +94,17 @@
                             </div>
                         </div>
                     </div>
+                    <div class="mt-2 bg-white w-max rounded-md">
+                        <q-btn  
+                            no-caps
+                            label="Gravar horários"
+                            flat
+                            type="submit"
+                        />
+
+                    </div>
                 </q-form>
                 
-                <div class="mt-2 bg-white w-max rounded-md">
-                    <q-btn  
-                        no-caps
-                        label="Gravar horários"
-                        flat 
-                        @click="saveHours" 
-                    />
-
-                </div>
-
                 <pre>{{ hoursLabel }}</pre>
             </div>
         </section>
@@ -97,19 +113,21 @@
 
 <script setup lang="ts">
     import camelcaseKeys from 'camelcase-keys';
-    import { LocalStorage } from 'quasar';
+    import { LocalStorage, useQuasar } from 'quasar';
     import { api } from 'src/boot/axios';
-    import { onMounted, reactive, ref, watch } from 'vue';
+    import { onMounted, reactive, ref } from 'vue';
 
     interface HoursLabel {
         day: string,
         markedDay: boolean,
         label: string,
-        time: string,
+        start: string,
+        end: string,
         interval: string,
         intervalBetweenServices: string
     };
 
+    const $q = useQuasar();
     const ownerCode = LocalStorage.getItem("ownerCode") as number;
 
     const intervalBetweenServicesOptions = ref<string[]>([
@@ -126,7 +144,8 @@
             day: 'Dom',
             markedDay: false,
             label: 'Domingo',
-            time: '',
+            start: '',
+            end: '',
             interval: '',
             intervalBetweenServices: ''
         },
@@ -134,7 +153,8 @@
             day: 'Seg',
             markedDay: false,
             label: 'Segunda',
-            time: '',
+            start: '',
+            end: '',
             interval: '',
             intervalBetweenServices: ''
         },
@@ -142,7 +162,8 @@
             day: 'Ter',
             markedDay: false,
             label: 'Terça',
-            time: '',
+            start: '',
+            end: '',
             interval: '',
             intervalBetweenServices: ''
         },
@@ -150,7 +171,8 @@
             day: 'Qua',
             markedDay: false,
             label: 'Quarta',
-            time: '',
+            start: '',
+            end: '',
             interval: '',
             intervalBetweenServices: ''
         },
@@ -158,7 +180,8 @@
             day: 'Qui',
             markedDay: false,
             label: 'Quinta',
-            time: '',
+            start: '',
+            end: '',
             interval: '',
             intervalBetweenServices: ''
         },
@@ -166,15 +189,17 @@
             day: 'Sex',
             markedDay: false,
             label: 'Sexta',
-            time: '',
+            start: '',
+            end: '',
             interval: '',
             intervalBetweenServices: ''
         },
         {
-            day: 'Sab',
+            day: 'Sáb',
             markedDay: false,
             label: 'Sábado',
-            time: '',
+            start: '',
+            end: '',
             interval: '',
             intervalBetweenServices: ''
         },
@@ -189,11 +214,6 @@
         attendantCode: number
         
     }>();
-
-    watch(hoursLabel, () => {
-        console.log('Algo foi clicado');
-        hoursLabel.map(h => h.markedDay ? h.intervalBetweenServices = '5 minutos' : h.intervalBetweenServices = '')
-    });
 
     function replaceDayLabel(day: string): string
     {
@@ -254,8 +274,15 @@
         });
         
         const data = res.data;
-
-        console.log(data);
+        if(data.success)
+        {
+            $q.notify({
+                color: 'green',
+                message: 'Horários alterados com sucesso!',
+                position: 'top'
+            });
+            emits('close', true);
+        };
     };
 
     const getHoursData = async () => {
@@ -275,14 +302,16 @@
                     intervalBetweenServices: src.intervalBetweenServices ?? '',
                     label: replaceDayLabel(src.day),
                     markedDay: !!Number(src.markedDay),
-                    time: src.time ?? ''
+                    start: src.start ?? '',
+                    end: src.end ?? '',
                 })
             } else {
                 Object.assign(h, {
                     interval: '',
                     intervalBetweenServices: '',
                     markedDay: false,
-                    time: ''
+                    start: '',
+                    end: ''
                 });
             };
         }); 
