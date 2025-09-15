@@ -16,7 +16,6 @@ class AuthRepository implements AuthInterface
     {
         $transaction = DB::transaction(function() use ($data) {
             $maxCode = Owner::max('owner_code');
-            $maxCode = Attendant::max('attendant_code');
             
             $owner = Owner::create([
                 'owner_code' => $maxCode ? $maxCode + 1 : 1, 
@@ -27,7 +26,7 @@ class AuthRepository implements AuthInterface
             ]);
 
             Log::info($owner);
-
+            $maxCode = Attendant::where('owner_code', $owner->owner_code)->max('attendant_code');
             $attendentOwner = Attendant::create([
                 'attendant_code' => $maxCode ? $maxCode + 1 : 1,
                 'owner_code' => $owner->owner_code,

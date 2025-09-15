@@ -38,16 +38,17 @@
                                 type="text" 
                                 class="mr-8"
                                 :rules="[
-                                    val => !!val || 'O nome do serviço é necessário!'
+                                    val => !!val || 'O nome da categoria é necessário!'
                                 ]"
                             />
                                               
                             <q-select 
                                 v-model="category.parentCategory" 
-                                :options="categorys" 
+                                :options="categories" 
                                 label="Categoria"
                                 stack-label
                                 outlined
+                                :option-label="val => `${val.categoryCode} - ${val.name}`"
                             >
                                 <template v-slot:label>
                                     <div class="mt-2">
@@ -124,7 +125,7 @@
         description: ''
     });
 
-    const categorys = ref<CategoriesData[]>([]);
+    const categories = ref<CategoriesData[]>([]);
     
     function validateDescriptionField(val: string) {
         if(val.length < 10) 
@@ -159,7 +160,9 @@
     };
 
     const getCategories = async () => {
-
+        const res = await api.get(`/categories/all/${ownerCode}`);
+        const data = camelcaseKeys(res.data.data, { deep: true });
+        categories.value = data;
     };
 
     const createCategory = async () => {
@@ -180,7 +183,7 @@
     
         try {
             console.log('payload:', payload);
-
+            
             if(props.action === 'create' && props.categoryCode === undefined)
             {
                 const res = await api.post('/categories/create', payload);
@@ -198,7 +201,7 @@
                     emits('close', true);
                 };
             };
-
+            
             if(props.action === 'update' && props.categoryCode !== undefined)
             {
                 const res = await api.put(`/categories/update/${ownerCode}/${props.categoryCode}`, payload);

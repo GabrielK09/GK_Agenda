@@ -26,7 +26,7 @@
                     @submit="saveHours"
                 >   
                     <div class="mt-4 bg-white p-8 grid grid-cols-3 w-max">                 
-                        <div v-for="hourLabel in hoursLabel">
+                        <div v-for="(hourLabel, i) in hoursLabel">
                             <div class="border p-4 m-4">
                                 <div class="flex mb-2 border-t border-b p-2">
                                     <q-toggle v-model="hourLabel.markedDay" /><span class="mt-auto mb-auto mr-4 text-sm">{{ hourLabel.label }}</span>
@@ -35,7 +35,7 @@
                                         outlined
                                         v-model="hourLabel.start" 
                                         mask="time" 
-                                        class="w-20 mr-2"
+                                        class="w-28 mr-2"
                                         :rules="hourLabel.markedDay ? ['time', requiredField] : []" 
                                         stack-label
                                         label=""
@@ -50,9 +50,9 @@
                                         outlined
                                         v-model="hourLabel.end" 
                                         mask="time" 
-                                        :rules="hourLabel.markedDay ? ['time', requiredField] : []" 
+                                        :rules="hourLabel.markedDay ? ['time', requiredField, endNoGreatrStart] : []" 
                                         stack-label
-                                        class="w-20"
+                                        class="w-28"
                                         label=""
                                     >
                                         <template #label>
@@ -215,9 +215,23 @@
         
     }>();
 
-    function endNoGreatrStart(val: number): boolean|string
+    function endNoGreatrStart(val: string): string|boolean
     {
+        const hour = hoursLabel.find(hour => hour.markedDay === true);
+        console.log('Hora');
+        console.log(hour);
         
+        if(!hour) return 'Esse campo é necessário';
+
+        if(hour.markedDay)
+        {
+            if(hour.end < hour.start)
+            {
+                return 'A hora de fim não podem menor que a de início!';
+            } else if (hour.end === hour.start) {
+                return 'As horas não podem ser iguais!';
+            };
+        };
 
         return true;
     }

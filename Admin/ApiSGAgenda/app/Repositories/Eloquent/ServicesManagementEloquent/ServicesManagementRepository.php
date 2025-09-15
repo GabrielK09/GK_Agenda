@@ -54,7 +54,7 @@ class ServicesManagementRepository
                                   ->where('owner_code', $data['ownerCode'])
                                   ->first();
 
-            $maxCode = Servicee::max('service_code')->where('owner_code', $data['ownerCode']);
+            $maxCode = Servicee::where('owner_code', $data['ownerCode'])->max('service_code');
 
             return Servicee::create([
                 'service_code' => $maxCode ? $maxCode + 1 : 1,
@@ -63,7 +63,7 @@ class ServicesManagementRepository
                 'category' => $category->name ?? null,
                 'name' => $data['name'],
                 'price' => $data['price'],
-                'description' => $data['description'],
+                'description' => $data['description'] ?? '',
                 'duration_string' => $data['durationString'],
                 'duration' => $data['duration'],
                 'is_home_service' => $data['isHomeService'],
@@ -113,7 +113,7 @@ class ServicesManagementRepository
                 'price' => $data['price'],
                 'description' => $data['description'],
                 'duration_string' => $data['durationString'],
-                'duration' => $data['duration'],
+                'duration' => $data['duration'] ?? '',
                 'is_home_service' => $data['isHomeService'],
                 'check_availability' => $data['checkAvailability'],
 

@@ -19,7 +19,7 @@ class AttendantRepository
     public function create(array $data)
     {
         $attendant = DB::transaction(function() use ($data) {
-            $maxCode = Attendant::max('attendant_code');
+            $maxCode = Attendant::where('owner_code', $data['ownerCode'])->max('attendant_code');
             return Attendant::create([
                 'attendant_code' => $maxCode ? $maxCode + 1 : 1,
                 'owner_code' => $data['ownerCode'],

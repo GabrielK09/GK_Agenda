@@ -74,7 +74,7 @@ class CommissionRepository
         Log::debug($category);
 
         $id = DB::transaction(function() use ($attendant, $owner, $category, $service, $data){ 
-            $maxCode = Commission::max('commission_attendants_code');
+            $maxCode = Commission::where('owner_code', $data['ownerCode'])->max('commission_attendants_code');
             $commission = Commission::create([
                 'commission_attendants_code' => $maxCode ? $maxCode + 1 : 1,
                 'owner_code' => $owner->owner_code,

@@ -54,8 +54,8 @@ class CategoriesManagementRepository
             if($data['parentCategory'])
             {
                 Log::warning('Tem uma categoria pai');
-                return $parentCategory = Category::where('owner_code', $data['ownerCode'])
-                                            ->where('category_code', $data['categoryCode'])
+                $parentCategory = Category::where('owner_code', $data['ownerCode'])
+                                            ->where('category_code', $data['parentCategory']['categoryCode'])
                                             ->first();
             } else {
                 Log::warning('Não tem uma categoria pai');
@@ -63,7 +63,7 @@ class CategoriesManagementRepository
 
             Log::info($parentCategory); 
 
-            $maxCode = Category::max('category_code');
+            $maxCode = Category::where('owner_code', $data['ownerCode'])->max('category_code');
 
             return Category::create([
                 'category_code' => $maxCode ? $maxCode + 1 : 1,

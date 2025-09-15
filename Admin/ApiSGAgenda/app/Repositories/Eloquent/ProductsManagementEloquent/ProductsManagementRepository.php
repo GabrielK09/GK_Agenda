@@ -23,7 +23,7 @@ class ProductsManagementRepository
         Log::info($data);
 
         $id = DB::transaction(function() use ($data) {
-            $maxCode = Product::max('product_code');
+            $maxCode = Product::where('owner_code', $data['ownerCode'])->max('product_code');
 
             return Product::create([
                 'product_code' => $maxCode ? $maxCode + 1 : 1,

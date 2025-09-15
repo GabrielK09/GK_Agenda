@@ -133,13 +133,31 @@
             };
             
         } catch (error: any) {
-            $q.notify({
-                color: 'green',
-                message: error.reponse?.data.message || error.reponse?.message,
-                position: 'top',
-                timeout: 1200
-            });
-            console.error('Erro: ', error);
+            console.error('Erro ao criar proprietário: ', error);
+            const e: string = error.response?.data?.message;
+            let isDuplicateMail;
+            if(e) isDuplicateMail = e.trim().includes("SQLSTATE[23000]")
+            
+            if (isDuplicateMail) {
+                $q.notify({
+                    color: 'red',
+                    message: 'Esse endereço já está cadastrado!',
+                    position: 'top',
+                    timeout: 2000
+
+                });
+
+                informedURL.value = '';
+
+            } else {
+                $q.notify({
+                    color: 'red',
+                    message: e,
+                    position: 'top',
+                    timeout: 2000
+
+                });
+            };
         };      
     };
 </script>

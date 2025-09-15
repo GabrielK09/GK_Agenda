@@ -55,7 +55,7 @@
                             >
                                 <template v-slot:label>
                                     <div class="mt-2">
-                                        <span>Preço do serviço</span>
+                                        <span>Preço do produto</span>
                                     </div>
                                 </template>
                             </q-input>
@@ -130,7 +130,7 @@
     const getProductsData = async () => {
         $q.notify({
             color: 'green',
-            message: 'Carregando dados do serviço ...',
+            message: 'Carregando dados do produto ...',
             position: 'top',
             timeout: 1000
 

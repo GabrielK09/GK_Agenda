@@ -15,7 +15,6 @@
 <script setup lang="ts">
     import { computed, ref, watch } from 'vue';
     import dayjs, { Dayjs } from 'dayjs';
-    import isBetween from 'dayjs/plugin/isBetween';
     
     const props = defineProps<{
         activeScheduling: string[]

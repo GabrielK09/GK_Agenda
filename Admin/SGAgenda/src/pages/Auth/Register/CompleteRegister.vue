@@ -1,5 +1,11 @@
 <template>
     <main class="p-12">
+        <router-link to="/register">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
+            </svg>
+            
+        </router-link>
         <div 
             class="text-2xl " 
             :class="{
@@ -114,7 +120,7 @@
 <script setup lang="ts">
     import { event, LocalStorage, useQuasar } from 'quasar';
     import { api } from 'src/boot/axios';
-    import { ref } from 'vue';
+    import { onMounted, ref } from 'vue';
     import { useRouter } from 'vue-router';
     import validateCPF from 'src/utils/validateCPF';
     import getCNPJData from 'src/utils/Services/CNPJ/getCNPJData';
@@ -161,28 +167,56 @@
             cnpjCpf: owner.value.cnpjCpf 
         };
         
-        console.log('ownerCode: ', ownerCode); 
 
-        const res = await api.put(`/auth/update-owner/${ownerCode}`, payload, {
-            headers: {
-                Accept: 'application/json'
-            }
-        });
-        
-        const data = res.data;
-
-        console.log('Res: ', res.data);
-        if(data.success)
-        {
-            $q.notify({
-                color: 'green',
-                message: 'Dados salvos com sucesso!',
-                position: 'top',
-                timeout: 1200
-
+        try {
+            const res = await api.put(`/auth/update-owner/${ownerCode}`, payload, {
+                headers: {
+                    Accept: 'application/json'
+                }
             });
+            
+            const data = res.data;
 
-            router.replace({ path: '/companie-url' });
+            console.log('Res: ', res.data);
+            if(data.success)
+            {
+                $q.notify({
+                    color: 'green',
+                    message: 'Dados salvos com sucesso!',
+                    position: 'top',
+                    timeout: 1200
+
+                });
+
+                router.replace({ path: '/companie-url' });
+            };
+            
+        } catch (error: any) {
+            console.error('Erro ao criar proprietário: ', error);
+            const e: string = error.response?.data?.message;
+            let isDuplicateMail;
+            if(e) isDuplicateMail = e.trim().includes("SQLSTATE[23000]")
+            
+            if (isDuplicateMail) {
+                $q.notify({
+                    color: 'red',
+                    message: 'Esse CNPJ/CPF já está cadastrado!',
+                    position: 'top',
+                    timeout: 2000
+
+                });
+
+                owner.value.cnpjCpf = '';
+
+            } else {
+                $q.notify({
+                    color: 'red',
+                    message: e,
+                    position: 'top',
+                    timeout: 2000
+
+                });
+            };
         };
     };  
 
@@ -232,4 +266,8 @@
 
     };
 
+    onMounted(() => {
+        if(!ownerCode) router.replace({ path: '/register' });
+
+    });
 </script>

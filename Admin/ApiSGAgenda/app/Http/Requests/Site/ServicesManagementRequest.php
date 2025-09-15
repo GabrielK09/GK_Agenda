@@ -28,7 +28,7 @@ class ServicesManagementRequest extends FormRequest
             'categoryCode' => ['nullable'],
             'name' => [$required, 'string'],
             'price' => [$required, 'numeric'],
-            'description' => [$required, 'string'],
+            'description' => ['sometimes'],
             'durationString' => [$required],
             'duration' => [$required],
             'isHomeService' => [$required],

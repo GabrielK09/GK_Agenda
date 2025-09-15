@@ -25,6 +25,8 @@ class AttendantHoursService {
     public function create(array $data)
     {
         $hours = $this->attendantHoursRepository->create($data);
+        Log::info('Retorno do create');
+        Log::info($hours);
 
         if($hours === 'callUpdate')
         {

@@ -271,7 +271,7 @@
                 };
 
             } catch (error: any) {
-                console.error('Erro do djabo: ', error);
+                console.error('Erro ao criar proprietário: ', error);
                 const e: string = error.response?.data?.message;
                 let isDuplicateMail;
                 if(e) isDuplicateMail = e.trim().includes("SQLSTATE[23000]")

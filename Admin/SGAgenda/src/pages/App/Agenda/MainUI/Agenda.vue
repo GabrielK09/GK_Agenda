@@ -77,7 +77,7 @@
         serviceCode: number,
         name: string
         attendantCode: number,
-        name2: string
+        attendant: string
         hour: string,
         day: string,
         month: string,
