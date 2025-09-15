@@ -17,5 +17,6 @@ class Schedule extends Model
         'customer_phone',
         'day',
         'hour', 
+        'month', 
     ];
 }

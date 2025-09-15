@@ -29,6 +29,7 @@ class ScheduleRequest extends FormRequest
             'customerPhone' => ['required', 'string'],
             'date' => ['required'],
             'hour' => ['required'],
+            'month' => ['required'],
 
         ];
     }

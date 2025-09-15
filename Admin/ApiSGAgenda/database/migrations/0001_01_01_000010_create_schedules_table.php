@@ -31,6 +31,7 @@ return new class extends Migration
 
             $table->string('day', 12);
             $table->string('hour', 12);
+            $table->string('month', 16);
             
             $table->timestamps();
         });

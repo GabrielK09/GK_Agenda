@@ -95,6 +95,7 @@
         :service-code="codeParam.scheduleCode"
         :attendant-code="LocalStorage.getItem('attendantCode')"
         :date="selectedDate"
+        :month="month.toString()"
 
     />
 </template>
@@ -153,7 +154,6 @@
     const attendants = ref<Attendant[]>([]);
     const hoursAttendants = ref([]);
     const allHoursAttendants = ref([]);
-    const showHoursAttendants = ref([]);
     
     const service = ref<Service>({
         serviceCode: 0,
@@ -302,10 +302,14 @@
             .filter(h => h.markedDay === 1)
             .map(h => dowIndex[h.day]);
 
-        const result: {  day: number, attendantCode: number, dayWeek: string }[] = [];
         const lastDay = new Date(year, month, 0).getDate();
+        const today = new Date();
+        const isCurrentMonth = year === today.getFullYear() && (month - 1) === today.getMonth();
+        const startDay = isCurrentMonth ? today.getDate() : 1;
 
-        for (let d = 1; d <= lastDay; d++) {
+        const result: { day: number; attendantCode: number; dayWeek: string }[] = [];
+
+        for (let d = startDay; d <= lastDay; d++) {
             const date = new Date(year, month - 1, d);
             const dow = date.getDay();
 

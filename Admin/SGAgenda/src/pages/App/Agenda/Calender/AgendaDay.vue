@@ -1,5 +1,6 @@
 <template>
     <div class="q-pa-md">
+        {{ activeScheduling }}
         <q-date
             v-model="dateForCalender"
             landscape

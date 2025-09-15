@@ -7,7 +7,7 @@
                     class="q-gutter-md"
                 >
                     <div class="">
-                        <span class="q-ml-sm">Confirmar agendamento para as {{ props.hour }} dia: {{ props.date }} | {{ props.attendantCode }} | {{ props.serviceCode }}</span>
+                        <span class="q-ml-sm">Confirmar agendamento para as {{ props.hour }} dia: {{ props.date }} em {{ props.month + 1 }} | {{ props.attendantCode }} | {{ props.serviceCode }}</span>
 
                         <q-input 
                             v-model="confirmData.customerName" 
@@ -54,7 +54,7 @@
 <script setup lang="ts">
     import { LocalStorage } from 'quasar';
     import { api } from 'src/boot/axios';
-    import { onMounted, ref } from 'vue';
+    import { ref } from 'vue';
 
     interface Confirm {
         siteName: string,
@@ -63,7 +63,8 @@
         customerName: string,
         customerPhone: string,        
         date: string,
-        hour: string
+        hour: string,
+        month: string,
     };
 
     const confirmData = ref<Confirm>({
@@ -74,6 +75,7 @@
         attendantCode: 0,
         date: '',
         hour: '',
+        month: '',
 
     });
 
@@ -87,7 +89,8 @@
         serviceCode: unknown,
         attendantCode: unknown,
         date: string,
-        hour: string
+        hour: string,
+        month: string,
         
     }>();
 
@@ -114,7 +117,8 @@
             customerName: confirmData.value.customerName,
             customerPhone: confirmData.value.customerPhone,
             serviceCode: newServiceCode,
-            siteName: LocalStorage.getItem("urlName") as string
+            siteName: LocalStorage.getItem("urlName") as string,
+            month: props.month
         };
 
         console.log(payload);
@@ -127,9 +131,5 @@
 
         console.log(res.data);
         
-    };  
-
-    onMounted(() => {
-
-    });
+    }; 
 </script>

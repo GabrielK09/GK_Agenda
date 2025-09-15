@@ -78,23 +78,24 @@
         name: string
         attendantCode: number,
         name2: string
-        schedulingHour: string,
-        schedulingDate: string,
+        hour: string,
+        day: string,
+        month: string,
     };
 
     const activeSchedulings = ref<string[]>([]);
 
     const columns = ref<QTableColumn[]>([
         {
-            field: 'schedulingDate',
+            field: 'day',
             label: 'Data do agendamento',
-            name: 'schedulingDate',
+            name: 'day',
             align: 'center'
         },
         {
-            field: 'schedulingHour',
+            field: 'hour',
             label: 'Horário',
-            name: 'schedulingHour',
+            name: 'hour',
             align: 'center'
         },
         {
@@ -134,7 +135,7 @@
     };
 
     const filter = (date: string) => {
-        schedulings.value = allSchedulings.value.filter(scheduling => scheduling.schedulingDate === date);
+        schedulings.value = allSchedulings.value.filter(scheduling => scheduling.day === date);
     };
 
     const getAllSchedulings = async () => {
@@ -142,6 +143,15 @@
         const data = camelcaseKeys(res.data.data, { deep: true });
         schedulings.value = data;
 
+        console.log(schedulings.value);
+
+        const date = schedulings.value.map(scheduling => scheduling.day);
+        const month: unknown[] = schedulings.value.map(scheduling => scheduling.month);
+        const newMonth = Number(month[0]) + 1;
+        console.log('Data: ', date[0]);
+        console.log('newMonth: ', newMonth);
+        
+        const newDate = convertStringDate(date[0] as string, newMonth);
         /*'scheduling_code',
         'owner_code',
         'attendant_code',
@@ -152,14 +162,19 @@
         'customer_phone',
         'day',
         'hour', */
+        console.log(newDate);
+        activeSchedulings.value.push(newDate);
     };
 
-    const convertStringDate = (stringDate: string): string => {
+    const convertStringDate = (stringDate: string, monthStr: number): string => {
         let newString = '';
+        console.log(monthStr);
+        
         const splitString: string[] = stringDate.split('/');
-        const day = splitString[0];
-        const month = splitString[1];
-        const year = splitString[2];
+        const day = splitString[0].length === 1 ? '0' + splitString[0] : splitString[0];
+        const month = monthStr.toString().length === 1 ? '0' + monthStr : monthStr;
+        const year = new Date().getFullYear();
+
         newString = `${year}/${month}/${day}`;
 
         return newString;
@@ -173,12 +188,12 @@
     };
 
     onMounted(() => {
-        allSchedulings.value = [...schedulings.value];
+        // allSchedulings.value = [...schedulings.value];
         
-        console.log(schedulings.value.map(scheduling => convertStringDate(scheduling.schedulingDate)));
-        activeSchedulings.value = schedulings.value.map(scheduling => convertStringDate(scheduling.schedulingDate));
+        // console.log(schedulings.value.map(scheduling => convertStringDate(scheduling.schedulingDate)));
+        // activeSchedulings.value = schedulings.value.map(scheduling => convertStringDate(scheduling.schedulingDate));
 
-        filter(dayjs().format('DD/MM/YYYY'));
+        // filter(dayjs().format('DD/MM/YYYY'));
         getAllSchedulings();
     }); 
 

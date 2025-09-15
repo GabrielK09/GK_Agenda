@@ -54,6 +54,7 @@ class ScheduleRepository
                 'customer_phone' => $data['customerPhone'],
                 'day' => $data['date'],
                 'hour' => $data['hour'],
+                'month' => $data['month'],
             ]);
         }); 
 
