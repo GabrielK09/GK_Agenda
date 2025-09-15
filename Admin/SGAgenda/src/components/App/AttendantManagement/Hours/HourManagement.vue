@@ -215,6 +215,13 @@
         
     }>();
 
+    function endNoGreatrStart(val: number): boolean|string
+    {
+        
+
+        return true;
+    }
+
     function replaceDayLabel(day: string): string
     {
         let newDay = '';

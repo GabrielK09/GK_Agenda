@@ -139,7 +139,7 @@
     const getCategoriesData = async () => {
         $q.notify({
             color: 'green',
-            message: 'Carregando dados do serviço ...',
+            message: 'Carregando dados da categoria ...',
             position: 'top',
             timeout: 1000
 
@@ -189,7 +189,7 @@
                 {
                     $q.notify({
                         color: 'green',
-                        message: 'Serviço cadastrado com sucesso!',
+                        message: 'Categoria cadastrada com sucesso!',
                         position: 'top',
                         timeout: 1200
 
