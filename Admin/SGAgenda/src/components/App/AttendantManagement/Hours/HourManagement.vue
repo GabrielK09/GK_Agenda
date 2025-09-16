@@ -101,11 +101,10 @@
                             flat
                             type="submit"
                         />
-
+                        <span>Clicar duas vezes</span>
                     </div>
                 </q-form>
                 
-                <pre>{{ hoursLabel }}</pre>
             </div>
         </section>
     </q-page>

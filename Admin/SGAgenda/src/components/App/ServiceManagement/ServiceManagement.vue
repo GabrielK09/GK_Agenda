@@ -249,8 +249,9 @@
 
         const category = service.value.categoryCode as Categories;
 
+        
         const payload: ServiceData = {
-            categoryCode: category.categoryCode,
+            categoryCode: service.value.categoryCode,
             checkAvailability: service.value.checkAvailability,
             description: service.value.description,
             durationString: service.value.duration,
