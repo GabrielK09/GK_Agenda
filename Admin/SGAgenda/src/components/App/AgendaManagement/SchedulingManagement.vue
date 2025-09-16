@@ -33,7 +33,7 @@
     <QRCode
         v-if="showQRCode"
         :total-amount="scheduling?.servicePrice"
-
+        @finaly="finishScheduleMethod"
     />
     
 </template>
@@ -109,8 +109,7 @@
             const res = await api.put('/schedule/finish/schedule', payload);
             const data = res.data;
 
-            
-            
+        
             if(data.success)
             {
                 $q.notify({

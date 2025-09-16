@@ -27,3 +27,4 @@
 
 -- Ideia de e-mail para enviar o agendamento no e-mail do proprietário da loja;
 -- Ideia inicial de login -> Nome Completo, e-mail, e-mail de recuperação ( opcional ) e senha;
+
