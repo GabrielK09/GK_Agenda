@@ -21,6 +21,15 @@ return new class extends Migration
             $table->unsignedBigInteger('attendant_code');   
             $table->foreign('attendant_code')->references('attendant_code')->on('attendants')->onDelete('cascade');
             $table->string('attendant', 120);
+
+            $table->unsignedBigInteger('service_code');
+            $table->foreign('service_code')->references('service_code')->on('services')->restrictOnDelete();
+            $table->string('service', 120);
+            $table->float('service_price', 16.2);
+
+            $table->unsignedBigInteger('category_code')->nullable();
+            $table->foreign('category_code')->references('category_code')->on('categories')->restrictOnDelete();
+            $table->string('category', 120)->nullable();
             
             $table->unsignedBigInteger('scheduling_code');   
             $table->foreign('scheduling_code')->references('scheduling_code')->on('schedules')->onDelete('cascade');

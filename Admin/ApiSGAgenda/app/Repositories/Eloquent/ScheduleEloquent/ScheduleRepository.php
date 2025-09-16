@@ -77,11 +77,21 @@ class ScheduleRepository
         $commission = DB::transaction(function() use ($ownerCode, $attendantCode, $scheduleCode, $totalCommission) {
             $maxCode = Commissions::where('owner_code', $ownerCode)->where('attendant_code', $attendantCode)->max('commission_code');
             $attendant = Attendant::where('owner_code', $ownerCode)->where('attendant_code', $attendantCode)->first();
+            $schedule = Schedule::where('owner_code', $ownerCode)->where('scheduling_code', $scheduleCode)->first();
+            $service = Servicee::where('owner_code', $ownerCode)->where('service_code', $schedule->service_code)->first();
+            
+            Log::info($service);
+
             return Commissions::create([
                 'commission_code' => $maxCode ? $maxCode + 1 : 1,
                 'owner_code' => $ownerCode,
                 'attendant_code' => $attendant->attendant_code,
                 'attendant' => $attendant->name,
+                'service_code' => $service->service_code,
+                'service' => $service->name,
+                'service_price' => $service->price,
+                'category_code' => $service->category_code,
+                'category' => $service->category,
                 'scheduling_code' => $scheduleCode,
                 'total_commission' => $totalCommission,
             ]); 

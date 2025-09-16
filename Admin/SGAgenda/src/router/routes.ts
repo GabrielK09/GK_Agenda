@@ -29,6 +29,11 @@ const routes: RouteRecordRaw[] = [
                 name: 'agenda'
             },
             {
+                path: 'commission',
+                component: () => import('pages/App/Attendants/Commission/AllCommissions.vue'),
+                name: 'commission'
+            },
+            {
                 path: 'services',
                 component: () => import('pages/App/MyServices/ShowAllServices.vue'),
                 name: 'services'

@@ -57,6 +57,15 @@ class AuthController extends Controller
                     'message' => 'Cadastro pendente!',
 
                 ]);
+            } else if(!$owner->completed) {
+                Log::warning('Proprietário não terminou o cadastro');
+                return response()->json([
+                    'success' => false,
+                    'ownerCode' => $owner->owner_code,
+                    'route' => 'complete-register',
+                    'message' => 'Cadastro pendente!',
+
+                ]);
             }
             
             Auth::login($owner);

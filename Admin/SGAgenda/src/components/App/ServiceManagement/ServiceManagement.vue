@@ -92,7 +92,7 @@
                                 label="Categoria"
                                 stack-label
                                 outlined
-                                :option-label="val => `${val.categoryCode} - ${val.name}`"
+                                :option-label="val => `${val.categoryCode ?? ''} - ${val.name ?? ''}`"
                             >
                                 <template v-slot:label>
                                     <div class="mt-2">

@@ -402,7 +402,7 @@
 
     function toMinutes(hhmm: string): number {
         const [h, m] = (hhmm ?? '00:00').split(':').map(v => parseInt(v, 10) || 0);
-        return h * 60 + m;
+        return Number(h) * 60 + Number(m);
     };
 
     function fromMinutes(min: number): string {

@@ -13,6 +13,11 @@ class Commissions extends Model
         'owner_code',
         'attendant_code',
         'attendant',
+        'service_code',
+        'service',
+        'service_price',
+        'category_code',
+        'category',
         'scheduling_code',
         'total_commission',
     ];
