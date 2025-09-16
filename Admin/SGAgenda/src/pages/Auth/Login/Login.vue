@@ -157,7 +157,6 @@
 
         const data = res.data;
         
-
         if(data.success) 
         { 
             $q.notify({

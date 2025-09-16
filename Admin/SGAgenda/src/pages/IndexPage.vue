@@ -1,11 +1,16 @@
 <template>
-    <q-page style="padding-top: 0px" class="q-pa-md">
+    <q-page>
         <main>
-            <section id="section1">
-                <div class="p-12">
-                    <article class="mt-12 text-4xl">
-                        <span class="text">Agenda</span>
-                    </article>
+            <section class="bg-gray-200 w-full border border-black p-12">
+                <div class="flex justify-left mt-12">
+                    <div class="ml-16">
+                        <h2 class="text-2xl">Procurando uma solução para simplificar seus negócios?</h2>
+
+                        <div class="text-lg mt-2">
+                            <p>Querendo mais facilidade e praticidade para seus clientes chegarem até você? A qualquer momento e qualquer local?</p>
+                            <p>Com o GK Agenda você pode se preocupar com o que realmente importa! Oferecendo um serviço excelente cada vez melhor muito mais prático!</p>
+                        </div>
+                    </div>
                 </div>
             </section>
         </main>
@@ -14,15 +19,3 @@
 
 <script setup lang="ts">
 </script>
-
-<style lang="scss">
-    #section1 {
-        background-image: url('../../public/images/imagem_reuniao.jpg');
-        background-repeat: no-repeat; 
-        position: relative;
-        height: 200vh;
-        width: 100vh;
-        
-    }   
-
-</style>

@@ -43,16 +43,6 @@ class ScheduleRepository
             $attendant = Attendant::where('owner_code', $ownerCode)->where('attendant_code', $data['attendantCode'])->first();
             $service = Servicee::where('owner_code', $ownerCode)->where('service_code', $data['serviceCode'])->first();
 
-                /*
-                    'siteName' => 'teste',
-                    'serviceCode' => 1,
-                    'attendantCode' => 1,
-                    'customerName' => 'aaaaaa',
-                    'customerPhone' => '(11) 11111-1111',
-                    'date' => '7/dom.',
-                    'hour' => '10:00',
-                */
-
             return Schedule::create([
                 'scheduling_code' => $maxCode ? $maxCode + 1 : 1,
                 'owner_code' => $ownerCode,
@@ -106,6 +96,7 @@ class ScheduleRepository
         Log::debug('Começou o commission');
         $commission = DB::transaction(function() use ($ownerCode, $attendantCode, $serviceCode, $schedule) {
             $totalSchedule = $schedule->service_price;
+            
             $commissionService = CommissionAttendant::where('owner_code', $ownerCode)->where('attendant_code', $attendantCode)->where('service_code', $serviceCode)->first();
             if(!$commissionService)
             {
@@ -166,6 +157,18 @@ class ScheduleRepository
 
         Log::info('Comissão criada com sucesso! line 157');
         return $commission;
+    }
+
+    public function invoicingRegister(int $ownerCode, int $attendantCode, int $schedulingCode, float $inputValue)
+    {
+        // 'invoicing_code',
+        // 'owner_code',
+        // 'attendant_code',
+        // 'scheduling_code',
+        // 'input_value'
+
+
+
     }
 
     public function finish(array $data)

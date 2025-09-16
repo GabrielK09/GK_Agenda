@@ -44,7 +44,7 @@ class URLRepository
                     'completed' => 1
                 ]);
 
-                return $site;
+                return $owner;
             }); 
 
             Log::info($urlSite);

@@ -113,9 +113,7 @@
     const toLogin = () => { 
         const token = LocalStorage.getItem("authToken");
         const siteName = LocalStorage.getItem("siteName");
-
-        console.log('Token:', token, ' siteName: ', siteName);
-
+    
         if(token && siteName)
         {
             router.replace({ path: `/admin/${siteName}/dashboard` });

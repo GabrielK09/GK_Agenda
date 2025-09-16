@@ -2,6 +2,11 @@ import type { RouteRecordRaw } from 'vue-router';
 
 const routes: RouteRecordRaw[] = [
     {
+        path: '/',
+        component: () => import('pages/Explorer/ExplorerURLs.vue'),
+        name: 'explorer'
+    },
+    {
         path: '/app.gkagenda/:siteName',
         component: () => import('layouts/SiteLayout.vue'),
         children: [

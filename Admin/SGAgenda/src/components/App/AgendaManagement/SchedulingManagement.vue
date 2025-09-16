@@ -8,6 +8,10 @@
 
                 </div>
             </q-card-section>
+
+            <q-card-section>
+                
+            </q-card-section>
             
             <q-card-section>
                 <div class="">
@@ -58,6 +62,12 @@
         month: string,
     };
 
+    interface Product {
+        productCode: number,
+        name: string,
+        price: number
+    };
+
     const $q = useQuasar();
 
     const props = defineProps<{
@@ -72,9 +82,11 @@
 
     const ownerCode = LocalStorage.getItem("ownerCode");
     const scheduling = ref<Scheduling>();
+    const products = ref<Product[]>([]);
 
     let showDetailScheduling = ref<boolean>(props.showDetailScheduling);
     let showQRCode = ref<boolean>(false);
+    let totalScheduling = ref<number>(0);
 
     const getSchedulingData = async () => {
         const res = await api.get(`/schedule/get-detail/${ownerCode}/${props.schedulingCode}`);
@@ -85,21 +97,16 @@
     };
 
     const callQRCode = () => {
-        showQRCode.value = true;
-        showDetailScheduling.value = false;
+        //showQRCode.value = true;
+        //showDetailScheduling.value = false;
     };
 
     const finishScheduleMethod = async () => {
-        /*'ownerCode'
-        'scheduleCode'
-        'amoutPaid'
-        'serviceCode'*/
-
         const payload = {
             ownerCode: ownerCode,
             attendantCode: scheduling.value?.attendantCode,
             scheduleCode: props.schedulingCode,
-            amoutPaid: scheduling.value?.servicePrice,
+            amoutPaid: totalScheduling.value,
             serviceCode: scheduling.value?.serviceCode,
         };  
 
@@ -108,7 +115,6 @@
         try {
             const res = await api.put('/schedule/finish/schedule', payload);
             const data = res.data;
-
         
             if(data.success)
             {
@@ -132,7 +138,20 @@
         };
     };
 
+    const getAllProducts = async () => {
+        const res = await api.get(`/products/all/${ownerCode}`);
+        const data = camelcaseKeys(res.data.data, { deep: true });
+
+        products.value = data;
+        console.log(products.value);
+        
+        
+    };
+
     onMounted(() => {
+        if(scheduling.value?.servicePrice) totalScheduling.value = scheduling.value.servicePrice;
+        
+        getAllProducts()
         getSchedulingData();
     }); 
 </script>
