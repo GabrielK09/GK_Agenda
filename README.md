@@ -1,4 +1,4 @@
--- Comandas a serem rodados --
+-- Comandos a serem rodados --
 
 Iniciar o BackEnd do Admin e alterar o .env de ambos os fronts: 
 
