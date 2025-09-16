@@ -30,6 +30,8 @@ return new class extends Migration
             $table->string('neighborhood', 100)->nullable();
             $table->string('municipality', 100)->nullable();
             $table->string('number', 12)->nullable();
+            
+            $table->string('pix_key', 8)->nullable()->default('CNPJ/CPF');
 
             $table->boolean('active', 1)->default(1);
             $table->boolean('completed', 1)->default(0);

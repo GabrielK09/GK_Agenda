@@ -13,10 +13,13 @@ class Schedule extends Model
         'attendant',
         'service_code',
         'service',
+        'service_price',
         'customer_name',
         'customer_phone',
         'day',
         'hour', 
         'month', 
+        'completed', 
+        'canceled', 
     ];
 }

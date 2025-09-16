@@ -25,6 +25,7 @@ return new class extends Migration
             $table->unsignedBigInteger('service_code');
             $table->foreign('service_code')->references('service_code')->on('services')->restrictOnDelete();
             $table->string('service', 120);
+            $table->float('service_price', 16.2);
 
             $table->string('customer_name', 120);
             $table->string('customer_phone', 120);
@@ -32,6 +33,8 @@ return new class extends Migration
             $table->string('day', 12);
             $table->string('hour', 12);
             $table->string('month', 16);
+            $table->boolean('completed', 1)->default(0);
+            $table->boolean('canceled', 1)->default(0);
             
             $table->timestamps();
         });

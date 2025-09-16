@@ -31,6 +31,7 @@ class Owner extends Authenticatable implements CanResetPassword
         'number',
         'active',
         'completed',
+        'pix_key',
     ];
 
     protected $hidden = [

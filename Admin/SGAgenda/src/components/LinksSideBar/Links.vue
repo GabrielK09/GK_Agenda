@@ -53,7 +53,6 @@
     ]);
 
     const changeMakred = (i: number) => {
-        console.log('Vai mudar a cor do fundo: ', i);
         LocalStorage.set("lastCheck", i);
 
         links.map(link => {

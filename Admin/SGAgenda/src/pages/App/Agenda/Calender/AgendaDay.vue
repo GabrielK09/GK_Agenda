@@ -1,19 +1,18 @@
 <template>
     <div class="q-pa-md">
-        {{ activeScheduling }}
         <q-date
             v-model="dateForCalender"
             landscape
             minimal
             :locale="myLocale"
-            :events="props.activeScheduling.map(date => dayjs(date).format('YYYY/MM/DD'))"
+            :events="props.activeScheduling"
             event-color="blue"
         />
     </div>
 </template>
 
 <script setup lang="ts">
-    import { computed, ref, watch } from 'vue';
+    import { computed, onMounted, ref, watch } from 'vue';
     import dayjs, { Dayjs } from 'dayjs';
     
     const props = defineProps<{
@@ -40,7 +39,11 @@
         return dayjs(dateForCalender.value).format('DD/MM/YYYY');
     }); 
 
-    watch(formatDate, () => {
+    watch(formatDate, () => {    
         emits('changeDate', formatDate.value);
+    });
+
+    onMounted(() => {
+        
     });
 </script>

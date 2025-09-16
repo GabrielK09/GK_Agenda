@@ -26,11 +26,6 @@ class ServicesManagementService
     public function getAllNotHasCommission(int $id)
     {
         $allServices = $this->servicesManagementRepository->getAllNotHasCommission($id);
-        
-        if(!$allServices)
-        {
-            throw new Exception("Erro ao localizar todos os serviços sem comissão!", 1);
-        }
 
         return $allServices;
 

@@ -137,7 +137,7 @@
 
         const res = await api.get(`/categorys/find/${ownerCode}/${props.categoryCode}`);
         const data: CategoriesData = camelcaseKeys(res.data.data, { deep: true });
-        console.log(data);
+        
         category.value = {
             parentCategory: data.parentCategory,
             description: data.description,

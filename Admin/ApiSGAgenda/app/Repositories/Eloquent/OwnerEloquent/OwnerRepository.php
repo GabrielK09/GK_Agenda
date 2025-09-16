@@ -14,6 +14,20 @@ class OwnerRepository implements OwnerInterface
     {
         return Owner::where('owner_code', $id)->first();
     }
+    
+    public function pixKey(int $id, string $pix)
+    {
+        $newPix = DB::transaction(function() use ($id, $pix) {
+            $owner = $this->findByID($id);
+            if(!$owner) return;
+
+            $owner->update([
+                'pix_key' => $pix
+            ]);
+        }); 
+        
+        return $newPix;
+    }
 
     public function findByMail(string $mail)
     {

@@ -27,11 +27,6 @@ class CategoriesManagementService
     {
         $allCategories = $this->categoriesManagementRepository->getAllNotHasCommission($id);
         
-        if(!$allCategories)
-        {
-            throw new Exception("Erro ao localizar todos os categorias sem comissão!", 1);
-        }
-
         return $allCategories;
 
     }
@@ -67,6 +62,30 @@ class CategoriesManagementService
         if(!$category)
         {
             throw new Exception("Erro ao alterar a categoria: {$category}", 1);
+        };
+
+        return $category;
+    }
+
+    public function active(int $ownerCode, int $categoryCode)
+    {
+        $category = $this->categoriesManagementRepository->active($ownerCode, $categoryCode);
+
+        if(!$category)
+        {
+            throw new Exception("Erro ao ativar a categoria: {$category}", 1);
+        };
+
+        return $category;
+    }
+
+    public function disable(int $ownerCode, int $categoryCode)
+    {
+        $category = $this->categoriesManagementRepository->disable($ownerCode, $categoryCode);
+
+        if(!$category)
+        {
+            throw new Exception("Erro ao desabilitar a categoria: {$category}", 1);
         };
 
         return $category;

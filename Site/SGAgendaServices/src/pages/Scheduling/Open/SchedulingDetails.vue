@@ -77,7 +77,7 @@
                                     @click="showConfirmHour(i)"
                                     title="Selecionar horário"
                                 >
-                                {{ s.time }}
+                                    {{ s.time }}
                             </q-btn>
                         </div>
                     </div>
@@ -95,7 +95,7 @@
         :service-code="codeParam.scheduleCode"
         :attendant-code="LocalStorage.getItem('attendantCode')"
         :date="selectedDate"
-        :month="month.toString()"
+        :month="selectedMonth"
 
     />
 </template>
@@ -123,6 +123,7 @@
 
     interface DayWeek {
         day: number,
+        month: number,
         attendantCode: number,
         dayWeek: string
     };
@@ -166,6 +167,7 @@
 
     let shoowConfirmHour = ref<boolean>(false);
     let positionMarked = ref<number>(0);
+    let selectedMonth = ref<number>(0);
     let selectedHour = ref<string>('');
     let selectedDate = ref<string>('');
 
@@ -219,11 +221,14 @@
         if(Number(val) === 0)
         {
             newVal = '';
+
         } else if(val.length === 1)
         {   
             newVal = `0${val}`;
+
         } else {
             return val;
+
         };
 
         return newVal;        
@@ -289,7 +294,7 @@
 
             const dayWeek = date.toLocaleDateString("pt-BR", { weekday: "short" });
 
-            days.push({ day, attendantCode, dayWeek});
+            days.push({ day, attendantCode, dayWeek, month});
         };
         //
 
@@ -297,7 +302,7 @@
         console.log(filterHours(data, attendantCode, year, month + 1));
     };
 
-    const filterHours = (attendantHours: AttendantHour[], attendantCode: number, year: number, month: number): { day: number, attendantCode: number, dayWeek: string }[] => {
+    const filterHours = (attendantHours: AttendantHour[], attendantCode: number, year: number, month: number): { day: number, attendantCode: number, dayWeek: string, month: number }[] => {
         const marked = attendantHours
             .filter(h => h.markedDay === 1)
             .map(h => dowIndex[h.day]);
@@ -307,19 +312,24 @@
         const isCurrentMonth = year === today.getFullYear() && (month - 1) === today.getMonth();
         const startDay = isCurrentMonth ? today.getDate() : 1;
 
-        const result: { day: number; attendantCode: number; dayWeek: string }[] = [];
+        const result: { day: number; attendantCode: number; dayWeek: string, month: number }[] = [];
 
         for (let d = startDay; d <= lastDay; d++) {
             const date = new Date(year, month - 1, d);
             const dow = date.getDay();
 
+            console.log('date: ', date);
+            
+            
             if(marked.includes(dow)) {
+                selectedMonth.value = date.getMonth() + 1;
                 result.push({
                     day: d,
+                    month: date.getMonth() + 1,
                     attendantCode,
-                    dayWeek: date.toLocaleDateString("pt-BR", { weekday: "short" })
-                })
-
+                    dayWeek: date.toLocaleDateString("pt-BR", { weekday: "short" }),
+                    
+                });
             };
         };
 
@@ -327,7 +337,7 @@
     };
 
     const selectedDay = async (day: string, dayWeek: string, attendantCode: number) => {
-        selectedDate.value = day + '/' + dayWeek;
+        selectedDate.value = day;
         console.log('Chamaou o selectedDay, day: ', day, ' dia da semana: ', dayWeek);
         
         releaseMarkHours.value = true;
@@ -388,12 +398,12 @@
             out.push({ time: fromMinutes(t), selected: false, disabled: false });
         }
         return out;
-    }
+    };
 
     function toMinutes(hhmm: string): number {
         const [h, m] = (hhmm ?? '00:00').split(':').map(v => parseInt(v, 10) || 0);
         return h * 60 + m;
-    }
+    };
 
     function fromMinutes(min: number): string {
         const h = Math.floor(min / 60);
@@ -401,7 +411,7 @@
         const hh = h.toString().padStart(2, '0');
         const mm = m.toString().padStart(2, '0');
         return `${hh}:${mm}`;
-    }
+    };
 
     const showConfirmHour = (position: number) => {
         const slot = slots.value[position];
@@ -412,7 +422,7 @@
             shoowConfirmHour.value = true;
             positionMarked.value = position;
             selectedHour.value = slot.time;
-        
+
         };
     };
 

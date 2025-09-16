@@ -21,6 +21,18 @@ class OwnerService {
         
         return $owner;   
     }
+    
+    public function pixKey(int $id, string $pix)
+    {
+        $owner = $this->ownerRepository->pixKey($id, $pix);
+
+        if (!$owner) {
+            throw new Exception("Erro ao localizar o proprietário!", 1);
+
+        }
+        
+        return $owner;   
+    }
 
 
     public function findByMail(string $mail)

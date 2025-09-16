@@ -136,7 +136,7 @@
         const res = await api.get(`/attendants/find/${ownerCode}/${props.attendantCode}`);
         const data: AttendantData = camelcaseKeys(res.data.data, { deep: true });
 
-        console.log(data);
+        
         attendant.value = {
             ownerCode: data.ownerCode,
             name: data.name,
@@ -196,7 +196,7 @@
                 {
                     $q.notify({
                         color: 'green',
-                        message: 'Serviço alterado com sucesso!',
+                        message: 'Dados do atendente alterado com sucesso!',
                         position: 'top',
                         timeout: 1200
 
@@ -205,9 +205,14 @@
                     emits('close', true);
                 };
             };
-        } catch (error) {
+        } catch (error: any) {
             console.error('Erro:', error);
-
+            $q.notify({
+                color: 'red',
+                message: error?.reponse?.data?.message,
+                position: 'top'
+                
+            });
         };
     };
 

@@ -20,7 +20,7 @@ class ServicesManagementRepository
 
     public function getAllNotHasCommission(int $id)
     {
-        $allServices = Servicee::where('owner_code', $id)->get();
+        $allServices = Servicee::where('owner_code', $id)->where('category_code', null)->get();
         $newServices = [];
         foreach ($allServices as $service) {
             Log::debug('Dentro do foreach');

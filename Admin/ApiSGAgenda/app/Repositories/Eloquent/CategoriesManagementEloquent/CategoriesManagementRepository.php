@@ -131,4 +131,32 @@ class CategoriesManagementRepository
 
         return $id;
     }
+
+    public function active(int $ownerCode, $categoryCode)
+    {
+        $category = DB::transaction(function() use ($ownerCode, $categoryCode) {
+            $category = $this->findByID($ownerCode, $categoryCode);
+            if(!$category) return;
+
+            $category->update([
+                'active' => 1
+            ]);
+        });
+
+        return $category;
+    }
+
+    public function disable(int $ownerCode, int $categoryCode)
+    {
+        $category = DB::transaction(function() use ($ownerCode, $categoryCode) {
+            $category = $this->findByID($ownerCode, $categoryCode);
+            if(!$category) return;
+
+            $category->update([
+                'active' => 0
+            ]);
+        });
+
+        return $category;
+    }
 }

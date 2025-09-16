@@ -138,7 +138,7 @@
 
         const res = await api.get(`/products/find/${ownerCode}/${props.productCode}`);
         const data: ProductData = camelcaseKeys(res.data.data, { deep: true });
-        console.log(data);
+        
 
         product.value = {
             ownerCode: data.ownerCode,

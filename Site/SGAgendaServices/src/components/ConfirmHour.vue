@@ -7,8 +7,9 @@
                     class="q-gutter-md"
                 >
                     <div class="">
-                        <span class="q-ml-sm">Confirmar agendamento para as {{ props.hour }} dia: {{ props.date }} em {{ props.month + 1 }} | {{ props.attendantCode }} | {{ props.serviceCode }}</span>
+                        <span class="q-ml-sm">Confirmar agendamento para as {{ props.hour }} dia: {{ props.date }} em {{ props.month }} | {{ props.attendantCode }} | {{ props.serviceCode }}</span>
 
+                        <span>Dia: {{  }}</span>
                         <q-input 
                             v-model="confirmData.customerName" 
                             type="text" 
@@ -52,9 +53,10 @@
 </template>
 
 <script setup lang="ts">
-    import { LocalStorage } from 'quasar';
+    import { LocalStorage, useQuasar } from 'quasar';
     import { api } from 'src/boot/axios';
     import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
     interface Confirm {
         siteName: string,
@@ -64,7 +66,7 @@
         customerPhone: string,        
         date: string,
         hour: string,
-        month: string,
+        month: number,
     };
 
     const confirmData = ref<Confirm>({
@@ -75,7 +77,7 @@
         attendantCode: 0,
         date: '',
         hour: '',
-        month: '',
+        month: 0,
 
     });
 
@@ -90,11 +92,13 @@
         attendantCode: unknown,
         date: string,
         hour: string,
-        month: string,
+        month: number,
         
     }>();
 
     const show = ref<boolean>(true);
+    const $q = useQuasar();
+    const router = useRouter();
 
     const closePoppup = () => {
         emits('close', true);
@@ -106,13 +110,19 @@
         return true;
     }
 
+    function formatDay(day: string, month: number) {
+        const year = new Date().getFullYear();
+
+        return `${day}/${month.toString().length === 1 ? `0` + month : month}/${year}`;
+    };
+
     const confirmHour = async () => {
         const newAttendantCode = Number(props.attendantCode);
         const newServiceCode = Number(props.serviceCode);
 
         const payload: Confirm = {
             attendantCode: newAttendantCode,
-            date: props.date,
+            date: formatDay(props.date, props.month),
             hour: props.hour,
             customerName: confirmData.value.customerName,
             customerPhone: confirmData.value.customerPhone,
@@ -123,13 +133,26 @@
 
         console.log(payload);
     
-        const res = await api.post('/site/create/schedule', payload, {
-            headers: {
-                Accept: 'application/json'
-            }
-        });
-
-        console.log(res.data);
-        
+        try {
+            const res = await api.post('/site/create/schedule', payload, {
+                headers: {
+                    Accept: 'application/json'
+                }
+            });
+            const data = res.data;
+            
+            if(data.success)
+            {
+                $q.notify({
+                    color: 'green',
+                    message: 'Agendamento cadastrado com sucesso!',
+                    position: 'top',
+                    timeout: 1000
+                });
+                closePoppup();
+            };
+        } catch (error) {
+            
+        };
     }; 
 </script>

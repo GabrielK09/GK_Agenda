@@ -146,7 +146,7 @@
 
     interface ServiceData {
         ownerCode: number,
-        categoryCode: number|string,
+        categoryCode: unknown,
         name: string,
         price: number,
         description: string,
@@ -210,7 +210,8 @@
 
         const res = await api.get(`/services/find/${ownerCode}/${props.serviceCode}`);
         const data: ServiceData = camelcaseKeys(res.data.data, { deep: true });
-        console.log(data);
+        
+        
         service.value = {
             categoryCode: data.categoryCode,
             isHomeService: data.isHomeService ? true : false,
@@ -246,8 +247,10 @@
         const seconds = Number(service.value.duration) % 60;
         const newDuration = minutes + ':' + (seconds === 0 ? '00' : seconds);
 
+        const category = service.value.categoryCode as Categories;
+
         const payload: ServiceData = {
-            categoryCode: service.value.categoryCode,
+            categoryCode: category.categoryCode,
             checkAvailability: service.value.checkAvailability,
             description: service.value.description,
             durationString: service.value.duration,

@@ -13,7 +13,7 @@
                         <div class="p-6 bg-blue-500 text-white rounded-lg w-[45vh]">
                             <span>Totais de atendimentos:</span>
                             
-                            <span class="flex"><div class="bg-white w-1 h-4 mt-4 mr-3"></div><span class="mt-3">{{ 0 }}</span></span>
+                            <span class="flex"><div class="bg-white w-1 h-4 mt-4 mr-3"></div><span class="mt-3">{{ countSchedulings }}</span></span>
                         </div>
 
                         <div class="">
@@ -108,7 +108,26 @@
 </template>
 
 <script setup lang="ts">
+    import camelcaseKeys from 'camelcase-keys';
     import { LocalStorage } from 'quasar';
+    import { api } from 'src/boot/axios';
+    import { onMounted, ref } from 'vue';
 
+    const ownerCode = LocalStorage.getItem("ownerCode");
     const width = LocalStorage.getItem("width") as number;
+
+    let countSchedulings = ref<number>(0);
+
+    const getAllSchedulings = async () => {
+        const res = await api.get(`/schedule/get-all/${ownerCode}`);
+        const data: unknown[] = camelcaseKeys(res.data.data, { deep: true });
+        countSchedulings.value = data.length;
+
+    };
+
+    onMounted(() => {
+        getAllSchedulings();
+
+    });
+    
 </script>

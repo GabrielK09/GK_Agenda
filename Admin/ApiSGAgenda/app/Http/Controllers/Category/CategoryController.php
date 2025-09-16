@@ -18,8 +18,23 @@ class CategoryController extends Controller
         return apiSuccess('', $this->categoriesManagementService->getAll($ownerCode));
     }
 
+    public function getAllNotHasCommission(int $ownerCode)
+    {
+        return apiSuccess('', $this->categoriesManagementService->getAllNotHasCommission($ownerCode));
+    }
+
     public function create(CategoryRequest $request)
     {
         return apiSuccess('Categoria cadastrada com sucesso!', $this->categoriesManagementService->create($request->validated()));
+    }
+
+    public function active(int $ownerCode, int $categoryCode)
+    {
+        return apiSuccess('Categoria ativada com sucesso!', $this->categoriesManagementService->active($ownerCode, $categoryCode));
+    }
+
+    public function disable(int $ownerCode, int $categoryCode)
+    {
+        return apiSuccess('Categoria desativada com sucesso!', $this->categoriesManagementService->disable($ownerCode, $categoryCode));
     }
 }

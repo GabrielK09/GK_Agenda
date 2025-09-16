@@ -34,14 +34,20 @@ Route::prefix('/v1')->group(function() {
     });
 
     Route::middleware('auth:sanctum')->group(function() {
+        Route::prefix('/owner')->group(function() {
+            Route::get('/data/{owner_code}', [OwnerController::class, 'findByID']);
+            Route::put('/update/pix-key/{owner_code}', [OwnerController::class, 'pixKey']);
+
+        });
+
         Route::prefix('/services')->group(function() {
             Route::get('/all/{id}', [ServicesManagementController::class, 'getAll']); 
             Route::get('/all/not-commission/{id}', [ServicesManagementController::class, 'getAllNotHasCommission']); 
             Route::get('/find/{owner_code}/{service_code}', [ServicesManagementController::class, 'findByID']); 
             Route::put('/update/{owner_code}/{service_code}', [ServicesManagementController::class, 'update']); 
-            Route::delete('/delete/{owner_code}/{service_code}', [ServicesManagementController::class, 'delete']); 
             Route::post('/create', [ServicesManagementController::class, 'create']); 
             Route::put('/active/{owner_code}/{product_code}', [ServicesManagementController::class, 'active']); 
+            Route::delete('/delete/{owner_code}/{service_code}', [ServicesManagementController::class, 'delete']); 
 
         });
 
@@ -50,9 +56,9 @@ Route::prefix('/v1')->group(function() {
             Route::get('/all/not-commission/{id}', [CategoryController::class, 'getAllNotHasCommission']); 
             Route::get('/find/{owner_code}/{category_code}', [CategoryController::class, 'findByID']); 
             Route::put('/update/{owner_code}/{category_code}', [CategoryController::class, 'update']); 
-            Route::delete('/delete/{owner_code}/{category_code}', [CategoryController::class, 'delete']); 
             Route::post('/create', [CategoryController::class, 'create']); 
             Route::put('/active/{owner_code}/{product_code}', [CategoryController::class, 'active']); 
+            Route::delete('/delete/{owner_code}/{category_code}', [CategoryController::class, 'delete']); 
         });
         
         Route::prefix('/attendants')->group(function() {
@@ -88,8 +94,8 @@ Route::prefix('/v1')->group(function() {
 
         Route::prefix('/schedule')->group(function() {
             Route::get('/get-all/{owner_code}', [ScheduleController::class, 'getAll']);
-            Route::get('/get-detail/{owner_code}', [ScheduleController::class, 'detail']);
-            Route::put('');
+            Route::get('/get-detail/{owner_code}/{schedule_code}', [ScheduleController::class, 'detail']);
+            Route::put('/finish/schedule', [ScheduleController::class, 'finish']);
         }); 
     });
 });

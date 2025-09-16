@@ -12,7 +12,7 @@
                     <div class="grid-calender grid grid-cols-2">
                         <div class="calender">
                             <AgendaDay
-                                :active-scheduling="activeSchedulings"
+                                :active-scheduling="events"
                                 @change-date="changeDateTable($event)"
                             />
                         </div>
@@ -24,15 +24,15 @@
                                 hide-bottom
                                 :rows="schedulings"
                                 :columns="columns"
-                                row-key="schedulingDate"
+                                row-key="schedulingCode"
                             >
                                 <template v-slot:body="props">
                                     <q-tr
                                         :props="props"
+                                        @click="openSchedulingDetails(props.row.schedulingCode)"
                                     >
                                         <q-td
                                             v-for="col in props.cols"
-                                            @click="openSchedulingDetails"
                                             class="cursor-pointer"
                                         >  
                                             <div 
@@ -67,11 +67,11 @@
     import SchedulingManagement from 'src/components/App/AgendaManagement/SchedulingManagement.vue';
     import { onMounted, ref } from 'vue';
     import { LocalStorage, QTableColumn } from 'quasar';
-    import dayjs from 'dayjs';
     import { api } from 'src/boot/axios';
     import camelcaseKeys from 'camelcase-keys';
 
-   interface Scheduling {
+    interface Scheduling {
+        schedulingCode: number,
         customerName: string,
         customerPhone: string,
         serviceCode: number,
@@ -81,6 +81,7 @@
         hour: string,
         day: string,
         month: string,
+        completed: number
     };
 
     const activeSchedulings = ref<string[]>([]);
@@ -103,97 +104,85 @@
             label: 'Cliente',
             name: 'customerName',
             align: 'center',
-            sortable: true,
-            format(val) {
-                return val.customerName;
-            }
+            
         },
         {
             field: 'service',
             label: 'Serviço',
             name: 'service',
-            align: 'center',
-            sortable: true,
-            format(val) {
-                return val.name;
-            }
+            align: 'center'
         }
     ]);
 
     const allSchedulings = ref<Scheduling[]>([]);
 
     const schedulings = ref<Scheduling[]>([]);
+    let events = ref<string[]>([]);
     const ownerCode = LocalStorage.getItem("ownerCode");
 
-    let formatedDate = ref<string>(dayjs().format('DD/MM/YYYY')); 
     let showDetailScheduling = ref<boolean>(false);
     let selectedSchedulingCode = ref<number>(0);
 
     const changeDateTable = (date: string) => {
-        formatedDate.value = date;
         filter(date);
     };
 
-    const filter = (date: string) => {
-        schedulings.value = allSchedulings.value.filter(scheduling => scheduling.day === date);
+    const changeCompleted = (val: number): boolean => {
+        console.log(val === 1 ? true : false);
+        
+        return val === 1 ? true : false;
+    };  
+
+    const filter = (informedDate: string) => {
+        console.log('Data selecionada: ', informedDate);
+        console.log('allSchedulings.value: ', allSchedulings.value);
+        schedulings.value = allSchedulings.value.filter(date => date.day === informedDate && date.completed === 0);
+        
     };
 
     const getAllSchedulings = async () => {
         const res = await api.get(`/schedule/get-all/${ownerCode}`);
         const data = camelcaseKeys(res.data.data, { deep: true });
+
         schedulings.value = data;
+        allSchedulings.value = [...schedulings.value];
 
         console.log(schedulings.value);
 
-        const date = schedulings.value.map(scheduling => scheduling.day);
-        const month: unknown[] = schedulings.value.map(scheduling => scheduling.month);
-        const newMonth = Number(month[0]) + 1;
-        console.log('Data: ', date[0]);
-        console.log('newMonth: ', newMonth);
+        const dates: string[] = schedulings.value.filter(d => d.completed === 0).map(scheduling => scheduling.day)
         
-        const newDate = convertStringDate(date[0] as string, newMonth);
-        /*'scheduling_code',
-        'owner_code',
-        'attendant_code',
-        'attendant',
-        'service_code',
-        'service',
-        'customer_name',
-        'customer_phone',
-        'day',
-        'hour', */
-        console.log(newDate);
-        activeSchedulings.value.push(newDate);
+        for (let i = 0; i < dates.length; i++) {
+            const date = dates[i] as string;
+            activeSchedulings.value.push(date);
+            
+        };
+
+        formatDateForFilter();
+        console.log('activeSchedulings: ', activeSchedulings.value);
+        
     };
 
-    const convertStringDate = (stringDate: string, monthStr: number): string => {
-        let newString = '';
-        console.log(monthStr);
-        
-        const splitString: string[] = stringDate.split('/');
-        const day = splitString[0].length === 1 ? '0' + splitString[0] : splitString[0];
-        const month = monthStr.toString().length === 1 ? '0' + monthStr : monthStr;
-        const year = new Date().getFullYear();
+    const formatDateForFilter = () => {
+        events.value = activeSchedulings.value.map(date => {
+            // 01/01/1000 - DD/MM/YYYY
+            const splitDate = date.split('/');
+            const day = splitDate[0];
+            const month = splitDate[1];
+            const year = splitDate[2];
+            return `${year}/${month}/${day}`;
+        });
+    };  
 
-        newString = `${year}/${month}/${day}`;
-
-        return newString;
-    };
-
-    const openSchedulingDetails = () => {
+    const openSchedulingDetails = (schedulingCode: number) => {
         console.log('openSchedulingDetails');
-        
-        showDetailScheduling.value = !showDetailScheduling.value;
+        console.log('schedulingCode: ', schedulingCode);
+        if(!schedulingCode) return;
 
+        showDetailScheduling.value = !showDetailScheduling.value;
+        selectedSchedulingCode.value = schedulingCode;
     };
 
     onMounted(() => {
-        // allSchedulings.value = [...schedulings.value];
-        
-        // console.log(schedulings.value.map(scheduling => convertStringDate(scheduling.schedulingDate)));
-        // activeSchedulings.value = schedulings.value.map(scheduling => convertStringDate(scheduling.schedulingDate));
-
-        // filter(dayjs().format('DD/MM/YYYY'));
         getAllSchedulings();
     }); 
 
@@ -212,7 +201,7 @@
             }
 
             .list-calender {
-                margin: 5rem 0 0 0;
+                margin: 2rem 0 0 0;
             }
         }   
     }

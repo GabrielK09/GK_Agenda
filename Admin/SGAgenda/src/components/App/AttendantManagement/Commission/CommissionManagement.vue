@@ -303,6 +303,14 @@
         console.log(services.value);
     };
 
+    const getAllCategories = async () => {
+        const res = await api.get(`/categories/all/not-commission/${ownerCode}`)
+        const data = camelcaseKeys(res.data.data, { deep: true });
+
+        categories.value = data;
+        allCategories.value = [...categories.value];
+    };
+
     const createCommission = async () => {
         if(!releaseForEmit.value.hasByOne || !releaseForEmit.value.hasValueByOne)
         {
@@ -324,19 +332,37 @@
                 ownerCode: commission.value.ownerCode
             };
 
-            const res = await api.post('/commission/create', payload, {
-                headers: {
-                    Accept: 'application/json'
-                }
-            });
-            
-            const data = res.data;
+            try {
+                const res = await api.post('/commission/create', payload, {
+                    headers: {
+                        Accept: 'application/json'
+                    }
+                });
+                
+                const data = res.data;
 
-            console.log('Data: ', data);
+                console.log('Data: ', data);
+                if(data.success)
+                {
+                    $q.notify({
+                        color: 'green',
+                        message: data.message,
+                        position: 'top'
+                    });
+                };
+                
+            } catch (error: any) {
+                $q.notify({
+                    color: 'green',
+                    message: error?.response?.data?.message,
+                    position: 'top'
+                });
+            };
         };
     };  
 
     onMounted(() => {
+        getAllCategories();
         getAllServices();
     }); 
 </script>

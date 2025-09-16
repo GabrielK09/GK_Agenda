@@ -16,8 +16,16 @@ class OwnerController extends Controller
 
     public function update(OwnerRequest $request, int $id) 
     {
-        Log::info($request->validated());        
-        Log::info($id);        
         return apiSuccess('Dados alterados com sucesso!', $this->ownerService->update($request->validated(), $id));
+    }
+
+    public function findByID(int $ownerCode)
+    {
+        return apiSuccess('Dados retornados com sucesso!', $this->ownerService->findByID($ownerCode));
+    }
+
+    public function pixKey(int $ownerCode, Request $request)
+    {
+        return apiSuccess('Dados retornados com sucesso!', $this->ownerService->pixKey($ownerCode, $request->input('pix')));
     }
 }
