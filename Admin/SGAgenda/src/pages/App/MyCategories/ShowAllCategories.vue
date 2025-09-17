@@ -51,8 +51,9 @@
                                 >
                                     <template v-if="col.name === 'actions'">
                                         <div class="text-center">
-                                            <q-btn size="10px" no-caps color="black" icon="edit_square" flat @click="showCategoryManagement('update', props.row.categoryCode)"/>
-                                            <q-btn size="10px" no-caps color="red" icon="delete" flat @click="showDialogDeleteCategory(props.row.categoryCode)"/>
+                                            <q-btn :disabled="props.row.active !== 1" size="10px" no-caps color="black" icon="edit_square" flat @click="showCategoryManagement('update', props.row.categoryCode)"/>
+                                            <q-btn :disabled="props.row.active !== 1" size="10px" no-caps color="red" icon="delete" flat @click="showDialogCategory(props.row.categoryCode, 'delete')"/>
+                                            <q-btn :disabled="props.row.active === 1" size="10px" no-caps color="green" icon="check" flat @click="showDialogCategory(props.row.categoryCode, 'active')"/>
 
                                         </div>
                                     </template>
@@ -151,15 +152,6 @@
     let action = ref<string>('');
     let selectedCategoryCode = ref<number|undefined>(0);
 
-    function formatVal(val: number | string) 
-    {    
-        const num = typeof val === 'string' ? parseFloat(val) : val;
-        return new Intl.NumberFormat('pt-BR', {
-            style: 'currency',
-            currency: 'BRL'
-        }).format(num);
-    };
-
     const search = () => {
         
     };
@@ -172,10 +164,10 @@
         
     };
 
-    const showDialogDeleteCategory = (categoryCode: number) => {
+    const showDialogCategory = (categoryCode: number, action: string) => {
         $q.dialog({
-            title: 'Excluir categoria',
-            message: `Deseja realmente remover essa categoria (${categoryCode})?`,
+            title: action === 'delete' ? 'Desativar categoria' : 'Ativar categoria',
+            message: `Deseja realmente ${action === 'delete' ? `desativar` : 'ativar'} essa categoria (${categoryCode})?`,
             cancel: {
                 push: true,
                 label: 'Não',
@@ -189,17 +181,46 @@
             },
 
         }).onOk(() => {
-            deleteCategory(categoryCode);
+            executeCategory(categoryCode, action);
 
         }).onCancel(() => {
             return;
         });
     };
 
-    const deleteCategory = async (categoryCode: number) => {
-        const res = await api.delete(`/categories/delete/${ownerCode}/${categoryCode}`);
-        console.log(res.data);
+    const executeCategory = async (categoryCode: number, action: string) => {
+        let success;
+        try {
+            if(action === 'delete') {
+                const res = await api.delete(`/categories/delete/${ownerCode}/${categoryCode}`);
+                const data = res.data;
+                success = data;
+                
+            } else {
+                const res = await api.put(`/categories/active/${ownerCode}/${categoryCode}`);
+                const data = res.data;
+                success = data;
+            };
 
+            if(success.success)
+            {
+                $q.notify({
+                    color: 'green',
+                    message: success.message,
+                    position: 'top'
+                });
+
+                getAllCategories();
+            };
+            
+        } catch (error: any) {
+            $q.notify({
+                color: 'red',
+                message: error.response?.data?.message,
+                position: 'top'
+            });
+
+        };
     };
 
     const showCategoryManagement = (management: string, categoryCode:number|undefined) => {

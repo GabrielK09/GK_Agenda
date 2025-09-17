@@ -5,15 +5,19 @@ namespace App\Repositories\Eloquent\CategoriesManagementEloquent;
 
 use App\Models\Category;
 use App\Models\CommissionAttendant;
-use App\Models\Servicee;
+use App\Repositories\Eloquent\ServicesManagementEloquent\ServicesManagementRepository;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class CategoriesManagementRepository 
 {
+    public function __construct(
+        protected ServicesManagementRepository $servicesManagementRepository
+    ){}
+
     public function getAll(int $id)
     {
-        $categories = Category::where('owner_code', $id)->get();
+        $categories = Category::where('active', 1)->where('owner_code', $id)->get();
 
         return $categories;
 
@@ -21,7 +25,7 @@ class CategoriesManagementRepository
 
     public function getAllNotHasCommission(int $id)
     {
-        $allCategories = Category::where('owner_code', $id)->get();
+        $allCategories = Category::where('active', 1)->where('owner_code', $id)->get();
         $newCategories = [];
         foreach ($allCategories as $category) {
             Log::debug('Dentro do foreach');
@@ -83,8 +87,7 @@ class CategoriesManagementRepository
 
     public function findByID(int $ownerCode, int $categoryCode)
     {
-        $category = Category::where('active', 1)
-                            ->where('owner_code', $ownerCode)
+        $category = Category::where('owner_code', $ownerCode)
                             ->where('category_code', $categoryCode)
                             ->first();
 
@@ -138,9 +141,13 @@ class CategoriesManagementRepository
             $category = $this->findByID($ownerCode, $categoryCode);
             if(!$category) return;
 
+            Log::debug('Achou a categoria');
+
             $category->update([
                 'active' => 1
             ]);
+
+            return $category;
         });
 
         return $category;
@@ -150,11 +157,24 @@ class CategoriesManagementRepository
     {
         $category = DB::transaction(function() use ($ownerCode, $categoryCode) {
             $category = $this->findByID($ownerCode, $categoryCode);
+
             if(!$category) return;
+
+            $services = $this->servicesManagementRepository->findByCategory($ownerCode, $categoryCode);
+
+            if(count($services) > 0) 
+            {
+                foreach ($services as $service) {
+                    $this->servicesManagementRepository->removeCategory($ownerCode, $service->service_code);
+
+                }
+            };
 
             $category->update([
                 'active' => 0
             ]);
+
+            return $category;
         });
 
         return $category;

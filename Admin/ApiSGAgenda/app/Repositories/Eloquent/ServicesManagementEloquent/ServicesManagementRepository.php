@@ -92,6 +92,23 @@ class ServicesManagementRepository
         
         return $service;
     }   
+    
+    public function findByCategory(int $ownerCode, int $categoryCode)
+    {
+        $service = Servicee::where('active', 1)
+                            ->where('owner_code', $ownerCode)
+                            ->where('category_code', $categoryCode)
+                            ->get();
+        if(!$service)
+        {
+            Log::warning("Serviço por categoria não encontado!, owner_code: {$ownerCode} | category_code: {$categoryCode}");
+            return;
+        }
+
+        Log::info($service);
+        
+        return $service;
+    }   
 
     public function update(array $data, int $ownerCode, int $serviceCode)
     {
@@ -143,9 +160,7 @@ class ServicesManagementRepository
     public function active(int $ownerCode, int $serviceCode)
     {  
         $id = DB::transaction(function() use ($ownerCode, $serviceCode) {
-            $service = Servicee::where('owner_code', $ownerCode)
-                            ->where('service_code', $serviceCode)
-                            ->first();
+            $service = $this->findByID($ownerCode, $serviceCode);
             
             if(!$service) return;
 
@@ -155,5 +170,25 @@ class ServicesManagementRepository
         });
 
         return $id;
+    }
+
+    public function removeCategory($ownerCode, $serviceCode)
+    {
+        Log::debug('Tem produto com categoria que está sendo desativada, vai remover a categoria');
+        $removeCategoryByService = DB::transaction(function() use ($ownerCode, $serviceCode) {
+            $service = $this->findByID($ownerCode, $serviceCode);
+
+            if(!$service) return;
+
+            $service->update([
+                'category_code' => null,
+                'category' => null,
+
+            ]);
+
+            return $service;
+        });
+
+        return $removeCategoryByService;
     }
 }

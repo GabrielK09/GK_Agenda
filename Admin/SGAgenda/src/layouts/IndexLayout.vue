@@ -26,7 +26,7 @@
                             :style="`background-color: rgb(59 130 200 / var(--tw-bg-opacity, 1))`"
                             class="mr-4"
                             label="Criar conta"
-                            @click="toRegister"   
+                            :to="'/auth/register'"
                         />
 
                         <q-btn 
@@ -67,7 +67,7 @@
                                 :style="`background-color: rgb(59 130 200 / var(--tw-bg-opacity, 1))`"
                                 class="mb-2 mt-2 flex justify-center text-white"
                                 label="Criar conta"
-                                @click="toRegister" 
+                                :to="'/auth/register'"
                             />  
 
                             <q-btn 
@@ -107,8 +107,6 @@
 
     let surprise = ref<boolean>(true);
     let show = ref<boolean>(false);
-
-    const toRegister = () => { router.replace({ path: '/register' }); };
     
     const toLogin = () => { 
         const token = LocalStorage.getItem("authToken");
@@ -119,7 +117,7 @@
             router.replace({ path: `/admin/${siteName}/dashboard` });
 
         } else {
-            router.replace({ path: '/login' }); 
+            router.replace({ path: '/auth/login' }); 
 
         };
         

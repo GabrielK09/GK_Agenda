@@ -33,7 +33,7 @@ class CategoryController extends Controller
         return apiSuccess('Categoria ativada com sucesso!', $this->categoriesManagementService->active($ownerCode, $categoryCode));
     }
 
-    public function disable(int $ownerCode, int $categoryCode)
+    public function delete(int $ownerCode, int $categoryCode)
     {
         return apiSuccess('Categoria desativada com sucesso!', $this->categoriesManagementService->disable($ownerCode, $categoryCode));
     }

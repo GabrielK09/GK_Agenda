@@ -40,7 +40,7 @@
 
     const router = useRouter();
 
-    let links: ILinks[] = reactive([
+    let links = ref<ILinks[]>([
         {icon: 'dashboard', title: 'Dashboard', position: 0, marked: true, url: `dashboard` },
         {icon: 'event', title: 'Agenda', position: 1, marked: false, url: `agenda` },
         {icon: 'attach_money', title: 'Comissões', position: 2, marked: false, url: `commission` },
@@ -55,7 +55,7 @@
     const changeMakred = (i: number) => {
         LocalStorage.set("lastCheck", i);
 
-        links.map(link => {
+        links.value.forEach(link => {
             if(link.position === i) link.marked = true, LocalStorage.set("lastURL", link.url);
             if(link.position !== i) link.marked = false;
         });
@@ -63,7 +63,7 @@
 
     onMounted(() => {;
         router.replace({ path: LocalStorage.getItem("lastURL") as string })
-        links.map(link => {
+        links.value.forEach(link => {
             if(link.position === LocalStorage.getItem("lastCheck")) link.marked = true;
             if(link.position !== LocalStorage.getItem("lastCheck")) link.marked = false;
         });

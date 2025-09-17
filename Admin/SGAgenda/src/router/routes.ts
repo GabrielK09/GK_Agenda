@@ -61,20 +61,27 @@ const routes: RouteRecordRaw[] = [
         ]
     },
     {
-        path: '/login',
-        component: () => import('pages/Auth/Login/Login.vue')
-    },
-    {
-        path: '/register',
-        component: () => import('pages/Auth/Register/RegisterOwner.vue')
-    },
-    {
-        path: '/complete-register',
-        component: () => import('pages/Auth/Register/CompleteRegister.vue')
-    },
-    {
-        path: '/companie-url',
-        component: () => import('pages/Auth/Site/RegisterURLSite.vue')
+        path: '/auth/',
+        name: 'auth',
+        component: () => import('layouts/AuthLayout.vue'),
+        children: [
+            {
+                path: 'login',
+                component: () => import('pages/Auth/Login/Login.vue')
+            },
+            {
+                path: 'register',
+                component: () => import('pages/Auth/Register/RegisterOwner.vue')
+            },
+            {
+                path: 'complete-register',
+                component: () => import('pages/Auth/Register/CompleteRegister.vue')
+            },
+            {
+                path: 'companie-url',
+                component: () => import('pages/Auth/Site/RegisterURLSite.vue')
+            },
+        ]
     },
     {
         path: '/:catchAll(.*)*',
