@@ -24,7 +24,7 @@ Route::prefix('/v1')->group(function() {
     Route::prefix('/site')->group(function() {
         Route::post('/create-url', [SiteManagementController::class, 'createURL']);
         Route::post('/create/schedule', [ScheduleController::class, 'create']);
-        Route::post('/get-all/schedule/{siteName}', [ScheduleController::class, 'getAllBySite']);
+        Route::get('/get-all/schedule/{siteName}', [ScheduleController::class, 'getAllBySite']);
         Route::get('/get-categories/{siteName}', [SiteManagementController::class, 'getCategories']);
         Route::get('/get-services/{siteName}', [SiteManagementController::class, 'getServices']);
         Route::get('/find/{site_name}/{service_code}', [SiteManagementController::class, 'findServiceByID']); 

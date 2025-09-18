@@ -7,9 +7,8 @@
                     class="q-gutter-md"
                 >
                     <div class="">
-                        <span class="q-ml-sm">Confirmar agendamento para as {{ props.hour }} dia: {{ props.date }} em {{ props.month }} | {{ props.attendantCode }} | {{ props.serviceCode }}</span>
+                        <span class="q-ml-sm">Confirmar agendamento para as {{ props.hour }} dia: {{ props.date }}</span>
 
-                        <span>Dia: {{  }}</span>
                         <q-input 
                             v-model="confirmData.customerName" 
                             type="text" 
@@ -56,7 +55,7 @@
     import { LocalStorage, useQuasar } from 'quasar';
     import { api } from 'src/boot/axios';
     import { ref } from 'vue';
-import { useRouter } from 'vue-router';
+    import { useRouter } from 'vue-router';
 
     interface Confirm {
         siteName: string,
@@ -152,6 +151,7 @@ import { useRouter } from 'vue-router';
                 closePoppup();
             };
         } catch (error) {
+            console.error('Erro:', error);
             
         };
     }; 

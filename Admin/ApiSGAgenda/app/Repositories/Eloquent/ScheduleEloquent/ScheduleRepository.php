@@ -27,14 +27,15 @@ class ScheduleRepository
         return Schedule::where('owner_code', $ownerCode)->where('completed', 0)->where('canceled', 0)->get();
     }
 
-    public function getAllBySite(string $siteName, string $day)
+    public function getAllBySite(string $siteName)
     {
-        Log::debug("Dia: {$day}");
         $ownerCode = $this->getOwnerCode($siteName);
 
-        $schedules = Schedule::where('owner_code', $ownerCode)->where('day', $day)->where('completed', 0)->where('canceled', 0)->get();
-        
-        return $schedules;
+        $schedules = $this->getAll($ownerCode);
+        Log::debug($ownerCode);
+        Log::debug($schedules);
+
+        return  $this->getAll($ownerCode);
     }
 
     public function detail(int $ownerCode, int $scheduleCode)
@@ -43,32 +44,55 @@ class ScheduleRepository
         Log::info($scheduleCode);
         return Schedule::where('owner_code', $ownerCode)->where('scheduling_code', $scheduleCode)->first();
     }
+
+    public function checkMarkedHour(string $customerName, string $customerPhone, int $ownerCode): bool
+    {
+        if(Schedule::where('owner_code', $ownerCode)->where('customer_name', $customerName)->orWhere('customer_phone', $customerPhone)->first())
+        {
+            Log::alert("Cliente: {$customerName} | {$customerPhone} | já tem horário marcado");
+            return false;
+        }
+
+        Log::alert("Cliente: {$customerName} | {$customerPhone} | não tem horário marcado");
+        return true;
+    }
     
     public function create(array $data) 
     {
-        $schedule = DB::transaction(function() use ($data) {
-            $ownerCode = $this->getOwnerCode($data['siteName']);
-            $maxCode = Schedule::where('owner_code', $ownerCode)->max('scheduling_code');
-            $attendant = Attendant::where('owner_code', $ownerCode)->where('attendant_code', $data['attendantCode'])->first();
-            $service = Servicee::where('owner_code', $ownerCode)->where('service_code', $data['serviceCode'])->first();
+        $hasMarked = $this->checkMarkedHour($data['customerName'], $data['customerPhone'], $this->getOwnerCode($data['siteName']));
+        Log::alert("Está marcado?: {$hasMarked}");
 
-            return Schedule::create([
-                'scheduling_code' => $maxCode ? $maxCode + 1 : 1,
-                'owner_code' => $ownerCode,
-                'attendant_code' => $attendant->attendant_code, 
-                'attendant' => $attendant->name,
-                'service_code' => $service->service_code,
-                'service' => $service->name,
-                'service_price' => $service->price,
-                'customer_name' => $data['customerName'],
-                'customer_phone' => $data['customerPhone'],
-                'day' => $data['date'],
-                'hour' => $data['hour'],
-                'month' => $data['month'],
-            ]);
-        }); 
+        if($hasMarked)
+        {
+            Log::alert("Vai marcar o horário");
+            $schedule = DB::transaction(function() use ($data) {
+                $ownerCode = $this->getOwnerCode($data['siteName']);
+                $maxCode = Schedule::where('owner_code', $ownerCode)->max('scheduling_code');
+                $attendant = Attendant::where('owner_code', $ownerCode)->where('attendant_code', $data['attendantCode'])->first();
+                $service = Servicee::where('owner_code', $ownerCode)->where('service_code', $data['serviceCode'])->first();
 
-        return $schedule;
+                return Schedule::create([
+                    'scheduling_code' => $maxCode ? $maxCode + 1 : 1,
+                    'owner_code' => $ownerCode,
+                    'attendant_code' => $attendant->attendant_code, 
+                    'attendant' => $attendant->name,
+                    'service_code' => $service->service_code,
+                    'service' => $service->name,
+                    'service_price' => $service->price,
+                    'customer_name' => $data['customerName'],
+                    'customer_phone' => $data['customerPhone'],
+                    'day' => $data['date'],
+                    'hour' => $data['hour'],
+                    'month' => $data['month'],
+                ]);
+            }); 
+
+            Log::debug('Agendamento cadastrado com sucesso!');
+            return $schedule;
+
+        } else {
+            Log::warning('Não é pra cair aqui');
+        }
     }
 
     public function createCommissionRegister(int $ownerCode, int $attendantCode, int $scheduleCode, float $totalCommission)

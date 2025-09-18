@@ -33,6 +33,7 @@ class AttendantHoursRepository
 
     public function create(array $data)
     {
+        $hours = null;
         if($this->checkExistHours($data['ownerCode'], $data['attendantCode']))
         {
             return 'callUpdate';
@@ -59,11 +60,10 @@ class AttendantHoursRepository
                 }
             });
 
-            Log::info('Horário cadastrado com sucesso!');
-
-            return $hours;
-
         };
+        Log::info('Horário cadastrado/alterada com sucesso, vai retornar - line 64!');
+        Log::info($hours);
+        return $hours;
     }
 
     public function findByID(int $ownerCode, int $attendantCode)

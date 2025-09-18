@@ -11,8 +11,9 @@ import (
 )
 
 type Paths struct {
-	ApiPath   string
-	FrontPath string
+	ApiPath       string
+	FrontPath     string
+	SiteFrontPath string
 }
 
 func getLocalIP() net.IP {
@@ -35,9 +36,11 @@ func getPath() Paths {
 
 	apiPath := filepath.Join(dir, "Admin", "ApiSGAgenda")
 	frontPath := filepath.Join(dir, "Admin", "SGAgenda")
+	siteFrontPath := filepath.Join(dir, "Site", "SGAgendaServices")
 
 	paths.ApiPath = apiPath
 	paths.FrontPath = frontPath
+	paths.SiteFrontPath = siteFrontPath
 
 	return paths
 }
@@ -49,17 +52,20 @@ func boot(paths Paths) {
 	log.Println(paths)
 	log.Println(ipCmd)
 
+	log.Println("Entrando no ApiPath")
 	cmdApi := exec.Command("php", "artisan", "serve", ipCmd)
 	cmdApi.Dir = paths.ApiPath
 	cmdApi.Stdout = os.Stdout
 	cmdApi.Stderr = os.Stderr
 	cmdApi.Start()
 
+	log.Println("Entrando no FrontPath")
 	cmdFront := exec.Command("quasar", "dev")
 	cmdFront.Dir = paths.FrontPath
 	cmdFront.Stdout = os.Stdout
 	cmdFront.Stderr = os.Stderr
 	cmdFront.Start()
+
 }
 
 func main() {

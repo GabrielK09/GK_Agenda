@@ -1,12 +1,12 @@
 <template>
     <q-page>
-        <section class="text-xl">
+        <section class="text-xl w-max">
             <div
                 class="m-2"
             >
                 <div class="bg-white rounded-lg">
                     <h2 class="text-gray-600 ml-4">Horários do(a) atendente: {{ props.attendantName }}</h2>
-                    <div class=" p-4 text-xs">
+                    <div class="p-4 text-xs">
                         <div 
                             @click="emits('close', true)"
                             class="flex mb-auto mt-auto cursor-pointer"
@@ -27,7 +27,7 @@
                 >   
                     <div class="mt-4 bg-white p-8 grid grid-cols-3 w-max">                 
                         <div v-for="(hourLabel, i) in hoursLabel">
-                            <div class="border p-4 m-4">
+                            <div class="border m-2 p-2">
                                 <div class="flex mb-2 border-t border-b p-2">
                                     <q-toggle v-model="hourLabel.markedDay" /><span class="mt-auto mb-auto mr-4 text-sm">{{ hourLabel.label }}</span>
                                     <q-input 

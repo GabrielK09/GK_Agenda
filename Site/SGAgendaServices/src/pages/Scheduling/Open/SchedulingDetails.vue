@@ -65,7 +65,9 @@
                     <div v-if="releaseMarkHours" class="mt-6">
                         <!--Ia-->
                         <div class="grid grid-cols-4 gap-2">
-                            <q-btn
+                            <div v-for="unday in allUnvaliableDays">
+                                {{ unday }}
+                                <q-btn
                                 v-for="(s, i) in slots"
                                 :key="s.time"
                                 class="px-3 py-2 rounded-md border text-sm hover:-translate-y-1 transition-transform"
@@ -79,6 +81,7 @@
                                 >
                                     {{ s.time }}
                             </q-btn>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -162,6 +165,7 @@
     const attendants = ref<Attendant[]>([]);
     const hoursAttendants = ref([]);
     const allHoursAttendants = ref([]);
+    const allUnvaliableDays = ref<Availability[]>([]);
     
     const service = ref<Service>({
         serviceCode: 0,
@@ -392,28 +396,23 @@
 
     };
 
-    //const checkAvailability = async (out: Slot[]): Promise<Slot[]> => {
-    const checkAvailability = async (out: Slot[]): Promise<Slot[]> => {
-        /*
-            let selectedMonth = ref<number>(0);
-            let selectedDate = ref<string>(''); 
-        */
-
-        let newOut: Slot[] = [];
-        const payload = {
-            dateByFilter: `${selectedDate.value}/${selectedMonth.value.toString().length === 1 ? `0${selectedMonth.value}` : selectedMonth.value}/${new Date().getFullYear()}`
-        }
+    const checkAvailability = async () => {
+        const res = await api.get(`/site/get-all/schedule/${urlName}`);
+        console.log(res.data.data);
         
-        const res = await api.post(`/site/get-all/schedule/${urlName}`, payload);
+        const data = camelcaseKeys(res.data.data, { deep: true });
 
-        const data: Availability[] = camelcaseKeys(res.data.data, { deep: true });
-
-        for (let i = 0; i < out.length; i++) {
+        allUnvaliableDays.value = data;
+        
+        
+        console.log(allUnvaliableDays.value);
+        /*for (let i = 0; i < out.length; i++) {
             const slot = out[i] as Slot;
-
+            
             for (let j = 0; j < data.length; j++) {
                 const day = data[j];
-        
+                let newOut: Slot[] = [];
+                
                 // time = hour
                 if(slot?.time === day?.hour)
                 {
@@ -423,8 +422,9 @@
                 };  
             };
         };
-
+        
         return newOut;
+        */
     };
 
     // ia
@@ -441,7 +441,7 @@
 
         }
 
-        checkAvailability(out);
+        //checkAvailability(out);
 
         return out;
     };
@@ -488,5 +488,7 @@
     onMounted(() => {
         getAttendantData();
         getServiceData();
+        checkAvailability();
+        
     });
 </script>

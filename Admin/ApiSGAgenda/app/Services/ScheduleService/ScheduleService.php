@@ -24,9 +24,9 @@ class ScheduleService
         return $schedules;   
     }
 
-    public function getAllBySite(string $siteName, string $day)
+    public function getAllBySite(string $siteName)
     {
-        $schedules = $this->scheduleRepository->getAllBySite($siteName, $day);
+        $schedules = $this->scheduleRepository->getAllBySite($siteName);
 
         if(!$schedules)
         {

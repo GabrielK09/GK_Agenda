@@ -20,10 +20,9 @@ class ScheduleController extends Controller
         return apiSuccess('Retornando todos os agendamentos!', $this->scheduleService->getAll($ownerCode));
     }
     
-    public function getAllBySite(Request $request, string $siteName)
+    public function getAllBySite(string $siteName)
     {
-        Log::debug($request->all());
-        return apiSuccess('Retornando todos os agendamentos ( marcados )!', $this->scheduleService->getAllBySite($siteName, $request->input('dateByFilter')));
+        return apiSuccess('Retornando todos os agendamentos ( marcados )!', $this->scheduleService->getAllBySite($siteName));
     }
 
     public function detail(int $ownerCode, int $scheduleCode)
@@ -32,10 +31,7 @@ class ScheduleController extends Controller
     }
 
     public function create(ScheduleRequest $request)
-    {
-        Log::debug('Dados');
-        Log::debug($request->all());
-        
+    {        
         return apiSuccess('Agendamento cadastrado com sucesso!', $this->scheduleService->create($request->validated()));
     }
 
