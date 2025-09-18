@@ -116,9 +116,9 @@
 
     const allSchedulings = ref<Scheduling[]>([]);
 
+    const ownerCode = LocalStorage.getItem("ownerCode");
     const schedulings = ref<Scheduling[]>([]);
     let events = ref<string[]>([]);
-    const ownerCode = LocalStorage.getItem("ownerCode");
 
     let showDetailScheduling = ref<boolean>(false);
     let selectedSchedulingCode = ref<number>(0);

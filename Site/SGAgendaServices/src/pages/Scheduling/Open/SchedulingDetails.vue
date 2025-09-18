@@ -139,6 +139,13 @@
         selected?: boolean,
         disabled?: boolean
     };
+
+    type Availability = {
+        day: string,
+        hour: string,
+        month: string
+    };
+
     const slots = ref<Slot[]>([]);
 
     const daysByMarked = ref<DayWeek[]>([]);
@@ -286,6 +293,7 @@
         
         hoursAttendants.value = data;
         const year = new Date().getFullYear();
+
         //ia
         const days: DayWeek[] = [];
 
@@ -317,10 +325,7 @@
         for (let d = startDay; d <= lastDay; d++) {
             const date = new Date(year, month - 1, d);
             const dow = date.getDay();
-
-            console.log('date: ', date);
-            
-            
+   
             if(marked.includes(dow)) {
                 selectedMonth.value = date.getMonth() + 1;
                 result.push({
@@ -384,6 +389,42 @@
                 break;
         }
         return interval;
+
+    };
+
+    //const checkAvailability = async (out: Slot[]): Promise<Slot[]> => {
+    const checkAvailability = async (out: Slot[]): Promise<Slot[]> => {
+        /*
+            let selectedMonth = ref<number>(0);
+            let selectedDate = ref<string>(''); 
+        */
+
+        let newOut: Slot[] = [];
+        const payload = {
+            dateByFilter: `${selectedDate.value}/${selectedMonth.value.toString().length === 1 ? `0${selectedMonth.value}` : selectedMonth.value}/${new Date().getFullYear()}`
+        }
+        
+        const res = await api.post(`/site/get-all/schedule/${urlName}`, payload);
+
+        const data: Availability[] = camelcaseKeys(res.data.data, { deep: true });
+
+        for (let i = 0; i < out.length; i++) {
+            const slot = out[i] as Slot;
+
+            for (let j = 0; j < data.length; j++) {
+                const day = data[j];
+        
+                // time = hour
+                if(slot?.time === day?.hour)
+                {
+                    continue  
+                } else {
+                    newOut.push(slot);
+                };  
+            };
+        };
+
+        return newOut;
     };
 
     // ia
@@ -394,15 +435,21 @@
         if (!stepMin || stepMin <= 0 || end <= start) return [];
 
         const out: Slot[] = [];
+        
         for (let t = start; t < end; t += stepMin) {
             out.push({ time: fromMinutes(t), selected: false, disabled: false });
+
         }
+
+        checkAvailability(out);
+
         return out;
     };
 
     function toMinutes(hhmm: string): number {
         const [h, m] = (hhmm ?? '00:00').split(':').map(v => parseInt(v, 10) || 0);
         return Number(h) * 60 + Number(m);
+
     };
 
     function fromMinutes(min: number): string {
@@ -412,6 +459,7 @@
         const mm = m.toString().padStart(2, '0');
         return `${hh}:${mm}`;
     };
+    //
 
     const showConfirmHour = (position: number) => {
         const slot = slots.value[position];
@@ -427,13 +475,10 @@
     };
 
     const closeAndUncheck = (show: boolean) => {
-        console.log('Vai fechar');
         shoowConfirmHour.value = !show;
     };  
 
     const removePosition = (position: number) => {
-        console.log('Vai desmarcar');
-        
         const slot = slots.value[position];
 
         if(!slot) return;

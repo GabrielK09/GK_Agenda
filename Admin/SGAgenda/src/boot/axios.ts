@@ -37,7 +37,7 @@ export default defineBoot(({ app, router }) => {
                 });
 
                 router.replace({
-                    path: '/login'
+                    path: '/auth/login'
                 });
             };
 
@@ -63,7 +63,7 @@ export default defineBoot(({ app, router }) => {
                 });
 
                 router.replace({
-                    path: '/login'
+                    path: '/auth/login'
                 });
             };
             

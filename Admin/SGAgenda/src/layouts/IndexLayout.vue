@@ -12,14 +12,6 @@
                         >
                     </q-avatar>
 
-                    <div class="ml-4 mt-auto mb-auto hover:bg-blue-500 rounded-md p-1">
-                        <router-link to="">Contato</router-link>
-                    </div>
-                    
-                    <div class="ml-4 mt-auto mb-auto hover:bg-blue-500 rounded-md p-1">
-                        <router-link to="">Suporte</router-link>
-                    </div>
-
                     <div class="ml-auto mr-14">
                         <q-btn  
                             no-caps

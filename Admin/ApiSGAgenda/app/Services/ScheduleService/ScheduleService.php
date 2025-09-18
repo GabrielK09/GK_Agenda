@@ -24,6 +24,18 @@ class ScheduleService
         return $schedules;   
     }
 
+    public function getAllBySite(string $siteName, string $day)
+    {
+        $schedules = $this->scheduleRepository->getAllBySite($siteName, $day);
+
+        if(!$schedules)
+        {
+            throw new Exception("Erro ao retornar todos os agendamentos");
+        }
+
+        return $schedules;   
+    }
+
     public function detail(int $ownerCode, int $scheduleCode)
     {
         $schedule = $this->scheduleRepository->detail($ownerCode, $scheduleCode);

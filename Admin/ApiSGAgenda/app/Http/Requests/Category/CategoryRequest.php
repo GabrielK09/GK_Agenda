@@ -26,7 +26,7 @@ class CategoryRequest extends FormRequest
             'ownerCode' => ['required', 'exists:owners,owner_code'],
             'parentCategory' => ['sometimes'],
             'name' => ['required', 'string'],
-            'description' => ['required', 'string'],
+            'description' => ['sometimes'],
         ];
     }
 }
