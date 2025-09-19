@@ -260,7 +260,7 @@
 
                     LocalStorage.set("ownerCode", data.data.ownerCode);
                     
-                    router.replace({ path: '/complete-register' });
+                    router.replace({ path: '/auth/complete-register' });
                 };
 
             } catch (error: any) {

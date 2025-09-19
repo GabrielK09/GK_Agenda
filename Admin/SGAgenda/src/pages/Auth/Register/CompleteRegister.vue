@@ -188,7 +188,7 @@
 
                 });
 
-                router.replace({ path: '/companie-url' });
+                router.replace({ path: '/auth/companie-url' });
             };
             
         } catch (error: any) {
@@ -267,7 +267,7 @@
     };
 
     onMounted(() => {
-        if(!ownerCode) router.replace({ path: '/register' });
+        if(!ownerCode) router.replace({ path: '/auth/register' });
 
     });
 </script>

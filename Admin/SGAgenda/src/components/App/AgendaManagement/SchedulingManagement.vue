@@ -37,7 +37,7 @@
     <QRCode
         v-if="showQRCode"
         :total-amount="scheduling?.servicePrice"
-        @finaly="finishScheduleMethod"
+        @close="finishScheduleMethod"
     />
     
 </template>
@@ -97,11 +97,13 @@
     };
 
     const callQRCode = () => {
-        //showQRCode.value = true;
-        //showDetailScheduling.value = false;
+        showQRCode.value = true;
+        showDetailScheduling.value = false;
     };
 
-    const finishScheduleMethod = async () => {
+    const finishScheduleMethod = async (event: boolean) => {
+        console.log('Call finishScheduleMethod');
+        
         const payload = {
             ownerCode: ownerCode,
             attendantCode: scheduling.value?.attendantCode,
@@ -129,6 +131,8 @@
                 emits('close', true);
             };
         } catch (error: any) {
+            console.error('Erro ao finalizar: ', error);
+            
             $q.notify({
                 color: 'red',
                 message: error?.response?.data?.message,
@@ -143,8 +147,6 @@
         const data = camelcaseKeys(res.data.data, { deep: true });
 
         products.value = data;
-        console.log(products.value);
-        
         
     };
 

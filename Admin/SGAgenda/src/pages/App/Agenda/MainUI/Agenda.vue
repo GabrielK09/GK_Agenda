@@ -55,7 +55,7 @@
             v-if="showDetailScheduling"
             :show-detail-scheduling="showDetailScheduling"
             :scheduling-code="selectedSchedulingCode"
-            @close="showDetailScheduling = !$event"
+            @close="attAgenda"
 
         />
             
@@ -138,6 +138,11 @@
         console.log('allSchedulings.value: ', allSchedulings.value);
         schedulings.value = allSchedulings.value.filter(date => date.day === informedDate && date.completed === 0);
         
+    };
+
+    const attAgenda = (event: boolean) => {
+        showDetailScheduling.value = !event
+        getAllSchedulings();
     };
 
     const getAllSchedulings = async () => {
