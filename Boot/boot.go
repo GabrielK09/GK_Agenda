@@ -66,6 +66,13 @@ func boot(paths Paths) {
 	cmdFront.Stderr = os.Stderr
 	cmdFront.Start()
 
+	log.Println("Entrando no SiteFrontPath")
+	cmdSitePath := exec.Command("npm", "run", "dev")
+	cmdSitePath.Dir = paths.SiteFrontPath
+	cmdSitePath.Stdout = os.Stdout
+	cmdSitePath.Stderr = os.Stderr
+	cmdSitePath.Start()
+
 }
 
 func main() {
