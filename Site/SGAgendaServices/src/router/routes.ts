@@ -16,7 +16,7 @@ const routes: RouteRecordRaw[] = [
                 name: 'index'
             },
             {
-                path: '/schedule/:scheduleCode',
+                path: '/app.gkagenda/:siteName/schedule/:scheduleCode',
                 component: () => import('pages/Scheduling/Open/SchedulingDetails.vue'),
                 name: 'schedule',
             }

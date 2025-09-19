@@ -23,7 +23,7 @@
                                     outline
                                     icon="arrow_forward"
                                     class="ml-24"
-                                    :to="`/schedule/${service.serviceCode}`"
+                                    :to="`/app.gkagenda/${whatURLName}/schedule/${service.serviceCode}`"
                                 />
                             </div>
                         </div>
@@ -52,7 +52,7 @@
                                 outline
                                 icon="arrow_forward"
                                 class="ml-24"
-                                :to="`/schedule/${service.serviceCode}`"
+                                :to="`/app.gkagenda/${whatURLName}/schedule/${service.serviceCode}`"
                             />
                         </div>
                     </div>
