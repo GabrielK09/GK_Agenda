@@ -33,7 +33,8 @@ class AttendantHoursRepository
 
     public function create(array $data)
     {
-        $hours = null;
+        Log::debug($data);
+
         if($this->checkExistHours($data['ownerCode'], $data['attendantCode']))
         {
             return 'callUpdate';
@@ -46,7 +47,7 @@ class AttendantHoursRepository
 
                 Log::debug('Entrando no foreach');
                 foreach ($data['hours'] as $days) {
-                    AttendantHour::create([
+                    $hours = AttendantHour::create([
                         'attendant_hour_code' => $maxCode ? $maxCode + 1 : 1,
                         'owner_code' => $data['ownerCode'],
                         'attendant_code' => $attendant->attendant_code,
@@ -54,13 +55,19 @@ class AttendantHoursRepository
                         'day' => $days['day'],
                         'start' => $days['start'],
                         'end' => $days['end'],
+                        'interval' => $days['interval'],
+                        'interval_between_services' => $days['intervalBetweenServices'],
                         'marked_day' => $days ['markedDay']
                         
                     ]);
                 }
+
+                return $hours;
             });
 
+            return $hours;
         };
+
         Log::info('Horário cadastrado/alterada com sucesso, vai retornar - line 64!');
         Log::info($hours);
         return $hours;

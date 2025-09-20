@@ -25,9 +25,9 @@
                 <q-form
                     @submit="saveHours"
                 >   
-                    <div class="mt-4 bg-white p-8 grid grid-cols-3 w-max">                 
+                    <div class="mt-4 bg-white p-8 grid grid-cols-3 w-max">
                         <div v-for="(hourLabel, i) in hoursLabel">
-                            <div class="border m-2 p-2">
+                            <div class="border m-2 p-4 h-80">
                                 <div class="flex mb-2 border-t border-b p-2">
                                     <q-toggle v-model="hourLabel.markedDay" /><span class="mt-auto mb-auto mr-4 text-sm">{{ hourLabel.label }}</span>
                                     <q-input 
@@ -93,15 +93,14 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="mt-2 bg-white w-max rounded-md">
-                        <q-btn  
-                            no-caps
-                            label="Gravar horários"
-                            flat
-                            type="submit"
-                        />
-                        <span>Clicar duas vezes</span>
+                        <div class="ml-auto mt-auto bg-white border rounded-md ">
+                            <q-btn  
+                                no-caps
+                                label="Gravar horários"
+                                flat
+                                type="submit"
+                            />
+                        </div>
                     </div>
                 </q-form>
                 

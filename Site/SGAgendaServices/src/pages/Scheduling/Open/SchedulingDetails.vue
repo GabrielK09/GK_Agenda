@@ -44,30 +44,26 @@
                 </div>
             </div>
 
-            <div class="flex justify-center">
-                <div v-if="releaseHours">
-                    <div v-for="day in daysByMarked">
-                        <div 
-                            class="p-4 text-center border cursor-pointer"
-                            @click="selectedDay(day.day.toString(), day.dayWeek, day.attendantCode)"
-                        >    
-                            {{ formatDay(day.day.toString()) + `/0${month + 1}` }} - {{ replaceDayLabel(day.dayWeek.replace('.', '')) }}
-                        </div>
-                    </div>
-                    <div v-if="daysByMarked.length <= 0">
-                        <span>Sem horários para este atendete</span>
+            <div v-if="releaseHours">
+                <div v-for="day in daysByMarked">
+                    <div 
+                        class="p-4 text-center cursor-pointer"
+                        @click="selectedDay(day.day.toString(), day.dayWeek, day.attendantCode)"
+                    >    
+                        {{ formatDay(day.day.toString()) + `/0${month + 1}` }} - {{ replaceDayLabel(day.dayWeek.replace('.', '')) }}
                     </div>
                 </div>
-            </div>    
+                <div v-if="daysByMarked.length <= 0">
+                    <span>Sem datas disponíveis para este atendete</span>
+                </div>
+            </div>
 
             <div class="">
                 <div v-if="releaseMarkHours">
                     <div v-if="releaseMarkHours" class="mt-6">
                         <!--Ia-->
                         <div class="grid grid-cols-4 gap-2">
-                            <div v-for="unday in allUnvaliableDays">
-                                {{ unday }}
-                                <q-btn
+                            <q-btn
                                 v-for="(s, i) in slots"
                                 :key="s.time"
                                 class="px-3 py-2 rounded-md border text-sm hover:-translate-y-1 transition-transform"
@@ -81,8 +77,10 @@
                                 >
                                     {{ s.time }}
                             </q-btn>
-                            </div>
                         </div>
+                    </div>
+                    <div v-else>
+                        <span>Sem horários para este atendete</span>
                     </div>
                 </div>
             </div>
