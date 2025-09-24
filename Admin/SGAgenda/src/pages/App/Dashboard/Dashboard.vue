@@ -39,7 +39,13 @@
                     <div class="text-black shadow-lg rounded-md p-8 w-96 h-96">
                         <div class="registers border h-80 overflow-y-auto">
                             <div v-for="schedule in schedules">
-                                <span class="flex"><div class="bg-green-500 w-1 h-6 mt-4 mr-3"></div><span class="mt-3">{{ schedule.customerName }}</span></span>
+                                <div class="flex">
+                                    <div class="bg-green-500 w-1 h-6 mt-4 mr-3"></div>
+                                    <div class="inline-flex flex-col mb-3">
+                                        <span class="mt-3">Cliente: {{ schedule.customerName }}</span>
+                                        <span class="mt-3">Telefone: {{ schedule.customerPhone }}</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -53,8 +59,6 @@
                 </div>
             </div>
         </div>
-
-        <pre>{{ schedules }}</pre>
     </q-page>
 </template>
 
@@ -87,7 +91,7 @@
         let total = 0;
 
         schedules.value.forEach(schedule => {
-            if(schedule.canceled === 0) total += schedule.servicePrice
+            if(schedule.canceled !== 1 || schedule.completed !== 0) total += schedule.servicePrice
             
         });
 
@@ -98,15 +102,11 @@
         let total = 0;
 
         schedules.value.forEach(schedule => {
-            if(schedule.completed === 1) total += schedule.servicePrice
+            if(schedule.canceled !== 1 || schedule.completed !== 0) total += schedule.servicePrice
             
         });
 
-        //total = total / countSchedules.value;
-        isNaN(total / countSchedules.value) ? total = 0 : total = total / countSchedules.value;
-
-        return `R$ ${total.toFixed(2).toString().replace('.', ',')}`;
-        
+        return `R$ ${(total / schedules.value.length).toFixed(2).toString().replace('.', ',')}`;
     });
 
     const getAllSchedulings = async () => {

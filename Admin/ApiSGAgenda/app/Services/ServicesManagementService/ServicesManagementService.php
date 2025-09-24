@@ -67,6 +67,18 @@ class ServicesManagementService
         return $service;
     }
 
+    public function groupServices(int $ownerCode)
+    {
+        $group = $this->servicesManagementRepository->groupServices($ownerCode);
+
+        if(!$group)
+        {
+            throw new Exception("Erro ao retonar os serviços agrupados o serviço: {$group}", 1);
+        };
+
+        return $group;
+    }
+
     public function delete(int $ownerCode, int $serviceCode)
     {
         $product = $this->servicesManagementRepository->delete($ownerCode, $serviceCode);

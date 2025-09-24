@@ -42,6 +42,11 @@ class ServicesManagementController extends Controller
     {
         return apiSuccess('Serviço alterado com sucesso!', $this->servicesManagementService->update($request->validated(), $ownerCode, $serviceCode));
     }
+ 
+    public function groupServices(int $ownerCode)
+    {
+        return apiSuccess('Serviços mais agendados', $this->servicesManagementService->groupServices($ownerCode));
+    }
 
     public function delete(int $ownerCode, int $productCode)
     {

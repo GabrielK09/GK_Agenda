@@ -6,9 +6,9 @@
             v-model="drawerLeft"
             show-if-above
             :width="210"
-            class="bg-[#03202e] text-white rounded-r-md"
+            class="bg-[#03202e] text-white rounded-r-md dashboard"
         >
-            <q-toolbar class="mt-8" v-if="width > 1100">
+            <q-toolbar class="logo">
                 <img
                     class="rounded mb-4"  
                     :src="surprise ? '../../public/images/GK_agenda.png' : '../../public/images/logo-branca.png'"
@@ -17,11 +17,14 @@
 
             </q-toolbar>
 
-            <Links/>
+            <div class="links">
+                <Links/>
+                
+            </div>
 
-            <div class="fixed mt-5 bottom-0 mb-2 bg-[#03202e] w-full ml-auto text-center">
+            <div class="h-10 relative flex justify-center">
                 <span
-                    class="p-2 rounded-md cursor-pointer "
+                    class="p-2 cursor-pointer absolute"
                     @click="confirm"
                 >
                     Sair
@@ -103,7 +106,35 @@
 </script>
 
 <style>
+    @media (max-width: 1100px) {
+        .dashboard {
+            .logo{
+                margin: 0;
+                width: 0;
+            
+            }
+
+            .links {
+                margin: -2rem 0 0 0;
+            }
+        }
+    }
+
+    @media (min-width: 1100px) {
+        .dashboard {
+            .logo{
+                margin: 2rem 0 0 0;
+            
+            }
+
+            .links {
+                margin: 0;
+            }
+        }
+    }
+
     body {
         background-color: #f5f5f5;
     }
+
 </style>

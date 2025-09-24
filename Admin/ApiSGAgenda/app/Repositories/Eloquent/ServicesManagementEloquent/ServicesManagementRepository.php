@@ -142,6 +142,18 @@ class ServicesManagementRepository
         return $id;
     }
 
+    public function groupServices(int $ownerCode)
+    {
+        $group = DB::table('schedules')
+                    ->where('owner_code', '=', $ownerCode)
+                    ->select('service', DB::raw('count(*) as total'))
+                    ->groupBy('service')
+                    ->get();
+
+        Log::debug($group);
+        
+    }
+
     public function delete(int $ownerCode, int $serviceCode)
     {  
         $id = DB::transaction(function() use ($ownerCode, $serviceCode) {
