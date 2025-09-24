@@ -24,7 +24,7 @@ class ScheduleRepository
 
     public function getAll(int $ownerCode)
     {
-        return Schedule::where('owner_code', $ownerCode)->where('completed', 0)->where('canceled', 0)->get();
+        return Schedule::where('owner_code', $ownerCode)->get();
     }
 
     public function getAllBySite(string $siteName)

@@ -86,7 +86,7 @@
                         <span   
                             class="text-xs flex mt-2 justify-center"
                         >
-                            <router-link to="/register">Ainda não possui uma conta?</router-link>
+                            <router-link to="/auth/register">Ainda não possui uma conta?</router-link>
                             
                         </span>
                     </q-form>

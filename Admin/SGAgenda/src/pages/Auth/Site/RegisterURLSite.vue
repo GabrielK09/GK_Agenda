@@ -132,7 +132,7 @@
                     timeout: 1200
                 });
 
-                router.replace({ path: '/login' });
+                router.replace({ path: '/auth/login' });
                 
             };
             
