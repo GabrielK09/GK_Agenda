@@ -117,9 +117,15 @@
 
     };
 
+    const groupByService = async () => {
+        const res = await api.get(`/dashboard/dashboard/get-group-services/${ownerCode}`); 
+        console.log(res.data);
+        
+    };
+
     onMounted(() => {
         getAllSchedulings();
-
+        groupByService();
     });
     
 </script>

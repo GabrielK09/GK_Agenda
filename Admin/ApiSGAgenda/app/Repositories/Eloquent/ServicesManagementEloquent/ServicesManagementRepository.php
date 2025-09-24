@@ -151,6 +151,7 @@ class ServicesManagementRepository
                     ->get();
 
         Log::debug($group);
+        return $group;
         
     }
 

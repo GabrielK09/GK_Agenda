@@ -35,8 +35,8 @@ Route::prefix('/v1')->group(function() {
 
     Route::middleware('auth:sanctum')->group(function() {
         Route::prefix('dashboard')->group(function() {
-            Route::get('/dashboard/get-group-services', [ServicesManagementController::class, 'groupServices']);
-            
+            Route::get('/dashboard/get-group-services/{owner_code}', [ServicesManagementController::class, 'groupServices']);
+
         });
 
         Route::prefix('/owner')->group(function() {
