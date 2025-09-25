@@ -21,7 +21,7 @@
                 <div class="">
                     <q-table
                         borded
-                        :rows="allCategories"
+                        :rows="categories"
                         :columns="columns"
                         row-key="name"
                         class="rounded-xl"
@@ -32,6 +32,7 @@
                                 v-model="searchInput" 
                                 type="text" 
                                 label="" 
+                                @update:model-value="filterCategories"
                             >
                                 <template v-slot:append>
                                     <q-icon name="search" />
@@ -221,6 +222,14 @@
             });
 
         };
+    };
+
+    const filterCategories = () => {    
+        console.log(searchInput.value);
+        
+        categories.value = allCategories.value.filter(category => category.name.toLowerCase().includes(searchInput.value));
+        console.log(categories.value);
+        
     };
 
     const showCategoryManagement = (management: string, categoryCode:number|undefined) => {

@@ -21,7 +21,7 @@
                 <div class="">
                     <q-table
                         borded
-                        :rows="allAttendant"
+                        :rows="attendants"
                         :columns="columns"
                         row-key="name"
                         class="rounded-xl"
@@ -32,6 +32,7 @@
                                 v-model="searchInput" 
                                 type="text" 
                                 label="" 
+                                @update:model-value="filterAttendant"
                             >
                                 <template v-slot:append>
                                     <q-icon name="search" />
@@ -117,7 +118,7 @@
 
 <script setup lang="ts">
     import { api } from 'src/boot/axios';
-    import { LocalStorage, QTableColumn, useQuasar } from 'quasar';
+    import { LocalStorage, QTableColumn } from 'quasar';
     import { onMounted, ref } from 'vue';
     import camelcaseKeys from 'camelcase-keys';
     import AttendantManagement from 'src/components/App/AttendantManagement/AttendantManagement.vue';    
@@ -131,7 +132,6 @@
 
     };
 
-    const $q = useQuasar();
     const ownerCode = LocalStorage.getItem("ownerCode") as number;
 
     const columns: QTableColumn[] = [
@@ -210,16 +210,20 @@
         showCommissionForAttendat.value = !showCommissionForAttendat.value;
     };
 
-    const exceptionsManagement = () => {
-
-    };
-
     const hoursManagement = (attendantName: string, attendantCode: number) => {
         selecetedAttendantName.value = attendantName;
         selecetedAttendantCode.value = attendantCode;            
 
         showAttendant.value = true;
         showHoursForAttendat.value = !showHoursForAttendat.value;
+    };
+
+    const filterAttendant = () => {    
+        console.log(searchInput.value);
+        
+        attendants.value = allAttendant.value.filter(attendant => attendant.name.toLowerCase().includes(searchInput.value));
+        console.log(attendants.value);
+        
     };
 
     onMounted(() => {

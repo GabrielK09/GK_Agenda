@@ -69,6 +69,7 @@
     import { LocalStorage, QTableColumn } from 'quasar';
     import { api } from 'src/boot/axios';
     import camelcaseKeys from 'camelcase-keys';
+    import dayjs from 'dayjs';
 
     interface Scheduling {
         schedulingCode: number,
@@ -127,12 +128,6 @@
         filter(date);
     };
 
-    const changeCompleted = (val: number): boolean => {
-        console.log(val === 1 ? true : false);
-        
-        return val === 1 ? true : false;
-    };  
-
     const filter = (informedDate: string) => {
         console.log('Data selecionada: ', informedDate);
         console.log('allSchedulings.value: ', allSchedulings.value);
@@ -188,6 +183,7 @@
     };
 
     onMounted(() => {
+        filter(dayjs().format('YYYY/MM/DD'));
         getAllSchedulings();
     }); 
 

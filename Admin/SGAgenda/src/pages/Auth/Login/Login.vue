@@ -1,5 +1,5 @@
 <template>
-    <main class="p-12">        
+    <main class="p-12">
         <div 
             class="text-2xl " 
             :class="{
@@ -90,13 +90,6 @@
                             
                         </span>
                     </q-form>
-                </div>
-
-                <div class="ml-12 relative right-8 top-8">
-                    <img 
-                        v-if="width > 1300 && width >= 1440"
-                        src="public/images/imagem_teste.jpg" 
-                    />
                 </div>
             </article>
         </div>

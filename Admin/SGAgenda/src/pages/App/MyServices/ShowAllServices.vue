@@ -21,7 +21,7 @@
                 <div class="">
                     <q-table
                         borded
-                        :rows="allServices"
+                        :rows="services"
                         :columns="columns"
                         row-key="name"
                         class="rounded-xl"
@@ -32,6 +32,7 @@
                                 v-model="searchInput" 
                                 type="text" 
                                 label="" 
+                                @update:model-value="filterServices"
                             >
                                 <template v-slot:append>
                                     <q-icon name="search" />
@@ -197,7 +198,11 @@
         }).format(num);
     };
 
-    const search = () => {
+    const filterServices = () => {    
+        console.log(searchInput.value);
+        
+        services.value = allServices.value.filter(service => service.name.toLowerCase().includes(searchInput.value));
+        console.log(services.value);
         
     };
 

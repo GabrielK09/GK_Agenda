@@ -21,7 +21,7 @@
                 <div class="">
                     <q-table
                         borded
-                        :rows="allProducts"
+                        :rows="products"
                         :columns="columns"
                         row-key="name"
                         class="rounded-xl"
@@ -32,6 +32,7 @@
                                 v-model="searchInput" 
                                 type="text" 
                                 label="" 
+                                @update:model-value="filterProducts"
                             >
                                 <template v-slot:append>
                                     <q-icon name="search" />
@@ -255,6 +256,14 @@
             });
         };
         getAllProducts();
+    };
+
+    const filterProducts = () => {    
+        console.log(searchInput.value);
+        
+        products.value = allProducts.value.filter(product => product.name.toLowerCase().includes(searchInput.value));
+        console.log(allProducts.value);
+        
     };
 
     const showProductManagement = (management: string, productCode:number|undefined) => {

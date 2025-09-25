@@ -27,7 +27,7 @@
 
 <script setup lang="ts">
     import { LocalStorage } from 'quasar';
-    import { onMounted, reactive, ref } from 'vue';
+    import { onMounted, ref } from 'vue';
     import { useRouter } from 'vue-router';
 
     interface ILinks {

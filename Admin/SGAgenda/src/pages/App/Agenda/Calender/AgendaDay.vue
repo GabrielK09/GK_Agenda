@@ -42,8 +42,4 @@
     watch(formatDate, () => {    
         emits('changeDate', formatDate.value);
     });
-
-    onMounted(() => {
-        
-    });
 </script>
