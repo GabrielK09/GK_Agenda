@@ -96,7 +96,6 @@ class ProductsManagementRepository
         return $id;
     }
 
-
     public function active(int $ownerCode, int $productCode)
     {  
         $id = DB::transaction(function() use ($ownerCode, $productCode) {
@@ -112,5 +111,12 @@ class ProductsManagementRepository
         });
 
         return $id;
+    }
+
+    public function quantityDiscount(int $ownerCode, int $productCode)
+    {
+        $product = DB::transaction(function() use($ownerCode, $productCode) {
+            
+        }); 
     }
 }

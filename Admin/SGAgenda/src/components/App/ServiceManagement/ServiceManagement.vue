@@ -121,7 +121,7 @@
                         <div class="flex justify-end">
                             <q-btn 
                                 no-caps
-                                label="Finalizar cadastro" 
+                                :label="props.action === 'update' ? 'Alterar cadastro' : 'Finalizar cadastro'" 
                                 type="submit" 
                                 color="primary"  
                             />

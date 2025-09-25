@@ -22,7 +22,7 @@
                     <div class="bg-blue-600 text-white rounded-md p-8 w-96">
                         <span>Média:</span>
                         
-                        <span class="flex"><div class="bg-white w-1 h-4 mt-4 mr-3"></div><span class="mt-3">{{ calculateAvgInvoicing  }}</span></span>
+                        <span class="flex"><div class="bg-white w-1 h-4 mt-4 mr-3"></div><span class="mt-3">{{ calculateAvgInvoicing }}</span></span>
                     </div>
                 </div>
             </div>
@@ -99,14 +99,17 @@
     });
 
     const calculateAvgInvoicing = computed(() => {
-        let total = 0;
+        let subtotal = 0;
+        let total;
 
         schedules.value.forEach(schedule => {
-            if(schedule.canceled !== 1 || schedule.completed !== 0) total += schedule.servicePrice
+            if(schedule.canceled !== 1 || schedule.completed !== 0) subtotal += schedule.servicePrice
             
         });
+ 
+        total = subtotal / schedules.value.length;
 
-        return `R$ ${(total / schedules.value.length).toFixed(2).toString().replace('.', ',')}`;
+        return `R$ ${total.toFixed(2).toString().replace('.', ',')}`;
     });
 
     const getAllSchedulings = async () => {

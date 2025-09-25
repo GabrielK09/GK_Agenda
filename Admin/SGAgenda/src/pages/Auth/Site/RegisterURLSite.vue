@@ -38,11 +38,9 @@
                                 label-slot
                                 borderless
                                 color="grey"
-                                label="Razão social"
+                                label="Endereço do site"
                                 class="w-[100%] border rounded-md"
-                                :rules="[
-                                    val => !!val || 'Esse campo é necessário!'
-                                ]"
+                                :rules="[validateURL]"
                                 hide-bottom-space
                                 required
                             >
@@ -97,6 +95,16 @@
     watch(informedURL, (newValue) => {
         prefix = `http://localhost:9090/app.gkagenda/` + newValue;
     });
+
+    const validateURL = (val: string) => {
+        const specialChars: string = 'âê/';
+
+        if(specialChars.includes(val)) return 'O endereço do site não pode ter caracteres especiais!';
+        if(val === '') return 'O endereço do site não pode ser vazio!';
+        if(val.length < 3) return 'O endereço do site precisa ter pelo menos 3 caracteres!';
+
+        return true;
+    };
 
     const makeSiteURL = async () => {
         $q.notify({

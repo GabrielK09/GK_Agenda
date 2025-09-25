@@ -59,6 +59,7 @@ class ScheduleRepository
     
     public function create(array $data) 
     {
+        Log::debug($data);
         $hasMarked = $this->checkMarkedHour($data['customerName'], $data['customerPhone'], $this->getOwnerCode($data['siteName']));
         Log::alert("Está marcado?: {$hasMarked}");
 

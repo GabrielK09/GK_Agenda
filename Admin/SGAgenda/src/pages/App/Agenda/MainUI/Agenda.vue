@@ -158,7 +158,7 @@
         };
 
         formatDateForFilter();
-        console.log('activeSchedulings: ', activeSchedulings.value);
+        filter(dayjs().format('YYYY/MM/DD'));
         
     };
 
@@ -183,8 +183,8 @@
     };
 
     onMounted(() => {
-        filter(dayjs().format('YYYY/MM/DD'));
         getAllSchedulings();
+        
     }); 
 
 </script>
