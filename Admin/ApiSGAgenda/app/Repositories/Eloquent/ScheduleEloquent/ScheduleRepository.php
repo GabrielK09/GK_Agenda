@@ -136,6 +136,11 @@ class ScheduleRepository
             {
                 Log::warning("Não tem comissão para esse produto: serviceCode: {$serviceCode}");
                 return;
+
+            } else if ($commissionService) {
+                Log::warning("Tem comissão para esse produto: serviceCode: {$serviceCode}");
+                return;
+
             } else {
                 Log::warning("Não tem comissão para esse produto: serviceCode: {$serviceCode}");
                 Log::warning("Buscando o produto para ver se possui categoria, se possuir categoria, conferir se possui comissão por categoria: serviceCode: {$serviceCode}");
@@ -200,8 +205,6 @@ class ScheduleRepository
         // 'attendant_code',
         // 'scheduling_code',
         // 'input_value'
-
-
 
     }
 

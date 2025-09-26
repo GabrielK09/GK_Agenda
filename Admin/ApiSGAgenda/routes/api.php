@@ -64,6 +64,7 @@ Route::prefix('/v1')->group(function() {
             Route::post('/create', [CategoryController::class, 'create']); 
             Route::put('/active/{owner_code}/{product_code}', [CategoryController::class, 'active']); 
             Route::delete('/delete/{owner_code}/{category_code}', [CategoryController::class, 'delete']); 
+
         });
         
         Route::prefix('/attendants')->group(function() {
@@ -73,7 +74,6 @@ Route::prefix('/v1')->group(function() {
             Route::put('/update/{owner_code}/{attendant_code}', [AttendantController::class, 'update']); 
             Route::delete('/delete/{owner_code}/{attendant_code}', [AttendantController::class, 'delete']); 
             Route::put('/active/{owner_code}/{product_code}', [AttendantController::class, 'active']); 
-
             Route::post('/create/hours', [AttendantHoursController::class, 'create']);
             Route::get('/get/hours/{owner_code}/{attendant_code}', [AttendantHoursController::class, 'getHours']);
             

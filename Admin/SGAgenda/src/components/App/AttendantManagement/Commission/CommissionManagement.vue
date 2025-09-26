@@ -4,7 +4,7 @@
             <div
                 class="m-2"
             >
-                <div class="bg-white p-8 text-xs">
+                <div class="bg-white p-8 text-xs rounded-md">
                     <div class="flex justify-between">
                         <div 
                             @click="emits('close', true)"
@@ -22,9 +22,9 @@
                     
                     <q-form
                         @submit="createCommission"
-                        class="q-gutter-md mt-4 rounded-xl"
+                        class="q-gutter-md mt-4 rounded-xl commission-form"
                     >   
-                        <div class="grid grid-cols-2">
+                        <div class="links">
                             <div>
                                 <div>
                                     <q-checkbox left-label v-model="commissionByCategory" label="Comissão por Categoria" />
@@ -226,8 +226,15 @@
             releaseForEmit.value.hasByOne = false;
         };
 
-        if(!commissionByCategory.value && !commissionByService.value) releaseValueTypeCommission.value = false;
+        if(!commissionByCategory.value && !commissionByService.value)
+        {
+            releaseValueTypeCommission.value = false;
+            valueCommissionByMoney.value = false;
+            commission.value.fixCommission = 0;
 
+            valueCommissionByPercent.value = false;
+            commission.value.percCommission = 0;
+        };
     });
 
     watch(commissionByService, () => {
@@ -241,7 +248,14 @@
             releaseForEmit.value.hasByOne = false;
         };
 
-        if(!commissionByService.value && !commissionByCategory.value) releaseValueTypeCommission.value = false; 
+        if(!commissionByService.value && !commissionByCategory.value) {
+            releaseValueTypeCommission.value = false;
+            valueCommissionByMoney.value = false;
+            commission.value.fixCommission = 0;
+
+            valueCommissionByPercent.value = false;
+            commission.value.percCommission = 0;
+        }; 
     });
 
     watch(valueCommissionByPercent, () => {
@@ -319,6 +333,7 @@
                 message: !releaseForEmit.value.hasByOne ? 'A comissão deve ser feito por um meio! ( categoria ou serviço )' : 'Um valor de comissão precisa ser definidio! ( percentual ou fixo )',
                 position: 'top-right'
             });
+
         } else {
             const isService: Service = commission.value.serviceCode;
             const isCategory: Category = commission.value.categoryCode;
@@ -330,6 +345,7 @@
                 fixCommission: Number(commission.value.fixCommission.toString().replace(',', '.')),
                 percCommission: Number(commission.value.percCommission.toString().replace(',', '.')),
                 ownerCode: commission.value.ownerCode
+
             };
 
             try {
@@ -341,7 +357,6 @@
                 
                 const data = res.data;
 
-                console.log('Data: ', data);
                 if(data.success)
                 {
                     $q.notify({
@@ -356,6 +371,7 @@
                     color: 'green',
                     message: error?.response?.data?.message,
                     position: 'top'
+
                 });
             };
         };

@@ -119,6 +119,8 @@
 
     const ownerCode = LocalStorage.getItem("ownerCode");
     const schedulings = ref<Scheduling[]>([]);
+    const DATE_NOW = dayjs().format('YYYY/MM/DD');
+
     let events = ref<string[]>([]);
 
     let showDetailScheduling = ref<boolean>(false);
@@ -158,7 +160,9 @@
         };
 
         formatDateForFilter();
-        filter(dayjs().format('YYYY/MM/DD'));
+        console.log('Data de hoje: ', DATE_NOW);
+        
+        filter(DATE_NOW);
         
     };
 

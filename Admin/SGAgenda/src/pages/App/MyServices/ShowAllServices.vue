@@ -132,7 +132,6 @@
 
     const $q = useQuasar();
     const ownerCode = LocalStorage.getItem("ownerCode") as number;
-    const width = LocalStorage.getItem("width") as number;
 
     const columns: QTableColumn[] = [
         {
@@ -244,8 +243,8 @@
 
     const showDialogActiveService = (serviceCode: number) => {
         $q.dialog({
-            title: 'Ativar produto',
-            message: `Deseja realmente ativar esse produto (${serviceCode})?`,
+            title: 'Ativar serviço',
+            message: `Deseja realmente ativar esse serviço (${serviceCode})?`,
             cancel: {
                 push: true,
                 label: 'Não',

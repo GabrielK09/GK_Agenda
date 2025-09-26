@@ -20,7 +20,7 @@
                     </div>
                 </div>
         
-                <div class="">
+                <div>
                     <q-table
                         borded
                         :rows="allCommissions"
@@ -28,26 +28,28 @@
                         row-key="name"
                         class="rounded-xl"
                     >
+                        <template v-slot:top-left>
+                            <div 
+                                @click="emits('close', true)"
+                                class="flex mb-auto mt-auto cursor-pointer text-xs"
+                            
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-3 mr-1">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
+                                </svg>      
+                                <span>
+                                    Voltar para listagem
+                                </span>
+                            </div>
+
+                        </template>
                         <template v-slot:body="props">
                             <q-tr
                                 :props="props"
                             >
                                 <q-td
-                                    v-for="(col, i) in props.cols"
+                                    v-for="col in props.cols"
                                 >   
-                                    <template v-if="col.name === 'actions'">
-                                        <div class="text-center">
-                                            |
-                                                <q-btn size="10px" no-caps color="black" icon="alarm_add" flat @click=""/> <!-- Horários -->
-                                                <q-btn size="10px" no-caps color="black" icon="money" flat @click=""/> <!-- Comissão -->
-                                                <q-btn size="10px" no-caps color="black" icon="hourglass_disabled" flat @click=""/> <!-- Exceções -->
-                                            |
-                                                <q-btn size="10px" no-caps color="black" icon="edit_square" flat @click=""/>
-                                                <q-btn size="10px" no-caps color="red" icon="delete" flat @click=""/>
-                                            |
-                                        </div>
-                                    </template>
-
                                     <template v-if="col.name === 'serviceCode'">
                                         <div class="text-center">
                                             {{ col.value ? col.value : '-' }}
@@ -201,8 +203,6 @@
             } 
         },
     ]);
-
-    const searchInput = ''
 
     const attPage = (event: boolean) => {
         showCommissionManagement.value = !event;

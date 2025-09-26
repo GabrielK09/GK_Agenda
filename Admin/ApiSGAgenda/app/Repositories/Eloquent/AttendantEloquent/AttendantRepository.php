@@ -51,10 +51,10 @@ class AttendantRepository
         return $attendant;
     }
 
-    public function update(array $data, int $attendantCode)
+    public function update(array $data, int $ownerCode, int $attendantCode)
     {
-        $id = DB::transaction(function () use ($data, $attendantCode) {
-            $attendant = $this->findByID($data['ownerCode'], $attendantCode);
+        $transaction = DB::transaction(function () use ($data, $ownerCode, $attendantCode) {
+            $attendant = $this->findByID($ownerCode, $attendantCode);
             
             if(!$attendant)
             {
@@ -63,14 +63,62 @@ class AttendantRepository
             }
 
             $attendant->update([
+                'name' => $data['name']
 
             ]); 
 
             return $attendant;
         });
 
-        Log::info($id);
-        return $id;
+        Log::info($transaction);
+        return $transaction;
+
+    }
+
+    public function active(int $ownerCode, int $attendantCode)
+    {
+        $transaction = DB::transaction(function () use ($ownerCode, $attendantCode) {
+            $attendant = $this->findByID($ownerCode, $attendantCode);
+            
+            if(!$attendant)
+            {
+                throw new Exception("Erro ao localizar o atendente para alteração");
+
+            }
+
+            $attendant->update([
+                'active' => 1
+
+            ]); 
+
+            return $attendant;
+        });
+
+        Log::info($transaction);
+        return $transaction;       
+    }
+
+    public function delete(int $ownerCode, int $attendantCode)
+    {
+        $transaction = DB::transaction(function () use ($ownerCode, $attendantCode) {
+            $attendant = $this->findByID($ownerCode, $attendantCode);
+            
+            if(!$attendant)
+            {
+                throw new Exception("Erro ao localizar o atendente para alteração");
+
+            }
+
+            $attendant->update([
+                'active' => 0
+
+            ]); 
+
+            return $attendant;
+        });
+
+        Log::info($transaction);
+        return $transaction;    
 
     }
 }

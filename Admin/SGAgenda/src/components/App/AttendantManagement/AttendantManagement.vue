@@ -4,8 +4,8 @@
             <div
                 class="m-2"
             >
-                <div class="flex justify-between">                    
-                    <h2 class="text-gray-600 m-2">Cadastrar um atendete</h2>
+                <div class="flex justify-between">   
+                    <h2 class="text-gray-600 m-2">{{ props.action === 'create' ? 'Cadastrar um(a) novo(a) atendete' : 'Editar dados do(a) atendente'}}</h2>
                 </div>
 
                 <div class="bg-white p-8 text-xs">
@@ -46,30 +46,33 @@
                                 stack-label
                                 outlined
                                 dense
+                                :disable="props.action === 'update'"
                                 :rules="[validateMail]"
                             />
                         </div>
 
-                        <div class="grid grid-cols-2">
-                            <q-input 
-                                label="Senha *" 
-                                v-model="attendant.password" 
-                                stack-label
-                                outlined
-                                type="text"
-                                class="mr-4" 
-                                dense
-                            />
-                        
-                            <q-input 
-                                v-model="attendant.confirmPassword" 
-                                type="text" 
-                                label="Confirme sua senha *" 
-                                stack-label
-                                outlined
-                                dense
-                                :rules="[validatePassword]"
-                            />
+                        <div v-if="props.action !== 'update'">
+                            <div class="grid grid-cols-2">
+                                <q-input 
+                                    label="Senha *" 
+                                    v-model="attendant.password" 
+                                    stack-label
+                                    outlined
+                                    type="text"
+                                    class="mr-4" 
+                                    dense
+                                />
+                            
+                                <q-input 
+                                    v-model="attendant.confirmPassword" 
+                                    type="text" 
+                                    label="Confirme sua senha *" 
+                                    stack-label
+                                    outlined
+                                    dense
+                                    :rules="[validatePassword]"
+                                />
+                            </div>
                         </div>
                         
                         <div class="flex justify-end">
@@ -127,16 +130,18 @@
     const getAttendantData = async () => {
         $q.notify({
             color: 'green',
-            message: 'Carregando dados do serviço ...',
+            message: 'Carregando dados do atendente ...',
             position: 'top',
             timeout: 1000
 
         });
 
         const res = await api.get(`/attendants/find/${ownerCode}/${props.attendantCode}`);
+        console.log(res.data);
+        
+
         const data: AttendantData = camelcaseKeys(res.data.data, { deep: true });
 
-        
         attendant.value = {
             ownerCode: data.ownerCode,
             name: data.name,
@@ -192,6 +197,8 @@
             {
                 const res = await api.put(`/attendants/update/${ownerCode}/${props.attendantCode}`, payload);
                 const data = res.data;
+                console.log(res.data);
+                
                 if(data.success)
                 {
                     $q.notify({
@@ -217,11 +224,15 @@
     };
 
     const validatePassword = () => {
-        if(attendant.value.confirmPassword !== attendant.value.password)
+        if(props.action !== 'update')
         {
-            return 'A senhas devem ser iguais!'
+            if(attendant.value.confirmPassword !== attendant.value.password)
+            {
+                return 'A senhas devem ser iguais!'
 
+            };
         };
+        
         return true;
     };  
 

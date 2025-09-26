@@ -21,15 +21,6 @@
                 <Links/>
                 
             </div>
-
-            <div class="h-10 relative flex justify-center">
-                <span
-                    class="p-2 cursor-pointer absolute"
-                    @click="confirm"
-                >
-                    Sair
-                </span>
-            </div>
         </q-drawer>
 
         <q-page-container>
@@ -41,63 +32,12 @@
 <script setup lang="ts">
     import Links from 'src/components/LinksSideBar/Links.vue';
     import { onMounted, ref } from 'vue';
-    import { LocalStorage, useQuasar } from 'quasar';
-    import { api } from 'src/boot/axios';
-    import { useRouter } from 'vue-router';
+    import { LocalStorage } from 'quasar';
 
-    const $q = useQuasar();
-    const router = useRouter();
     const width = LocalStorage.getItem("width") as number;
 
     let surprise = ref<boolean>(true);
     let drawerLeft = ref<boolean>(true);
-
-    const confirm = () => {
-        $q.dialog({
-            title: 'Confirme',
-            message: 'Deseja realmente sair?',
-            
-            cancel: {
-                push: true,
-                label: 'Não',
-                color: 'red',
-            },
-
-            ok: {
-                push: true,
-                label: 'Sim',
-                color: 'green',
-            },
-
-        }).onOk(() => {
-            logout();
-
-        }).onCancel(() => {
-            return;
-
-        });;
-    }
-
-    const logout = async () => {
-        $q.notify({
-            color: 'green',
-            message: 'Saindo ...',
-            position: 'top',
-            timeout: 2000
-
-        });
-
-        const res = await api.post('/auth/logout');
-        if(res.data) 
-        {
-            LocalStorage.remove("authToken");
-            LocalStorage.remove("siteName");            
-            LocalStorage.remove("lastCheck"); 
-            LocalStorage.remove("lastURL"); 
-
-            router.replace({ path: '/' });   
-        };
-    };
 
     onMounted(() => {
         width >= 1100 ? drawerLeft.value = true : drawerLeft.value = false;
@@ -106,6 +46,7 @@
 </script>
 
 <style>
+
     @media (max-width: 1100px) {
         .dashboard {
             .logo{

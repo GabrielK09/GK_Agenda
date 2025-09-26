@@ -61,9 +61,9 @@ class AttendantService {
         return $attendant;   
     }
 
-    public function update(array $data, int $id) 
+    public function update(array $data, int $ownerCode, int $attendantCode)
     {
-        $newAttendant = $this->attendantRepository->update($data, $id);
+        $newAttendant = $this->attendantRepository->update($data, $ownerCode, $attendantCode);
 
         if(!$newAttendant) 
         {
@@ -72,6 +72,33 @@ class AttendantService {
         }
 
         return $newAttendant;
+    }
 
+    public function active(int $ownerCode, int $attendantCode)
+    {
+        $attendant = $this->attendantRepository->active($ownerCode, $attendantCode);
+
+        if(!$attendant) 
+        {
+            throw new Exception("Erro ao alterar os dados do atendente!", 1);
+
+        }
+
+        return $attendant;
+        
+    }
+
+    public function delete(int $ownerCode, int $attendantCode)
+    {
+        $attendant = $this->attendantRepository->delete($ownerCode, $attendantCode);
+
+        if(!$attendant) 
+        {
+            throw new Exception("Erro ao alterar os dados do atendente!", 1);
+
+        }
+
+        return $attendant;
+        
     }
 }

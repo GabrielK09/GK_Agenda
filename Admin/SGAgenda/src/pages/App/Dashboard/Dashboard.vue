@@ -37,7 +37,7 @@
 
                 <div class="card-2">
                     <div class="text-black shadow-lg rounded-md p-8 w-96 h-96">
-                        <div class="registers border h-80 overflow-y-auto">
+                        <div class="registers h-80 overflow-y-auto">
                             <div v-for="schedule in schedules">
                                 <div class="flex">
                                     <div class="bg-green-500 w-1 h-6 mt-4 mr-3"></div>
@@ -76,6 +76,7 @@
         servicePrice: number,
         completed?: number,
         canceled?: number,
+
     };
 
     const ownerCode = LocalStorage.getItem("ownerCode");
@@ -100,16 +101,13 @@
 
     const calculateAvgInvoicing = computed(() => {
         let subtotal = 0;
-        let total;
-
+        
         schedules.value.forEach(schedule => {
             if(schedule.canceled !== 1 || schedule.completed !== 0) subtotal += schedule.servicePrice
             
         });
- 
-        total = subtotal / schedules.value.length;
 
-        return `R$ ${total.toFixed(2).toString().replace('.', ',')}`;
+        return `R$ ${(subtotal / schedules.value.length > 0 ? schedules.value.length : 0).toFixed(2).toString().replace('.', ',')}`;
     });
 
     const getAllSchedulings = async () => {

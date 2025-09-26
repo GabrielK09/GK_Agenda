@@ -11,7 +11,7 @@
                         <q-btn 
                             no-caps 
                             class="bg-sky-500 text-white" 
-                            @click="attendantManagement" 
+                            @click="attendantManagement('create', 0)" 
                             label="Cadastrar novo atendente"
                         
                         />
@@ -51,13 +51,23 @@
                                     v-for="(col, i) in props.cols"
                                 >   
                                     <template v-if="col.name === 'isAttendant'">
-                                        <div class="text-center">
+                                        <div 
+                                            class="text-center"
+                                            :class="{
+                                                'text-gray-400': !props.row.active
+                                            }"
+                                        >
                                             {{ col.value ? 'Atendente' : 'Administrador' }}
                                         </div>
                                     </template>
 
                                     <template v-else>
-                                        <div class="text-center">
+                                        <div 
+                                            class="text-center"
+                                            :class="{
+                                                'text-gray-400': !props.row.active
+                                            }"
+                                        >
                                             {{ col.value }}
 
                                         </div>
@@ -66,11 +76,20 @@
                                     <template v-if="col.name === 'actions'">
                                         <div class="text-center">
                                             |
-                                                <q-btn size="10px" no-caps color="black" icon="alarm_add" flat @click="hoursManagement(props.row.name, props.row.attendantCode)"/> <!-- Horários -->
-                                                <q-btn size="10px" no-caps color="black" icon="money" flat @click="commissionManagement(props.row.name, props.row.attendantCode)"/> <!-- Comissão -->
+                                                <q-btn :disable="!props.row.active" size="10px" no-caps color="black" icon="alarm_add" flat @click="hoursManagement(props.row.name, props.row.attendantCode)"/> <!-- Horários -->
+                                                <q-btn :disable="!props.row.active" size="10px" no-caps color="black" icon="money" flat @click="commissionManagement(props.row.name, props.row.attendantCode)"/> <!-- Comissão -->
                                             |
-                                                <q-btn size="10px" no-caps color="black" icon="edit_square" flat @click=""/>
-                                                <q-btn size="10px" no-caps color="red" icon="delete" flat @click=""/>
+                                                <q-btn :disable="!props.row.active" size="10px" no-caps color="black" icon="edit_square" flat @click="attendantManagement('update', props.row.attendantCode)" />
+
+                                                <q-btn 
+                                                    size="10px" 
+                                                    no-caps
+                                                    :disable="!props.row.isAttendant"
+                                                    :color="props.row.active ? 'red' : 'green'" 
+                                                    :icon="props.row.active ? 'delete' : 'check'" 
+                                                    flat 
+                                                    @click.prevent="props.row.active ? showDialogDeleteAttendant(props.row.attendantCode) :  showDialogActiveAttendant(props.row.attendantCode)"
+                                                />
                                             |
                                         </div>
                                     </template>
@@ -94,8 +113,8 @@
         <AttendantManagement 
             v-if="showAttendantManagement"
             @close="attPage($event)"
-            :action="'create'"
-            :attendant-code="undefined"
+            :action="selecetedAction"
+            :attendantCode="selecetedAttendantCode"
 
         />
 
@@ -118,7 +137,7 @@
 
 <script setup lang="ts">
     import { api } from 'src/boot/axios';
-    import { LocalStorage, QTableColumn } from 'quasar';
+    import { LocalStorage, QTableColumn, useQuasar } from 'quasar';
     import { onMounted, ref } from 'vue';
     import camelcaseKeys from 'camelcase-keys';
     import AttendantManagement from 'src/components/App/AttendantManagement/AttendantManagement.vue';    
@@ -132,6 +151,7 @@
 
     };
 
+    const $q = useQuasar();
     const ownerCode = LocalStorage.getItem("ownerCode") as number;
 
     const columns: QTableColumn[] = [
@@ -178,7 +198,88 @@
 
     let showAttendant = ref<boolean>(false); 
     let selecetedAttendantName = ref<string>(''); 
+    let selecetedAction = ref<string>(''); 
     let selecetedAttendantCode = ref<number>(0); 
+
+    const showDialogDeleteAttendant = (attendantCode: number) => {
+        $q.dialog({
+            title: 'Desativar atendente',
+            message: `Deseja realmente desativar esse atendente (${attendantCode})?`,
+            cancel: {
+                push: true,
+                label: 'Não',
+                color: 'red',
+            },
+
+            ok: {
+                push: true,
+                label: 'Sim',
+                color: 'green',
+            },
+
+        }).onOk(() => {
+            deleteService(attendantCode);
+
+        }).onCancel(() => {
+            return;
+        });
+    };
+
+    const showDialogActiveAttendant = (attendantCode: number) => {
+        $q.dialog({
+            title: 'Ativar atendente',
+            message: `Deseja realmente ativar esse atendente (${attendantCode})?`,
+            cancel: {
+                push: true,
+                label: 'Não',
+                color: 'red',
+            },
+
+            ok: {
+                push: true,
+                label: 'Sim',
+                color: 'green',
+            },
+
+        }).onOk(() => {
+            activeService(attendantCode);
+
+        }).onCancel(() => {
+            return;
+        });
+    };
+
+    const activeService = async (attendantCode: number) => {
+        const res = await api.put(`/attendants/active/${ownerCode}/${attendantCode}`);
+        const data = res.data;
+
+        if(data.success)
+        {
+            $q.notify({
+                color: 'green',
+                message: data.message,
+                position: 'top',
+                timeout: 1200
+            });
+        };
+        getAllAttendant();
+    };
+
+    const deleteService = async (attendantCode: number) => {
+        const res = await api.delete(`/attendants/delete/${ownerCode}/${attendantCode}`);
+        const data = res.data;
+
+        if(data.success)
+        {
+            $q.notify({
+                color: 'green',
+                message: data.message,
+                position: 'top',
+                timeout: 1200
+            });
+        };
+        getAllAttendant();
+    };
 
     const getAllAttendant = async () => {
         const res = await api.get(`/attendants/all/${ownerCode}`); 
@@ -197,7 +298,10 @@
         getAllAttendant();
     };
 
-    const attendantManagement = () => {
+    const attendantManagement = (action: string, attendantCode: number) => {
+        selecetedAction.value = action;
+        selecetedAttendantCode.value = attendantCode;
+
         showAttendant.value = true;
         showAttendantManagement.value = !showAttendantManagement.value;
     };

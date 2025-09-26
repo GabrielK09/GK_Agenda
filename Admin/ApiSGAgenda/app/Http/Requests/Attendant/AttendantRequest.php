@@ -4,6 +4,7 @@ namespace App\Http\Requests\Attendant;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class AttendantRequest extends FormRequest
 {
@@ -25,8 +26,8 @@ class AttendantRequest extends FormRequest
         return [
             'ownerCode' => ['required', 'exists:owners,owner_code'],
             'name' => ['required', 'string'],
-            'email' => ['required', 'email'],
-            'password' => ['required', 'string']
+            'email' => ['sometimes', 'email'],
+            'password' => ['sometimes', 'string']
         ];
     }
 }
