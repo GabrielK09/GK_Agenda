@@ -1,21 +1,10 @@
 <template>
     <main class="p-12">
         <div 
-            class="text-2xl " 
-            :class="{
-                'ml-32 mt-12': width >= 1100
-            }"
+            class="text-2xl login-form" 
         >
-            <article
-                :class="{
-                    'grid grid-cols-2': width >= 1100
-                }"    
-            >
+            <article >
                 <div
-                    :class="{
-                        'flex justify-between mt-8 p-12': width >= 1100
-
-                    }"
                     class="max-h-max"
                 >
                     <q-form
@@ -35,7 +24,7 @@
                                 color="grey"
                                 label="Nome"
                                 outlined
-                                class="max-w-[140%] mb-4 rounded-md"
+                                class="mb-4 rounded-md"
                                 required
                             >
                                 <template v-slot:label>
@@ -59,7 +48,7 @@
                                 color="grey"
                                 label="Nome"
                                 outlined
-                                class="w-[100%] mb-4 rounded-md"
+                                class=" mb-4 rounded-md"
                                 :rules="[checkMail]"
                                 hide-bottom-space
                                 required
@@ -86,7 +75,7 @@
                                 color="grey"
                                 label="Nome"
                                 outlined
-                                class="w-[100%] mb-4 rounded-md"
+                                class=" mb-4 rounded-md"
                                 mask="(##) #####-####"
                             >
                                 <template v-slot:label>
@@ -104,11 +93,7 @@
                         </div>        
 
                         <div
-                            class="min-w-60"
-                            :class="{
-                                'flex gap-10': width >= 1100
-                            }"
-
+                            class="min-w-60 passwords"
                         >
                             <q-input 
                                 v-model="owner.password" 
@@ -117,7 +102,7 @@
                                 stack-label
                                 outlined
                                 color="grey"
-                                class="rounded-md w-60"
+                                class="rounded-md w-60 q-input-1"
                                 :rules="[validatePassword]"
                                 hide-bottom-space
                                 required
@@ -177,13 +162,6 @@
                             </span>
                     </q-form>
                 </div>
-
-                <div class="relative right-8 top-20">
-                    <img 
-                        v-if="width > 1300 && width >= 1440"
-                        src="public/images/imagem_teste.jpg" 
-                    />
-                </div>
             </article>
         </div>
     </main>
@@ -213,8 +191,6 @@
         phone: '',
         password: ''
     });
-
-    const width = LocalStorage.getItem("width") as number;
     
     let confirmPassword = ref<string>('');
     let show = ref<boolean>(false);
@@ -245,7 +221,6 @@
                     }
                 });
 
-                console.log('Res:', res);
                 const data = camelcaseKeys(res.data, { deep: true });
                 
                 if(data.success) {
@@ -292,11 +267,6 @@
             };
         };
     };
-    
-    const toLogin = () => {
-        router.replace({ path: '/login' });
-
-    };
 
     const checkMail = () => {
         if(!owner.value.email.trim().includes('@')) return 'E-mail inválido!';
@@ -323,3 +293,36 @@
         return true;
     };
 </script>
+
+<style lang="scss">
+
+    @media (min-width: 1000px) {
+        .login-form {
+            width: 40%;
+            background-color: orange;
+            
+            .passwords {
+                display: flex;
+                flex-direction: row;
+                
+                .q-input-1 {
+                    margin: 0 1.5rem 0 0;
+                    
+                }
+            }
+        }
+    }       
+
+    @media (max-width: 1100px) {
+        .login-form {
+            background-color: aqua;
+            display: flex;
+            justify-content: center;
+            
+            .passwords .q-input-1{
+                margin: 0 0 1rem 0;
+            }
+        }
+    }       
+    
+</style>

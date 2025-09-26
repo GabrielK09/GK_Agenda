@@ -9,13 +9,29 @@
             </router-link>
 
             
-            <div class="border border-red-500">
+            <div class="border border-red-500 view">
                 <router-view></router-view>
                 <img 
-                    src="https://admin.sgagenda.com.br/images/login.png" alt="" 
+                    src="https://admin.sgagenda.com.br/images/login.png" alt=""
                     srcset=""
                 />
             </div>
         </main>
     </q-layout>
 </template>
+
+<style lang="scss">
+    @media (min-width: 1100px) {
+        .view {
+            
+            
+        }
+    }      
+
+    @media (max-width: 1250px) {
+        img {
+            display: none;
+        }
+    }      
+    
+</style>
