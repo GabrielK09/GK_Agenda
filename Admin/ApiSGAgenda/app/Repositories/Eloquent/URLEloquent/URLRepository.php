@@ -2,15 +2,22 @@
 
 namespace App\Repositories\Eloquent\URLEloquent;
 
-use App\Models\URL as SiteURL;
-use App\Repositories\Eloquent\AttendantEloquent\AttendantHoursRepository;
-use App\Repositories\Eloquent\AttendantEloquent\AttendantRepository;
+use App\Models\{
+    URL as SiteURL,
+    SiteSetting
+};
+
+use App\Repositories\Eloquent\AttendantEloquent\{
+    AttendantHoursRepository,
+    AttendantRepository
+
+};
+
 use App\Repositories\Eloquent\CategoriesManagementEloquent\CategoriesManagementRepository;
 use App\Repositories\Eloquent\OwnerEloquent\OwnerRepository;
 use App\Repositories\Eloquent\ServicesManagementEloquent\ServicesManagementRepository;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-
 class URLRepository 
 {
     public function __construct(
@@ -107,5 +114,41 @@ class URLRepository
         $hours = $this->attendantHoursRepository->getHours($ownerCode, $attendantCode);
 
         return $hours;
+    }
+
+    public function saveSiteSettings(array $data)
+    {
+        $settings = DB::transaction(function() use ($data) {
+            $maxCode = SiteSetting::where('owner_code', $data['ownerCode'])->max('site_setting_code');
+            $setting = null;
+
+            if(SiteSetting::where('owner_code', $data['ownerCode'])->first())
+            {
+                $setting = SiteSetting::update([
+                    
+                    'theme_color' => $data['themeColor'],
+                    'contact_phone' => $data['contactPhone'],
+                    'slogan' => $data['slogan'],
+                    
+                ]);
+                
+            } else {
+                $setting = SiteSetting::create([
+                    'site_setting_code' => $maxCode ? $maxCode + 1 : 1,
+                    'owner_code' => $data['ownerCode'],
+                    'theme_color' => $data['themeColor'],
+                    'site_color' => $data['siteColor'],
+                    'contact_phone' => $data['contactPhone'],
+                    'slogan' => $data['slogan'],
+
+                ]);                
+            };
+
+            Log::debug($setting);
+
+            return $setting;
+        });
+
+        return $settings;
     }
 }

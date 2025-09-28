@@ -1,3 +1,15 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@media (max-width: 1100px) {
+    .agenda .agendaDay .container_ {
+        margin-left: -2rem;
+        background: #fff;
+
+        .schedulings-table{
+            margin: 1rem auto 0 1.5rem;
+
+        }
+    }
+}

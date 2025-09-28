@@ -2,50 +2,47 @@
     <q-page padding>
         <section class="text-xl">
             <div
-                class="m-2"
+                class="agenda"
             >
-                <div class="flex justify-between">
-                    <h2 class="text-gray-600 m-2">Agendamentos</h2>
-                </div>
+                <h2 class="text-gray-600 m-2">Agendamentos</h2>
                 
-                <div class="rounded-md bg-white shadow-md">
-                    <div class="grid-calender grid grid-cols-2">
-                        <div class="calender">
+                <div class="rounded-md agendaDay shadow-md">
+                    <div class="flex justify-evenly p-6 container_">
+                        <div class="days ">
                             <AgendaDay
                                 :active-scheduling="events"
                                 @change-date="changeDateTable($event)"
                             />
                         </div>
 
-                        <div class="list-calender">
-                            <q-table
-                                flat 
-                                bordered
-                                hide-bottom
-                                :rows="schedulings"
-                                :columns="columns"
-                                row-key="schedulingCode"
-                            >
-                                <template v-slot:body="props">
-                                    <q-tr
-                                        :props="props"
-                                        @click="openSchedulingDetails(props.row.schedulingCode)"
-                                    >
-                                        <q-td
-                                            v-for="col in props.cols"
-                                            class="cursor-pointer"
-                                        >  
-                                            <div 
-                                                class="text-center"                
-                                            >
-                                                {{ col.value }} 
+                        <q-table
+                            flat 
+                            class="schedulings-table"
+                            bordered
+                            hide-bottom
+                            :rows="schedulings"
+                            :columns="columns"
+                            row-key="schedulingCode"
+                        >
+                            <template v-slot:body="props">
+                                <q-tr
+                                    :props="props"
+                                    @click="openSchedulingDetails(props.row.schedulingCode)"
+                                >
+                                    <q-td
+                                        v-for="col in props.cols"
+                                        class="cursor-pointer"
+                                    >  
+                                        <div 
+                                            class="text-center"                
+                                        >
+                                            {{ col.value }} 
 
-                                            </div>
-                                        </q-td>
-                                    </q-tr>
-                                </template>
-                            </q-table>
-                        </div>
+                                        </div>
+                                    </q-td>
+                                </q-tr>
+                            </template>
+                        </q-table>
                     </div>
                 </div>        
             </div>
@@ -116,7 +113,6 @@
     ]);
 
     const allSchedulings = ref<Scheduling[]>([]);
-
     const ownerCode = LocalStorage.getItem("ownerCode");
     const schedulings = ref<Scheduling[]>([]);
     const DATE_NOW = dayjs().format('YYYY/MM/DD');
@@ -192,36 +188,3 @@
     }); 
 
 </script>
-
-<style lang="scss">
-    @media (min-width: 1000px) {
-        .grid-calender {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            margin: 0 2rem 0 auto;    
-
-            .calender {
-                display: flex;
-                justify-content: center;
-            }
-
-            .list-calender {
-                margin: 2rem 0 0 0;
-            }
-        }   
-    }
-
-    @media (max-width: 1000px) {
-        .grid-calender {
-            display: grid;
-            grid-template-columns: repeat(1, minmax(0, 1fr));
-            padding: 2rem;
-            overflow-x: hidden ;
-
-            .calender {
-                display: flex;
-                justify-content: center;
-            }
-        }   
-    }
-</style>

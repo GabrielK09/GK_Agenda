@@ -94,4 +94,16 @@ class URLService
 
         return $attendantHour;
     }
+
+    public function saveSiteSettings(array $data)
+    {
+        $siteSettings = $this->urlRepository->saveSiteSettings($data);
+
+        if(!$siteSettings) 
+        {
+            throw new Exception('Erro ao gravar configurações para o site', 1);
+        }
+
+        return $siteSettings;
+    }
 }

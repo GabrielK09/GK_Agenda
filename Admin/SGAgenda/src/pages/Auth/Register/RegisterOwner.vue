@@ -295,7 +295,6 @@
 </script>
 
 <style lang="scss">
-
     @media (min-width: 1000px) {
         .login-form {
             width: 40%;

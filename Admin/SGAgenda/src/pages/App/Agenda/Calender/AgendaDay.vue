@@ -1,18 +1,16 @@
 <template>
-    <div class="q-pa-md">
-        <q-date
-            v-model="dateForCalender"
-            landscape
-            minimal
-            :locale="myLocale"
-            :events="props.activeScheduling"
-            event-color="blue"
-        />
-    </div>
+    <q-date
+        v-model="dateForCalender"
+        landscape
+        minimal
+        :locale="myLocale"
+        :events="props.activeScheduling"
+        event-color="blue"
+    />
 </template>
 
 <script setup lang="ts">
-    import { computed, onMounted, ref, watch } from 'vue';
+    import { computed, ref, watch } from 'vue';
     import dayjs, { Dayjs } from 'dayjs';
     
     const props = defineProps<{

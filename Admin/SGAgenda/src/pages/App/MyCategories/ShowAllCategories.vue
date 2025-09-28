@@ -113,21 +113,15 @@
     
     const columns: QTableColumn[] = [
         {
-            name: 'categoryCode',
-            label: 'Cód',
-            field: 'categoryCode',
+            name: 'name',
+            label: 'Categoria',
+            field: 'name',
             align: 'center'
         },
         {
             name: 'parentCategory',
             label: 'Categoria pai',
             field: 'parentCategory',
-            align: 'center'
-        },
-        {
-            name: 'name',
-            label: 'Categoria',
-            field: 'name',
             align: 'center'
         },
         {

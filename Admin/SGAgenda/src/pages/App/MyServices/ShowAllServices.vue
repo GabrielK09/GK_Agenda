@@ -135,12 +135,6 @@
 
     const columns: QTableColumn[] = [
         {
-            name: 'serviceCode',
-            label: 'Cód',
-            field: 'serviceCode',
-            align: 'center'
-        },
-        {
             name: 'name',
             label: 'Nome',
             field: 'name',

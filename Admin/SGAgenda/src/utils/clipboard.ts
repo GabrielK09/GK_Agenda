@@ -13,7 +13,6 @@ function clipBoard() {
             clipboard.destroy();
             reject(false);
         });
-
     });
 };
 

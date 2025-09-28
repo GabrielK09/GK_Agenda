@@ -95,6 +95,7 @@ Route::prefix('/v1')->group(function() {
 
         Route::prefix('/site')->group(function() {
             Route::get('/get-url/{owner_code}', [SiteManagementController::class, 'getURL']);
+            Route::post('/save-site-settings', [SiteManagementController::class, 'saveSiteSettings']);
         });
 
         Route::prefix('/schedule')->group(function() {
