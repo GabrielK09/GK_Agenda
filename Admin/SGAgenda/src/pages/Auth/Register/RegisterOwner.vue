@@ -3,10 +3,8 @@
         <div 
             class="text-2xl login-form" 
         >
-            <article >
-                <div
-                    class="max-h-max"
-                >
+            <article>
+                <div>
                     <q-form
                         @submit="registerOwner"
                         class="q-gutter-md p-4 ml-12"

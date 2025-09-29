@@ -9,12 +9,19 @@
             </router-link>
 
             
-            <div class="border border-red-500 view">
-                <router-view></router-view>
-                <img 
-                    src="https://admin.sgagenda.com.br/images/login.png" alt=""
-                    srcset=""
-                />
+            <div class="view">
+                <div class="views">
+                    <router-view></router-view>
+
+                </div>
+
+                <div>
+                    <img 
+                        class="auth-img"
+                        src="../../public/images/auth-img.png" 
+                        alt=""
+                    />
+                </div>
             </div>
         </main>
     </q-layout>
@@ -23,15 +30,24 @@
 <style lang="scss">
     @media (min-width: 1100px) {
         .view {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
             
-            
+            .views {
+                margin: 5rem 0 0 0;
+            }
+
+            .auth-img {
+                height: 90%;
+                border-radius: 10px;
+            }
         }
     }      
 
     @media (max-width: 1250px) {
-        img {
-            display: none;
+        .view .views {
+            display: flex;
+            justify-content: center;
         }
-    }      
-    
+    }
 </style>
