@@ -15,6 +15,7 @@ class SiteSetting extends Model
         'site_color',
         'bg_card_color',
         'bg_btn_color',
+        'text_color',
         'contact_phone',
         'slogan',
     ];

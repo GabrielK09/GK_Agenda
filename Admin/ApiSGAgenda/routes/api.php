@@ -30,6 +30,7 @@ Route::prefix('/v1')->group(function() {
         Route::get('/find/{site_name}/{service_code}', [SiteManagementController::class, 'findServiceByID']); 
         Route::get('/get-attendants/{siteName}', [SiteManagementController::class, 'getAttendants']);
         Route::get('/get-attendants/hours/{siteName}/{attendantCode}', [SiteManagementController::class, 'getAttendantHour']);
+        Route::get('/get-site-settings/{siteName}', [SiteManagementController::class, 'returnSiteSettings']);
 
     });
 

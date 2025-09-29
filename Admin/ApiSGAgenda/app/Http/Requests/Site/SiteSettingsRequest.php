@@ -25,8 +25,8 @@ class SiteSettingsRequest extends FormRequest
         return [
             'ownerCode' => ['required', 'exists:owners,owner_code'],
             'siteColor' => ['required'],
-            'siteURL' => ['required'],
-            'slogan' => ['required'],
+            'siteURL' => ['sometimes'],
+            'slogan' => ['sometimes'],
             'themeColor' => ['required'],
             'contactPhone' => ['required'],
         ];

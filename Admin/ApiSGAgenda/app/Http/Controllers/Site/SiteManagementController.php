@@ -56,6 +56,11 @@ class SiteManagementController extends Controller
     public function saveSiteSettings(SiteSettingsRequest $request)
     {
         Log::debug($request->all());
-        //return apiSuccess('Retornando os horários do atendente!', $this->urlService->getAttendantHour());
+        return apiSuccess('Retornando os horários do atendente!', $this->urlService->saveSiteSettings($request->validated()));
+    }
+
+    public function returnSiteSettings(string $siteName)
+    {
+        return apiSuccess('Retornando as configurações do site!', $this->urlService->returnSiteSettings($siteName));
     }
 }

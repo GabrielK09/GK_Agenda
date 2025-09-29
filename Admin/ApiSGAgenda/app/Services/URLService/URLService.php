@@ -106,4 +106,16 @@ class URLService
 
         return $siteSettings;
     }
+
+    public function returnSiteSettings(string $siteName)
+    {
+        $siteSettings = $this->urlRepository->returnSiteSettings($siteName);
+
+        if(!$siteSettings) 
+        {
+            throw new Exception('Erro ao retornar as configurações para o site', 1);
+        }
+
+        return $siteSettings;
+    }
 }

@@ -3,8 +3,8 @@
 namespace App\Repositories\Eloquent\URLEloquent;
 
 use App\Models\{
+    SiteSetting,
     URL as SiteURL,
-    SiteSetting
 };
 
 use App\Repositories\Eloquent\AttendantEloquent\{
@@ -120,19 +120,21 @@ class URLRepository
     {
         $settings = DB::transaction(function() use ($data) {
             $maxCode = SiteSetting::where('owner_code', $data['ownerCode'])->max('site_setting_code');
-            $setting = null;
-
             if(SiteSetting::where('owner_code', $data['ownerCode'])->first())
             {
-                $setting = SiteSetting::update([
-                    
+                Log::debug('Já tem configuração criada, vai editar');
+                $setting = SiteSetting::where('owner_code', $data['ownerCode'])->update([                    
                     'theme_color' => $data['themeColor'],
                     'contact_phone' => $data['contactPhone'],
                     'slogan' => $data['slogan'],
                     
                 ]);
+
+                Log::debug($setting);
+                return $setting;
                 
             } else {
+                Log::debug('Não tem configuração criada, vai criar');
                 $setting = SiteSetting::create([
                     'site_setting_code' => $maxCode ? $maxCode + 1 : 1,
                     'owner_code' => $data['ownerCode'],
@@ -144,11 +146,18 @@ class URLRepository
                 ]);                
             };
 
-            Log::debug($setting);
-
             return $setting;
         });
 
         return $settings;
+    }
+
+    public function returnSiteSettings(string $siteName)
+    {
+        $ownerCode = $this->getOwnerCode($siteName);
+        $settings = SiteSetting::where('owner_code', $ownerCode)->first();
+
+        return $settings;
+
     }
 }

@@ -17,14 +17,14 @@
                             borderless
                             outlined
                         >
-                            <a target="_blank" :href="site.siteURL">{{site.siteURL}}</a>
+                            <a target="_blank" :href="siteURL">{{ siteURL }}</a>
                             
                             <template v-slot:append>
                                 <q-btn 
                                     icon="content_copy"
                                     flat
                                     rounded
-                                    :data-clipboard-text="site.siteURL"
+                                    :data-clipboard-text="siteURL"
                                     class="btn"
                                     @click="fnClipBoard"
                                 />
@@ -106,7 +106,6 @@
 
     interface SiteSettings {
         ownerCode: number,
-        siteURL: string,
         slogan: string,
         contactPhone: string,
         themeColor: string,
@@ -119,7 +118,6 @@
 
     const site = ref<SiteSettings>({
         ownerCode: ownerCode,
-        siteURL: '',
         slogan: '',
         contactPhone: '',
         themeColor: 'Tema claro',
@@ -127,20 +125,38 @@
 
     });
 
+    let siteURL = ref<string>('');
     let showPickColor = ref<boolean>(false);
 
     const getURL = async () => {
         const res = await api.get(`/site/get-url/${ownerCode}`);
-        const data = camelcaseKeys(res.data, { deep: true });
+        const data = camelcaseKeys(res.data.data, { deep: true });
 
-        site.value.siteURL = data.data.siteUrl;
+        siteURL.value = data.siteUrl;
+        console.log(data.siteUrl);
+        getSiteSettings();
+    };  
+
+    const getSiteSettings = async () => {
+        const url = siteURL.value.split('/');
+        const urlName = url[url.length-1] as string;
+        
+        const res = await api.get(`/site/get-site-settings/${urlName}`);
+        const data: SiteSettings = camelcaseKeys(res.data.data, { deep: true });
+
+        site.value = {
+            contactPhone: data.contactPhone,
+            ownerCode: data.ownerCode,
+            siteColor: data.siteColor,
+            slogan: data.slogan,
+            themeColor: data.themeColor === '#ffffff' ? 'Tema claro' : 'Tema escuro'
+        };
     };  
 
     const saveSiteSettings = async () => {
         const payload: SiteSettings = {
             ownerCode: ownerCode,
             siteColor: site.value.siteColor,
-            siteURL: site.value.siteURL,
             slogan: site.value.slogan,
             themeColor: site.value.themeColor === 'Tema claro' ? '#ffffff' : ' #000000',
             contactPhone: site.value.contactPhone,
@@ -167,6 +183,7 @@
 
     onMounted(() => {
         getURL();
+        
     });
 </script>   
 

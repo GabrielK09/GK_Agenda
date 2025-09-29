@@ -1,5 +1,6 @@
 <template>
     <div class="flex justify-center mt-24">
+        <h1 class="text-red-500">Teste</h1>
         <div class="">
             <div v-for="category in categories" class="text-xl mt-4 p-8">
                 <span class="p-1 ml-4">{{ category.name }} - {{ category.categoryCode }}</span>
@@ -115,19 +116,8 @@
     };
 
     onMounted(() => {
-        const url = document.URL.split('/');
-        const urlName = url[url.length-1] as string;
+        whatURLName.value = LocalStorage.getItem("urlName") as string;
+        getData(whatURLName.value);
         
-        LocalStorage.set("urlName", urlName);
-        whatURLName.value = urlName;
-
-        getData(urlName);
-         
     }); 
 </script>
-
-<style>
-    body {
-        background-color: #f5f5f5;
-    }
-</style>
