@@ -40,6 +40,7 @@
                             label="Telefone"
                             outlined
                             stack-label
+                            mask="(##) #####-####"
                         />
 
                         <q-input 
@@ -58,6 +59,7 @@
                         <h3 class="mt-2 ml-.5">Personalização</h3>
 
                         <div class="colors flex">
+                            {{ site.themeColor }}
                             <q-select 
                                 v-model="site.themeColor" 
                                 :options="[
@@ -120,8 +122,8 @@
         ownerCode: ownerCode,
         slogan: '',
         contactPhone: '',
-        themeColor: 'Tema claro',
-        siteColor: '#000000',
+        themeColor: '',
+        siteColor: '#ffffff',
 
     });
 
@@ -133,7 +135,6 @@
         const data = camelcaseKeys(res.data.data, { deep: true });
 
         siteURL.value = data.siteUrl;
-        console.log(data.siteUrl);
         getSiteSettings();
     };  
 
@@ -145,10 +146,10 @@
         const data: SiteSettings = camelcaseKeys(res.data.data, { deep: true });
 
         site.value = {
-            contactPhone: data.contactPhone,
+            contactPhone: data.contactPhone ?? site.value.contactPhone,
             ownerCode: data.ownerCode,
-            siteColor: data.siteColor,
-            slogan: data.slogan,
+            siteColor: data.siteColor ?? site.value.siteColor,
+            slogan: data.slogan ?? site.value.slogan,
             themeColor: data.themeColor === '#ffffff' ? 'Tema claro' : 'Tema escuro'
         };
     };  
@@ -165,9 +166,18 @@
         console.log('payload: ', payload);
         
         const res = await api.post('/site/save-site-settings', payload);
-
-        console.log(res.data);
+        const data = res.data;
         
+        if(data.success)
+        {
+            $q.notify({
+                color: 'green',
+                message: data.message,
+                position: 'top'
+            });
+            
+            getSiteSettings();
+        };
     };
 
     const fnClipBoard = async () => {
@@ -190,19 +200,25 @@
 <style lang="scss">
     @media (min-width: 1100px){
         .options {
+            display: flex;
+            justify-content: space-between;
+            
             .phone_input {
                 margin: 0 2rem 0 0;
 
             }
 
             .slogan_input {
-                width: 85%;
+                width: 81.4%;
             }
         }
     }    
     
-    @media (max-width: 1100px){
+    @media (max-width: 1280px){
         .options {
+            display: flex;
+            justify-content: space-between;
+
             .phone_input {
                 width: 35%;
                 margin: 0 1rem 0 0;
@@ -210,7 +226,7 @@
             }
 
             .slogan_input {
-                width: 60%;
+                width: 59%;
             }
         }
     }    
