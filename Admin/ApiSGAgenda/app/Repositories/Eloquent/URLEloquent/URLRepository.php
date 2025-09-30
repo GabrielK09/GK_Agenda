@@ -126,6 +126,7 @@ class URLRepository
                 $setting = SiteSetting::where('owner_code', $data['ownerCode'])->update([                    
                     'theme_color' => $data['themeColor'],
                     'contact_phone' => $data['contactPhone'],
+                    'text_color' => $data['themeColor'] === '#222831' ? '#fff' : '#000',
                     'slogan' => $data['slogan'],
                     
                 ]);
@@ -140,6 +141,7 @@ class URLRepository
                     'owner_code' => $data['ownerCode'],
                     'theme_color' => $data['themeColor'],
                     'site_color' => $data['siteColor'],
+                    'text_color' => $data['themeColor'] === '#222831' ? '#fff' : '#000',
                     'contact_phone' => $data['contactPhone'],
                     'slogan' => $data['slogan'],
 

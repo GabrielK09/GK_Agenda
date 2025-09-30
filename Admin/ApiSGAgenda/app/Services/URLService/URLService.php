@@ -4,6 +4,7 @@ namespace App\Services\URLService;
 
 use App\Repositories\Eloquent\URLEloquent\URLRepository;
 use Exception;
+use Illuminate\Support\Facades\Log;
 
 class URLService 
 {
@@ -97,14 +98,87 @@ class URLService
 
     public function saveSiteSettings(array $data)
     {
-        $siteSettings = $this->urlRepository->saveSiteSettings($data);
+        $newData[] = [];
+        $themeColor = $data['themeColor'];
+        $apiURLPrefix = env('THE_COLOR_API');
+
+        Log::info($data);
+        Log::info("URL: {$apiURLPrefix}");
+
+        if($themeColor === '#222831')
+        {
+            $replaceTheme = str_replace('#', '', $themeColor);
+
+            $apiURL = "{$apiURLPrefix}/scheme?hex={$replaceTheme}";
+
+            Log::info($apiURL);
+            $this->fecthApi($apiURL);
+        };
+
+        /*$siteSettings = $this->urlRepository->saveSiteSettings($data);
 
         if(!$siteSettings) 
         {
             throw new Exception('Erro ao gravar configurações para o site', 1);
         }
 
-        return $siteSettings;
+        return $siteSettings;*/
+    }
+
+    public function fecthApi(string $url)
+    {
+        Log::info('fecthApi');
+
+        if($url === '') return [];
+
+        $ch = curl_init();  
+
+        curl_setopt_array($ch, [
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HEADER => false,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYHOST => false,
+        ]);
+
+        $res = curl_exec($ch);
+
+        if(curl_errno($ch))
+        {
+            Log::alert("Erro ao consultar a api - {$url}");
+            Log::alert(curl_errno($ch));
+            curl_close($ch);
+            return [];
+
+        };
+        
+        curl_close($ch);
+
+        $decode = json_decode($res, true);
+
+        if(json_last_error() === JSON_ERROR_NONE) {
+            Log::debug('Json API:');
+            Log::debug($decode['colors']);
+
+            $newArray = [
+                'bg_card_color' => $decode['colors'][3]['hex']['value'],
+                'bg_btn_color' => $decode['colors'][4]['hex']['value']
+
+            ];
+            
+            // 4 - bg btn
+            //
+
+            Log::debug('Retorno:');
+            Log::debug($newArray);
+            return $newArray;
+
+        }
+
+        Log::debug($res);
+
+        return ['raw' => $res];
     }
 
     public function returnSiteSettings(string $siteName)

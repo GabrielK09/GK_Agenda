@@ -1,16 +1,20 @@
 <template>
-    <div class="flex justify-center mt-24">
-        <h1 class="text-red-500">Teste</h1>
+    <div class="flex justify-center">
+        <h1 :style="`color: ${textColor}`">
+            {{ slogan }}
+        </h1>
+
         <div class="">
             <div v-for="category in categories" class="text-xl mt-4 p-8">
                 <span class="p-1 ml-4">{{ category.name }} - {{ category.categoryCode }}</span>
                 <div v-for="service in servicesHasCategory"class="mt-4 bg-gray-500 rounded-md"> 
                     <div v-if="service.categoryCode === category.categoryCode" class="card p-12">
-                        <div class="text-white"> 
+                        <div :style="`color: ${textColor}`"> 
                             <div class="">
                                 <span>Serviço: {{service.name}}</span>
                                 <br>
                                 <span>{{ service.description }}</span>
+
                             </div>
                         
                             <div class="mt-4">
@@ -35,7 +39,7 @@
             <div v-if="servicesNotHasCategory.length > 0" class="mt-4 p-8">
                 <span class="p-1 ml-4">Confira os demais serviços!</span>
                 <div v-for="service in servicesNotHasCategory" class="mt-4 bg-gray-500 rounded-md  p-8">
-                    <div class="text-white"> 
+                    <div :style="`color: ${textColor}`"> 
                         <div class="">
                             <span>Serviço: {{service.name}}</span>
                             <br>
@@ -85,6 +89,27 @@
         description: string,
     };
 
+    interface SiteSettings {
+        themeColor: string,
+        siteColor: string,
+        bgCardColor: string,
+        bgBtnColor: string,
+        contactPhone: string,
+        slogan: string,
+    };
+
+    const siteSettings = ref<SiteSettings>({
+        themeColor: '',
+        siteColor: '',
+        bgCardColor: '',
+        bgBtnColor: '',
+        contactPhone: '',
+        slogan: '',
+    });
+
+    let themeColor = ref<string>('');
+    let textColor = ref<string>('');
+
     let servicesNotHasCategory = ref<Service[]>([]);
     let servicesHasCategory = ref<Service[]>([]);
     let servicesByCategory = ref<Service[]>([]);
@@ -93,6 +118,7 @@
     let categories = ref<Categories[]>([]);
     
     let whatURLName = ref<string>('');
+    let slogan = ref<string>(LocalStorage.getItem('slogan') as string);
 
     const getData = async (urlName: string) => {
         
@@ -115,9 +141,36 @@
         console.log(servicesByCategory.value);
     };
 
+    const getSiteSettings = async (urlName: string) => {
+        const res = await api.get(`/site/get-site-settings/${urlName}`);
+        const data: SiteSettings = camelcaseKeys(res.data.data, { deep: true });
+        console.log(data);
+        
+        siteSettings.value = data;
+        
+        LocalStorage.set("themeColor", data.themeColor);
+        LocalStorage.set("siteColor", data.siteColor);
+        LocalStorage.set("contactPhone", data.contactPhone);
+        LocalStorage.set("slogan", data.slogan);
+    
+        themeColor.value = data.themeColor;
+        const qApp = document.getElementById('q-app');
+        if(qApp !== null)
+        {   
+            qApp.style.backgroundColor = themeColor.value; 
+
+            if(themeColor.value === '#222831')
+            {   
+                textColor.value = '#ffffff';
+                
+            };
+        };  
+    };
+
     onMounted(() => {
         whatURLName.value = LocalStorage.getItem("urlName") as string;
         getData(whatURLName.value);
+        getSiteSettings(whatURLName.value);
         
     }); 
 </script>

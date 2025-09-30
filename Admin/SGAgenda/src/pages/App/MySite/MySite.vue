@@ -59,7 +59,6 @@
                         <h3 class="mt-2 ml-.5">Personalização</h3>
 
                         <div class="colors flex">
-                            {{ site.themeColor }}
                             <q-select 
                                 v-model="site.themeColor" 
                                 :options="[
@@ -159,12 +158,10 @@
             ownerCode: ownerCode,
             siteColor: site.value.siteColor,
             slogan: site.value.slogan,
-            themeColor: site.value.themeColor === 'Tema claro' ? '#ffffff' : ' #000000',
+            themeColor: site.value.themeColor === 'Tema claro' ? '#ffffff' : '#222831',
             contactPhone: site.value.contactPhone,
         };
-
-        console.log('payload: ', payload);
-        
+  
         const res = await api.post('/site/save-site-settings', payload);
         const data = res.data;
         

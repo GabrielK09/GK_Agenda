@@ -12,6 +12,7 @@
                             <AgendaDay
                                 :active-scheduling="events"
                                 @change-date="changeDateTable($event)"
+
                             />
                         </div>
 
@@ -183,8 +184,6 @@
     };
 
     onMounted(() => {
-        getAllSchedulings();
-        
+        getAllSchedulings();        
     }); 
-
 </script>

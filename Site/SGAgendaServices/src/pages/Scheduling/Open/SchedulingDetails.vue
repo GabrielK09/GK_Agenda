@@ -1,5 +1,5 @@
 <template>
-    <div class="flex justify-center mt-24">
+    <div class="flex justify-center">
         <div class="w-[70vh]">
             <div class="border">
                 <q-btn

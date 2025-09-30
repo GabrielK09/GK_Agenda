@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Site\CreateURLSiteRequest;
 use App\Http\Requests\Site\SiteSettingsRequest;
 use App\Services\URLService\URLService;
-use Illuminate\Support\Facades\Log;
 
 class SiteManagementController extends Controller
 {
@@ -22,8 +21,6 @@ class SiteManagementController extends Controller
     public function createURL(CreateURLSiteRequest $request)
     {
         $data = $request->validated();
-        Log::info('-- SiteController --');
-        Log::info($data);
         return apiSuccess('Site registrado com sucesso!', $this->urlService->createURL($data['url'], $data['urlName'], $data['ownerCode']));
 
     }
@@ -55,8 +52,7 @@ class SiteManagementController extends Controller
 
     public function saveSiteSettings(SiteSettingsRequest $request)
     {
-        Log::debug($request->all());
-        return apiSuccess('Retornando os horários do atendente!', $this->urlService->saveSiteSettings($request->validated()));
+        return apiSuccess('Configuração gravadas com sucesso!', $this->urlService->saveSiteSettings($request->validated()));
     }
 
     public function returnSiteSettings(string $siteName)
