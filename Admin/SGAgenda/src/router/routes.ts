@@ -57,7 +57,13 @@ const routes: RouteRecordRaw[] = [
                 path: 'site',
                 component: () => import('pages/App/MySite/MySite.vue'),
                 name: 'site'
+            },
+            {
+                path: 'custom-site',
+                component: () => import('pages/App/MySite/Site/CustomSite.vue'),
+                name: 'site'
             }
+
         ]
     },
     {

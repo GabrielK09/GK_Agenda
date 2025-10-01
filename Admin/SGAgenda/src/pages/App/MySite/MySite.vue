@@ -57,6 +57,15 @@
 
                     <div class="persona m-2">
                         <h3 class="mt-2 ml-.5">Personalização</h3>
+                        <q-btn 
+                            color="primary" 
+                            icon="join" 
+                            label="Estúdio" 
+                            no-caps
+                            :to="`custom-site`"
+                            target="_blank"
+                            
+                        />
 
                         <div class="colors flex">
                             <q-select 
@@ -75,7 +84,7 @@
                             <div
                                 class="rounded-3xl h-12 w-12 picker cursor-pointer"
                                 :class="{
-                                    'border-black border': site.siteColor === '#ffffff'
+                                    'border-black border': site.siteColor === '#ffffff' || site.siteColor === ''
                                 }"
                                 :style="`background-color: ${site.siteColor}`"
                                 @click="showPickColor = !showPickColor"
