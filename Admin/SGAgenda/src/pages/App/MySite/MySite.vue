@@ -122,7 +122,7 @@
         slogan: '',
         contactPhone: '',
         themeColor: '',
-        siteColor: '#ffffff',
+        siteColor: '',
 
     });
 
@@ -150,7 +150,10 @@
             siteColor: data.siteColor ?? site.value.siteColor,
             slogan: data.slogan ?? site.value.slogan,
             themeColor: data.themeColor === '#ffffff' ? 'Tema claro' : 'Tema escuro'
+
         };
+
+        console.log(site.value);        
     };  
 
     const saveSiteSettings = async () => {
@@ -161,6 +164,9 @@
             themeColor: site.value.themeColor === 'Tema claro' ? '#ffffff' : '#222831',
             contactPhone: site.value.contactPhone,
         };
+
+        console.log('payload:', payload);
+        
   
         const res = await api.post('/site/save-site-settings', payload);
         const data = res.data;

@@ -116,9 +116,9 @@ class URLRepository
         return $hours;
     }
 
-    public function saveSiteSettings(array $data)
+    public function saveSiteSettings(array $data, array $colorData)
     {
-        $settings = DB::transaction(function() use ($data) {
+        $settings = DB::transaction(function() use ($data, $colorData) {
             $maxCode = SiteSetting::where('owner_code', $data['ownerCode'])->max('site_setting_code');
             if(SiteSetting::where('owner_code', $data['ownerCode'])->first())
             {
@@ -126,7 +126,10 @@ class URLRepository
                 $setting = SiteSetting::where('owner_code', $data['ownerCode'])->update([                    
                     'theme_color' => $data['themeColor'],
                     'contact_phone' => $data['contactPhone'],
+                    'site_color' => $data['siteColor'],
                     'text_color' => $data['themeColor'] === '#222831' ? '#fff' : '#000',
+                    'bg_card_color' => $colorData['bgCardColor'],
+                    'bg_btn_color' => $colorData['bgBtnColor'], 
                     'slogan' => $data['slogan'],
                     
                 ]);
@@ -143,6 +146,8 @@ class URLRepository
                     'site_color' => $data['siteColor'],
                     'text_color' => $data['themeColor'] === '#222831' ? '#fff' : '#000',
                     'contact_phone' => $data['contactPhone'],
+                    'bg_card_color' => $colorData['bgCardColor'],
+                    'bg_btn_color' => $colorData['bgBtnColor'], 
                     'slogan' => $data['slogan'],
 
                 ]);                

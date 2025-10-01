@@ -98,31 +98,34 @@ class URLService
 
     public function saveSiteSettings(array $data)
     {
-        $newData[] = [];
-        $themeColor = $data['themeColor'];
+        $colorData = null;
         $apiURLPrefix = env('THE_COLOR_API');
 
         Log::info($data);
         Log::info("URL: {$apiURLPrefix}");
 
-        if($themeColor === '#222831')
+        if($data['siteColor'])
         {
-            $replaceTheme = str_replace('#', '', $themeColor);
+            $replaceSiteColor = str_replace('#', '', $data['siteColor']);
 
-            $apiURL = "{$apiURLPrefix}/scheme?hex={$replaceTheme}";
+            $apiURL = "{$apiURLPrefix}/scheme?hex={$replaceSiteColor}";
 
-            Log::info($apiURL);
-            $this->fecthApi($apiURL);
+            $colorData = $this->fecthApi($apiURL);
         };
 
-        /*$siteSettings = $this->urlRepository->saveSiteSettings($data);
+        Log::info('data');
+        Log::info($data);
+        Log::info('colorData');
+        Log::info($colorData);
+
+        $siteSettings = $this->urlRepository->saveSiteSettings($data, $colorData);
 
         if(!$siteSettings) 
         {
             throw new Exception('Erro ao gravar configurações para o site', 1);
         }
 
-        return $siteSettings;*/
+        return $siteSettings;
     }
 
     public function fecthApi(string $url)
@@ -162,13 +165,10 @@ class URLService
             Log::debug($decode['colors']);
 
             $newArray = [
-                'bg_card_color' => $decode['colors'][3]['hex']['value'],
-                'bg_btn_color' => $decode['colors'][4]['hex']['value']
+                'bgCardColor' => $decode['colors'][3]['hex']['value'],
+                'bgBtnColor' => $decode['colors'][4]['hex']['value']
 
             ];
-            
-            // 4 - bg btn
-            //
 
             Log::debug('Retorno:');
             Log::debug($newArray);
