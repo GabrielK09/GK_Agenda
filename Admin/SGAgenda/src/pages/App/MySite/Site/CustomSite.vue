@@ -63,6 +63,13 @@
                 </div>
             </div>
             
+            <ColorManagement
+                v-if="showColorManagement"
+                :label="selecetToEdit"
+                @close="showColorManagement = !$event"
+                @chagen-color="colorManagement($event)"
+            />
+
             <div v-if="servicesNotHasCategory.length > 0" class="mt-4 p-8 relative">
                 <span 
                     class="p-1 ml-4"
@@ -70,85 +77,7 @@
                     
                 >   
                     Confira os demais serviços!
-                </span>
-                
-                <div
-                    class="absolute z-50 backdrop-blur-sm p-2 rounded-lg"
-                    v-if="showChangeColors.showBgCardColor"
-                >
-                    <div class="mb-2 flex bg-white">
-                        <q-btn color="primary" icon="close" @click="showChangeColors.showBgCardColor = !showChangeColors.showBgCardColor" />
-                        <span class="mt-auto mb-auto ml-4 mr-4">Cor do fundo em edição</span>
-                    </div>
-                    <q-color 
-                        no-header
-                        v-model="colors.bgCardColor" 
-                    />
-
-                </div>
-
-                <div
-                    v-if="showChangeColors.showBgLabel1"
-                    class="absolute z-50 bg-white p-2 rounded-lg right-96 w-52"
-                >
-                    <div class="mb-2">                        
-                        <span class="ml-4 mr-4">Cor do valor em edição</span>
-                        
-                        <q-btn
-                            class="ml-4 mb-2 w-4 h-4" 
-                            color="primary" 
-                            icon="close"
-                            c
-                            @click="showChangeColors.showBgLabel1 = !showChangeColors.showBgLabel1" 
-                        />
-
-                        <q-btn
-                            class="ml-4 mb-2" 
-                            color="primary" 
-                            no-caps
-                            outline
-                            label="Cor do texto"
-                            
-                        />
-                    </div>
-                    <q-color 
-                        no-header
-                        v-model="colors.bgLabel1" 
-                    />
-
-                </div>
-
-                <div
-                    v-if="showChangeColors.showBgLabel2"
-                    class="absolute z-50 bg-white p-2 rounded-lg right-96 w-52"
-                >
-                <div class="mb-2">
-                        <span class="ml-4 mr-4">Cor da duração em edição</span>
-                        <q-btn 
-                            color="primary" 
-                            icon="close"
-                            outline
-                            @click="showChangeColors.showBgLabel2 = !showChangeColors.showBgLabel2" 
-
-                        />
-
-                        <q-btn
-                            class="ml-4 mb-2" 
-                            color="primary" 
-                            no-caps
-                            outline
-                            label="Cor do texto"
-                            
-                        />
-
-                    </div>
-                    <q-color 
-                        no-header
-                        v-model="colors.bgLabel2" 
-                        
-                    />
-                    
-                </div>
+                </span>                
 
                 <div
                     v-for="service in servicesNotHasCategory" 
@@ -201,6 +130,7 @@
 
 <script setup lang="ts">
     import { api } from 'src/boot/axios';
+    import ColorManagement from 'src/components/Colors/ColorManagement.vue';
     import { onMounted, ref } from 'vue';
     import camelcaseKeys from 'camelcase-keys';
     import { LocalStorage } from 'quasar';
@@ -233,14 +163,9 @@
         textColorLabel3: string,
     };
 
-    interface ShowEditSiteColors {
-        showBgCardColor: boolean,
-        showBgBtnColor1: boolean,
-        showBgLabel1: boolean,
-        showTextColorLabel1: boolean,
-        showBgLabel2: boolean,
-        showTextColorLabel2: boolean,
-        showTextColorLabel3: boolean,
+    interface ReturnColors {
+        label: string,
+        color: string
     };
 
     const colors = ref<SiteColors>({
@@ -253,16 +178,7 @@
         bgLabel2: '#9ca3af',
         textColorLabel2: '#fff',
         bgCardColor: '#ccc' 
-    });
-
-    const showChangeColors = ref<ShowEditSiteColors>({
-        showBgBtnColor1: false,
-        showBgLabel1: false,
-        showTextColorLabel1: false,
-        showBgLabel2: false,
-        showTextColorLabel2: false,
-        showTextColorLabel3: false,
-        showBgCardColor: false
+        
     });
 
     let servicesHasCategory = ref<Service[]>([]);
@@ -281,64 +197,37 @@
 
     let categories = ref<Categories[]>([]);
 
+    let selecetToEdit = ref<string>('');
+    let showColorManagement = ref<boolean>(false);
     let isDarkTheme = ref<boolean>(false);
-    
-    const showChangeColor = (label: string) => {
-        switch (label) {
-            case 'card':
-                showChangeColors.value = {
-                    showBgCardColor: true,
-                    showBgBtnColor1: false,
-                    showBgLabel1: false,
-                    showTextColorLabel1: false,
-                    showBgLabel2: false,
-                    showTextColorLabel2: false,
-                    showTextColorLabel3: false,
-                };
 
+    const showChangeColor = (label: string) => {
+        selecetToEdit.value = label;
+        showColorManagement.value = !showColorManagement.value;
+    };
+
+    const colorManagement = (event: ReturnColors) => {
+        console.log(event);
+        switch (event.label) {
+            case 'card':
+                colors.value.bgCardColor = event.color;
                 break;
         
             case 'btn1':
-                showChangeColors.value = {
-                    showBgCardColor: false,
-                    showBgBtnColor1: true,
-                    showBgLabel1: false,
-                    showTextColorLabel1: false,
-                    showBgLabel2: false,
-                    showTextColorLabel2: false,
-                    showTextColorLabel3: false,
-                };
-
+                colors.value.bgBtnColor1 = event.color;
                 break
 
             case 'lb1':
-                showChangeColors.value = {
-                    showBgCardColor: false,
-                    showBgBtnColor1: false,
-                    showBgLabel1: true,
-                    showTextColorLabel1: false,
-                    showBgLabel2: false,
-                    showTextColorLabel2: false,
-                    showTextColorLabel3: false,
-                };
-
+                colors.value.bgLabel1 = event.color;
                 break
 
             case 'lb2':
-                 showChangeColors.value = {
-                    showBgCardColor: false,
-                    showBgBtnColor1: false,
-                    showBgLabel1: false,
-                    showTextColorLabel1: false,
-                    showBgLabel2: true,
-                    showTextColorLabel2: false,
-                    showTextColorLabel3: false,
-                };
-
-                break
+                colors.value.bgLabel2 = event.color;
+                break;
+        
             default:
                 break;
-        };
+        }
     };
 
     const changeTheme = () => {
@@ -357,4 +246,8 @@
 
         };   
     };
+
+    onMounted(() => {
+        colors.value.theme === '#fff' ? colors.value.generalTextColor = '#000' : colors.value.generalTextColor = '#fff';
+    });
 </script>
