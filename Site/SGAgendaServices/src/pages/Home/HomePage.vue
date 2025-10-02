@@ -170,7 +170,6 @@
     const getSiteSettings = async (urlName: string) => {
         const res = await api.get(`/site/get-site-settings/${urlName}`);
         const data: SiteSettings = camelcaseKeys(res.data.data, { deep: true });
-        console.log('getSiteSettings:', data);
         
         siteSettings.value = data;
         
@@ -184,6 +183,7 @@
         colors.value = {
             bgBtnColor: data.bgBtnColor,
             bgCardColor: data.bgCardColor
+            
         };
     
         themeColor.value = data.themeColor;

@@ -63,8 +63,6 @@
                             label="Estúdio" 
                             no-caps
                             :to="`custom-site`"
-                            target="_blank"
-                            
                         />
 
                         <div class="colors flex">
@@ -174,9 +172,6 @@
             contactPhone: site.value.contactPhone,
         };
 
-        console.log('payload:', payload);
-        
-  
         const res = await api.post('/site/save-site-settings', payload);
         const data = res.data;
         

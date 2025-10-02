@@ -61,7 +61,7 @@ const routes: RouteRecordRaw[] = [
             {
                 path: 'custom-site',
                 component: () => import('pages/App/MySite/Site/CustomSite.vue'),
-                name: 'site'
+                name: 'custom'
             }
 
         ]
