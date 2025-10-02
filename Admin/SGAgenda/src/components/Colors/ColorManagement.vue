@@ -1,13 +1,18 @@
 <template>
     <div
-        class="absolute z-50 bg-white p-2 rounded-lg w-52"
+        v-if="!showChangeTextColor"
+        id="draggableWindow"
+        class="border absolute z-50 bg-white p-2 rounded-lg w-80"
         :class="{
-            'right-96': props.label === 'lb1',
-            'left-96': props.label === 'lb2' || props.label === 'card',
+            'right-44': props.label === 'lb1',
+            'right-96': props.label === 'lb2' || props.label === 'card',
 
         }"
     >
-        <div class="mb-2">                        
+        <div
+            id="windowHeader"
+            class="mb-2"
+        >                        
             <span class="ml-4 mr-4">{{ descLabel }}</span>
             
             <q-btn
@@ -45,20 +50,23 @@
         }"
     >
         <div class="mb-2">                        
-            <span class="ml-4 mr-4">{{ descLabel }}</span>
+            <span class="ml-4 mr-4">Cor do texto</span>
             
             <q-btn
-                class="ml-4 mb-2 w-4 h-4" 
+                class="ml-4 mb-2" 
                 color="primary" 
-                icon="close"
-                @click="emits('close', true)" 
+                no-caps
+                outline
+                label="Cor do elemento"
+                @click="showChangeTextColor = !showChangeTextColor"
+                
             />
 
         </div>
 
         <q-color 
             no-header
-            v-model="colors.color" 
+            v-model="colors.textColor" 
 
         />
     </div>
@@ -69,11 +77,13 @@
     
     interface ReturnColors {
         label: string,
+        textColor: string,
         color: string
     };
 
     type SiteColors = {
-        color: string
+        color: string,
+        textColor: string
     };
 
     const props = defineProps<{
@@ -92,10 +102,13 @@
 
     const colors = ref<SiteColors>({
         color: '#000',
+        textColor: '#000',
         
     });
 
-    watch(colors.value, () => {
+    watch(colors.value, (newColor) => {
+        console.log(newColor);
+        
         commit();
     });
 
@@ -106,7 +119,7 @@
                 break;
         
             case 'btn1':
-                descLabel.value = 'Cor do botão do serviço em edição';
+                descLabel.value = 'Cor do botão de seleção do serviço em edição';
                 break
 
             case 'lb1':
@@ -124,6 +137,7 @@
     const commit = () => {
         const payload: ReturnColors = {
             color: colors.value.color,
+            textColor: colors.value.textColor,
             label: props.label
         };
 
@@ -146,4 +160,31 @@
 
     });
 
+    /*
+    const draggableWindow = document.getElementById('draggableWindow');
+    const windowHeader = document.getElementById('windowHeader');
+
+    let isDragging = false;
+    let offSetX, offSetY;
+
+    if(draggableWindow)
+    {
+        windowHeader?.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            offSetX = e.clientX - draggableWindow?.getBoundingClientRect().left;
+            offSetY = e.clientY - draggableWindow?.getBoundingClientRect().top;
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            
+            draggableWindow.style.left = `${e.clientX - offSetX}px`;
+            draggableWindow.style.top = `${e.clientX - offSetY}px`;
+        });
+
+        document.addEventListener('mouseup', (e) => {
+            isDragging = false;
+            draggableWindow.style.cursor = 'grab';
+        });
+    };  */
 </script>

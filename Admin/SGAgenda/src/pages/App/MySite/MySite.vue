@@ -59,7 +59,7 @@
                         <h3 class="mt-2 ml-.5">Personalização</h3>
                         <q-btn 
                             color="primary" 
-                            icon="join" 
+                            icon="co_present" 
                             label="Estúdio" 
                             no-caps
                             :to="`custom-site`"

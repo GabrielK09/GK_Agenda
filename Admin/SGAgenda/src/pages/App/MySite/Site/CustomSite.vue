@@ -85,8 +85,9 @@
                     :style="`background-color: ${colors.bgCardColor}`"
                 >
                     <div
-                        @click="showChangeColor('card')" 
-                        :style="`color: ${colors.textColorLabel3}`"
+                        @click="showChangeColor('card')"
+                        title="Clicando aqui o fundo será editado" 
+                        :style="`color: ${colors.textCardColor1}`"
                         
                     > 
                         <div class="">
@@ -106,7 +107,7 @@
 
                             <span 
                                 class="rounded-md p-2 mr-4 cursor-pointer"
-                                :style="`background-color: ${colors.bgLabel2}`"
+                                :style="`background-color: ${colors.bgLabel2}; color: ${colors.textColorLabel2}`"
                                 @click.stop="showChangeColor('lb2')"
                             >
                                 <q-avatar icon="schedule" />{{ service.duration }}
@@ -114,11 +115,12 @@
 
                             <q-btn
                                 no-caps
-                                outline
                                 icon="arrow_forward"
                                 class="ml-24 bg-gra"
-                                
+                                :style="`background-color: ${colors.bgBtnColor1}; color: ${colors.bgBtnColor1 === '#000000' ? '#fff' : '#000'}`"
+                                @click.stop="showChangeColor('btn1')"
                             />
+
                         </div>
                     </div>
                 </div>
@@ -126,6 +128,7 @@
         </div>    
     </div>
     <pre>{{ colors }}</pre>
+    <pre>{{ returnEvent }}</pre>
 </template>
 
 <script setup lang="ts">
@@ -154,8 +157,10 @@
     interface SiteColors {
         theme: string,
         generalTextColor: string,
+        textCardColor1: string,
         bgCardColor: string,
         bgBtnColor1: string,
+        bgBtnColor2: string,
         bgLabel1: string,
         textColorLabel1: string,
         bgLabel2: string,
@@ -165,6 +170,7 @@
 
     interface ReturnColors {
         label: string,
+        textColor: string,
         color: string
     };
 
@@ -173,10 +179,12 @@
         generalTextColor: '#fff',
         textColorLabel3: '#fff',
         bgBtnColor1: '',
+        bgBtnColor2: '',
         bgLabel1: '#9ca3af',
         textColorLabel1: '#fff',
         bgLabel2: '#9ca3af',
         textColorLabel2: '#fff',
+        textCardColor1: '',
         bgCardColor: '#ccc' 
         
     });
@@ -201,28 +209,41 @@
     let showColorManagement = ref<boolean>(false);
     let isDarkTheme = ref<boolean>(false);
 
+    let returnEvent = ref<ReturnColors>();
+
     const showChangeColor = (label: string) => {
         selecetToEdit.value = label;
         showColorManagement.value = !showColorManagement.value;
     };
 
     const colorManagement = (event: ReturnColors) => {
-        console.log(event);
+        returnEvent.value = event;
         switch (event.label) {
             case 'card':
                 colors.value.bgCardColor = event.color;
+                colors.value.textCardColor1 = event.textColor;
+
                 break;
         
             case 'btn1':
+                colors.value.bgBtnColor1 = event.color;
+                //colors.value.
+                break
+
+            case 'btn2':
                 colors.value.bgBtnColor1 = event.color;
                 break
 
             case 'lb1':
                 colors.value.bgLabel1 = event.color;
+                colors.value.textColorLabel1 = event.textColor;
+
                 break
 
             case 'lb2':
                 colors.value.bgLabel2 = event.color;
+                colors.value.textColorLabel2 = event.textColor;
+                
                 break;
         
             default:
