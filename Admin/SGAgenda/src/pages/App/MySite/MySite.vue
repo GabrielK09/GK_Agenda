@@ -65,38 +65,6 @@
                             :to="`custom-site`"
                         />
 
-                        <div class="colors flex">
-                            <q-select 
-                                v-model="site.themeColor" 
-                                :options="[
-                                    'Tema claro',
-                                    'Tema escuro'
-                                ]" 
-
-                                display-value-html
-                                label="Tema do site" 
-                                class="m-4 w-44"
-                                stack-label
-                            />
-
-                            <div
-                                class="rounded-3xl h-12 w-12 picker cursor-pointer"
-                                :class="{
-                                    'border-black border': site.siteColor === '#ffffff' || site.siteColor === ''
-                                }"
-                                :style="`background-color: ${site.siteColor}`"
-                                @click="showPickColor = !showPickColor"
-                            >
-                            </div>
-                            <q-color 
-                                v-show="showPickColor"
-                                v-model="site.siteColor" 
-                                inline 
-                                no-header-tabs
-                                no-header
-                                class="m-4 w-44"
-                            />
-                        </div>
                     </div>
                     <q-btn color="primary"  label="OK" @click="saveSiteSettings" />
                 </div>
@@ -134,7 +102,6 @@
     });
 
     let siteURL = ref<string>('');
-    let showPickColor = ref<boolean>(false);
 
     const getURL = async () => {
         const res = await api.get(`/site/get-url/${ownerCode}`);
